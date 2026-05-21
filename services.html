@@ -84,11 +84,8 @@
             <div class="hero-inner">
                 <div class="hero-eyebrow reveal">ベイクドジーティ</div>
                 <h1 class="hero-title reveal">
-                    <span class="word-bkd">Products</span><span class="word-ziti">&</span>
+                    <span class="word-bkd">Products</span><span class="word-ziti">&amp;</span><span class="word-bkd">Services</span>
                 </h1>
-                <p class="hero-title reveal">
-                    Services
-                </p>
                 <p class="hero-sub reveal">
                     Integrated culinary consulting, media production, and branding for restaurants and businesses.
                 </p>
@@ -126,11 +123,44 @@
         window.PAGE_CONFIG = {
             sections: [
                 {
+                    id: 'contact',
+                    label: 'Reach Out',
+                    title: 'Reach out to BKDziti',
+                    body:  'Branding, menu design, visual identity, and digital strategy. We craft distinctive brand experiences that resonate with your audience and stand out in a competitive market.',
+                    media: 'assets/images/Card.png',
+                    mediaType: 'image',
+                    contain: true,
+                    align: 'left',
+                    button: { text: 'Text Me', url: 'sms:+1(239)-420-5010' },
+                    palette: [
+                        [252, 249, 245, 0.10],
+                        [254, 241, 194, 0.12],
+                        [188, 149, 117, 0.16],
+                        [249, 234, 202, 0.11]
+                    ]
+                },
+                 {
+                    id: 'popup-coordination',
+                    label: 'PopUp Coordination',
+                    title: 'PopUp Coordination',
+                    body:  'End-to-end pop-up event coordination, Marketing Campaigns, and Media Production. Concept development, menu design, vendor sourcing, logistics, marketing, and on-site execution. We help you bring unique dining experiences to life with less stress and more impact.',
+                    media: 'assets/images/MP4-converted.webm',
+                    mediaType: 'video',
+                    align: 'right',
+                    button: { text: "What's a Pop-Up", url: 'blog/how-to-start-popup-restaurant.html' },
+                    palette: [
+                        [255, 154, 11,  0.18],
+                        [249, 234, 202, 0.12],
+                        [255, 242, 194, 0.10],
+                        [188, 149, 117, 0.14]
+                    ]
+                 },
+                {
                     id: 'food-consulting',
                     label: 'Culinary Consulting',
                     title: 'Culinary Consulting',
                     body:  'Strategic guidance for business concepts, pop-ups, menu development, and restaurant operations. We help you navigate the complexities of starting and scaling food businesses.',
-                    media: 'assets/images/MP4-converted.webm',
+                    media: 'assets/images/food2.webm',
                     mediaType: 'video',
                     align: 'left',
                     button: { text: 'Learn More', url: 'food-consulting.html' },
@@ -146,7 +176,7 @@
                     label: 'Media Production',
                     title: 'Media Production',
                     body:  'Professional videography, photography, and content creation. We capture the essence of your food and brand, creating compelling visual content for social media, marketing, and digital presence.',
-                    media: 'assets/images/food2.webm',
+                    media: 'assets/images/MP4-converted.webm',
                     mediaType: 'video',
                     align: 'right',
                     button: { text: 'Learn More', url: 'media-production.html' },
@@ -158,22 +188,21 @@
                     ]
                 },
                 {
-                    id: 'branding',
-                    label: 'Branding & Design',
-                    title: 'Branding & Design',
-                    body:  'Restaurant branding, menu design, visual identity, and digital strategy. We craft distinctive brand experiences that resonate with your audience and stand out in a competitive market.',
-                    media: 'assets/images/image0.jpeg',
-                    mediaType: 'image',
-                    contain: true,
-                    align: 'left',
-                    button: { text: 'Text Me', url: 'sms:+1(239)-420-5010' },
+                    id: 'blog',
+                    label: 'Blog',
+                    title: 'Blog',
+                    body:  'Professional videography, photography, and content creation. We capture the essence of your food and brand, creating compelling visual content for social media, marketing, and digital presence.',
+                    media: 'assets/images/MP4-converted.webm',
+                    mediaType: 'video',
+                    align: 'right',
+                    button: { text: 'Read More', url: 'blog/index.html' },
                     palette: [
-                        [252, 249, 245, 0.10],
-                        [254, 241, 194, 0.12],
-                        [188, 149, 117, 0.16],
-                        [249, 234, 202, 0.11]
+                        [233, 50,  0,   0.22],
+                        [249, 83,  1,   0.16],
+                        [231, 54,  2,   0.18],
+                        [255, 154, 11,  0.10]
                     ]
-                }
+                },
             ],
 
             // Side panel nav: section links are auto-generated from `sections`.
