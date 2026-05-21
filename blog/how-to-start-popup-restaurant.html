@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Start a Pop-Up Restaurant: Complete 13-Step Guide | BKDziti</title>
+    <meta name="description" content="Complete guide to starting a pop-up restaurant. Learn concept development, permits, venue selection, marketing, menu planning, and execution strategies.">
+    <meta name="keywords" content="how to start pop-up restaurant, pop-up restaurant guide, limited menu restaurant, pop-up food concept">
+
+    <!-- ── Favicons / app icons ── -->
+    <link rel="icon"          type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="icon"          type="image/png"     href="../assets/images/favicon-32x32.png"  sizes="32x32">
+    <link rel="icon"          type="image/png"     href="../assets/images/favicon-16x16.png"  sizes="16x16">
+    <link rel="icon"          type="image/png"     href="../assets/images/favicon-96x96.png"  sizes="96x96">
+    <link rel="icon"          type="image/png"     href="../assets/images/favicon-196x196.png" sizes="196x196">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+    <link rel="manifest" href="../assets/images/site.webmanifest">
+    <meta name="apple-mobile-web-app-title" content="BKDziti">
+    <meta name="application-name"           content="BKDziti • ベイクドジーティ">
+    <meta name="msapplication-TileColor"    content="#371603">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="How to Start a Pop-Up Restaurant | Complete Guide | BKDziti">
+    <meta property="og:description" content="Step-by-step guide to launching a successful pop-up restaurant. From concept to execution.">
+    <meta property="og:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+    <meta property="og:url" content="https://www.bkdziti.com/blog/how-to-start-popup-restaurant">
+    <meta property="og:type" content="article">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+    <!-- Schema.org Article Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "How to Start a Pop-Up Restaurant: Complete Guide",
+      "description": "Step-by-step guide to launching a successful pop-up restaurant from concept to execution.",
+      "image": "https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG",
+      "datePublished": "2026-05-21",
+      "dateModified": "2026-05-21",
+      "author": {
+        "@type": "Organization",
+        "name": "BKDziti",
+        "url": "https://bkdziti.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "BKDziti",
+        "url": "https://bkdziti.com"
+      }
+    }
+    </script>
+</head>
+<body>
+    <canvas id="bgPulse"></canvas>
+    <div id="notificationOverlay" class="notification-overlay"></div>
+    <div id="notificationBanner" class="notification-banner"></div>
+
+    <button id="menuTrigger" class="menu-trigger" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+    <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
+        <div class="side-panel-inner">
+            <img src="../assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img">
+            <h2 class="panel-name">BKDziti</h2>
+            <p class="panel-tagline">ベイクドジーティ</p>
+            <hr class="panel-divider">
+
+            <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
+
+            <div class="panel-socials" id="panelSocials"></div>
+            <div class="panel-footer">© 2025 BKDziti LLC · All Rights Reserved</div>
+        </div>
+    </aside>
+
+    <main>
+
+        <!-- ── HERO ── -->
+        <section class="hero" id="hero">
+            <div class="hero-bg-ring"></div>
+            <div class="hero-bg-ring"></div>
+            <div class="hero-bg-ring"></div>
+
+            <div class="hero-inner">
+                <div class="hero-eyebrow reveal">ベイクドジーティ</div>
+                <h1 class="hero-title reveal">
+                    <span class="word-bkd">Pop-Up</span><span class="word-ziti">Restaurant</span>
+                </h1>
+                <p class="hero-sub reveal">
+                    Complete 13-step guide to starting a pop-up restaurant. From concept to execution.
+                </p>
+                <div id="heroSocials" class="hero-socials reveal"></div>
+                <button id="scrollToAbout" class="hero-scroll-hint reveal" aria-label="Scroll to guide">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ── Content sections (rendered from PAGE_CONFIG.sections) ── -->
+        <div id="contentSections"></div>
+
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-logo">• ベイクドジーティ •</div>
+            <nav class="footer-nav">
+                <a href="../index.html#hero">Home</a> ·
+                <a href="../services.html#hero">Services</a> ·
+                <a href="../portfolio.html#hero">Portfolio</a> ·
+                <a href="../faq.html#hero">FAQ</a> ·
+                <a href="index.html#hero">Blog</a> ·
+                <a href="../secret.html#hero">Resume</a>
+            </nav>
+            <div class="footer-socials" id="footerSocials"></div>
+            <p class="footer-copy">© Copyright 2026 BKDziti LLC · All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <!-- ── Page configuration & shared scripts ── -->
+    <script>
+        window.PAGE_CONFIG = {
+            sections: [
+                {
+                    id: 'concept-menu',
+                    label: 'Concept & Menu',
+                    title: 'Step 1-2: Define Your Concept & Develop Your Menu',
+                    body:  'Start with a clear vision—what\'s your unique angle? Specific cuisine, dietary focus, chef collaboration, seasonal menu, or cultural experience? Create a cohesive menu reflecting your concept. A focused menu (5-8 dishes) is better than extensive options. Consider ingredient sourcing, cost, preparation time, and plating.',
+                    media: '../assets/images/food2.webm',
+                    mediaType: 'video',
+                    align: 'left',
+                    button: { text: 'Schedule Consulting', url: 'sms:+1(239)-420-5010' },
+                    palette: [
+                        [255, 154, 11,  0.18],
+                        [249, 234, 202, 0.12],
+                        [255, 242, 194, 0.10],
+                        [188, 149, 117, 0.14]
+                    ]
+                },
+                {
+                    id: 'permits-kitchen',
+                    label: 'Permits & Kitchen',
+                    title: 'Step 3-4: Research Permits & Secure a Kitchen',
+                    body:  'Check local health department requirements, business licenses, liquor permits, and zoning regulations—these vary by location. You\'ll need a commercial kitchen (home kitchens aren\'t allowed). Options: restaurant kitchens during off-hours, catering facilities, shared commercial kitchens, or culinary schools. Negotiate rates and availability.',
+                    media: '../assets/images/MP4-converted.webm',
+                    mediaType: 'video',
+                    align: 'right',
+                    button: { text: 'Text for Help', url: 'sms:+1(239)-420-5010' },
+                    palette: [
+                        [233, 50,  0,   0.22],
+                        [249, 83,  1,   0.16],
+                        [231, 54,  2,   0.18],
+                        [255, 154, 11,  0.10]
+                    ]
+                },
+                {
+                    id: 'venue-costs',
+                    label: 'Venue & Costs',
+                    title: 'Step 5-6: Choose Your Venue & Calculate Costs',
+                    body:  'Pop-ups can happen anywhere: restaurants, galleries, warehouses, parks, private homes, outdoor spaces. Consider capacity, ambiance, parking, and concept alignment. Venue rental is a major cost factor. Break down all costs: kitchen rental, venue, ingredients, staff, insurance, permits, marketing. Price tickets to cover costs plus margin (60-70% food cost).',
+                    media: '../assets/images/image0.jpeg',
+                    mediaType: 'image',
+                    contain: true,
+                    align: 'left',
+                    button: { text: 'Get Consulting', url: 'sms:+1(239)-420-5010' },
+                    palette: [
+                        [252, 249, 245, 0.10],
+                        [254, 241, 194, 0.12],
+                        [188, 149, 117, 0.16],
+                        [249, 234, 202, 0.11]
+                    ]
+                }
+            ],
+
+            nav: {
+                before: [{ label: 'Home', href: '../index.html#hero' }],
+                after:  [
+                    { label: '─────────────', href: '#' },
+                    { label: 'Services', href: '../services.html#hero' },
+                    { label: 'Food Consulting', href: '../food-consulting.html#hero' },
+                    { label: 'Media Production', href: '../media-production.html#hero' },
+                    { label: 'Portfolio', href: '../portfolio.html#hero' },
+                    { label: 'FAQ', href: '../faq.html#hero' },
+                    { label: 'Blog', href: 'index.html#hero' },
+                    { label: '─────────────', href: '#' },
+                    { label: 'Resume & Cover Letter', href: '../secret.html#hero' },
+                    { label: '─────────────', href: '#' },
+                    { label: 'Email', href: 'mailto:AlexZornes@BKDziti.com' }
+                ]
+            }
+        };
+    </script>
+
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/site.js"></script>
+
+</body>
+</html>

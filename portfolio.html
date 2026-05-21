@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BKDziti • Resume & Cover Letter</title>
+    <title>Portfolio | Food Consulting & Media Production Case Studies | BKDziti</title>
+    <meta name="description" content="View recent projects and case studies showcasing food consulting, media production, and restaurant branding work.">
+    <meta name="keywords" content="portfolio, case studies, food consulting examples, restaurant media projects">
 
     <!-- ── Favicons / app icons ── -->
     <link rel="icon"          type="image/svg+xml" href="assets/images/favicon.svg">
@@ -19,12 +21,12 @@
     <meta name="msapplication-TileColor"    content="#371603">
 
     <!-- ── Open Graph ── -->
-    <meta name="description"  content="BKDziti — Resume and Cover Letter">
-    <meta property="og:title" content="BKDziti — Resume & Cover Letter">
+    <meta name="description"  content="View recent projects and case studies showcasing food consulting, media production, and restaurant branding work.">
+    <meta property="og:title" content="Portfolio | Case Studies | BKDziti">
     <meta property="og:type"  content="website">
+    <meta property="og:description" content="See our recent projects and case studies in food consulting and media production.">
     <meta property="og:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
-    <meta property="og:url"   content="https://www.bkdziti.com/secret.html">
-    <meta name="robots"       content="noindex, nofollow">
+    <meta property="og:url"   content="https://www.bkdziti.com/portfolio.html">
 
     <!-- ── External resources ── -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -52,7 +54,7 @@
         <div class="side-panel-inner">
             <img src="assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img">
             <h2 class="panel-name">BKDziti</h2>
-            <p class="panel-tagline">Resume · Cover Letter</p>
+            <p class="panel-tagline">ベイクドジーティ</p>
             <hr class="panel-divider">
 
             <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
@@ -73,19 +75,19 @@
             <div class="hero-inner">
                 <div class="hero-eyebrow reveal">ベイクドジーティ</div>
                 <h1 class="hero-title reveal">
-                    <span class="word-bkd">BKD</span><span class="word-ziti">ziti</span>
+                    <span class="word-bkd">Our</span><span class="word-ziti">Portfolio</span>
                 </h1>
                 <p class="hero-sub reveal">
-                    Resume and cover letter — Current and past professional output.
+                    Case studies and examples of food consulting, media production, and restaurant branding work.
                 </p>
                 <div id="heroSocials" class="hero-socials reveal"></div>
-                <button id="scrollToAbout" class="hero-scroll-hint reveal" aria-label="Scroll to resume">
+                <button id="scrollToAbout" class="hero-scroll-hint reveal" aria-label="Scroll to projects">
                     <i class="fas fa-chevron-down"></i>
                 </button>
             </div>
         </section>
 
-        <!-- ── Content sections (Resume + Cover Letter) ── -->
+        <!-- ── Content sections (rendered from PAGE_CONFIG.sections) ── -->
         <div id="contentSections"></div>
 
     </main>
@@ -97,10 +99,10 @@
             <nav class="footer-nav">
                 <a href="index.html#hero">Home</a> ·
                 <a href="services.html#hero">Services</a> ·
-                <a href="portfolio.html#hero">Portfolio</a> ·
+                <a href="#hero">Portfolio</a> ·
                 <a href="faq.html#hero">FAQ</a> ·
                 <a href="blog/index.html#hero">Blog</a> ·
-                <a href="#hero">Resume</a>
+                <a href="secret.html#hero">Resume</a>
             </nav>
             <div class="footer-socials" id="footerSocials"></div>
             <p class="footer-copy">© Copyright 2026 BKDziti LLC · All Rights Reserved</p>
@@ -112,14 +114,14 @@
         window.PAGE_CONFIG = {
             sections: [
                 {
-                    id: 'about',
-                    label: 'Resume',
-                    title: 'Resume & Background',
-                    body:  "A comprehensive overview of my professional goals, skills, and accomplishments.",
-                    media: 'assets/images/AZ_resume.pdf',
-                    mediaType: 'pdf',
+                    id: 'popup-restaurant',
+                    label: 'Pop-Up Restaurant Launch',
+                    title: 'Pop-Up Restaurant Launch',
+                    body:  'From concept to execution: strategy, permits, marketing, and operations for a successful limited-service restaurant event. Complete guidance through every phase of launching a pop-up.',
+                    media: 'assets/images/food2.webm',
+                    mediaType: 'video',
                     align: 'left',
-                    button: { text: 'Download Resume', url: 'assets/images/AZ_resume.pdf', download: true, target: '_blank' },
+                    button: { text: 'View Case Study', url: 'sms:+1(239)-420-5010' },
                     palette: [
                         [255, 154, 11,  0.18],
                         [249, 234, 202, 0.12],
@@ -128,24 +130,40 @@
                     ]
                 },
                 {
-                    id: 'cover-letter',
-                    label: 'Cover Letter',
-                    title: 'Cover Letter',
-                    body:  'A brief introduction to who I am, what I bring to the table, and why I think we should work together.',
-                    media: 'assets/images/Cover Letter Generic Redux.pdf',
-                    mediaType: 'pdf',
+                    id: 'restaurant-media',
+                    label: 'Restaurant Media Production',
+                    title: 'Restaurant Media Production',
+                    body:  'Complete visual branding: food photography, videography, and content creation for restaurant marketing and social media. Professional content that elevates your brand and drives customer engagement.',
+                    media: 'assets/images/MP4-converted.webm',
+                    mediaType: 'video',
                     align: 'right',
-                    button: { text: 'Download Cover Letter', url: 'assets/images/Cover Letter Generic Redux.pdf', download: true, target: '_blank' },
+                    button: { text: 'View Case Study', url: 'sms:+1(239)-420-5010' },
                     palette: [
                         [233, 50,  0,   0.22],
                         [249, 83,  1,   0.16],
                         [231, 54,  2,   0.18],
                         [255, 154, 11,  0.10]
                     ]
+                },
+                {
+                    id: 'menu-strategy',
+                    label: 'Menu Strategy & Branding',
+                    title: 'Menu Strategy & Branding',
+                    body:  'Menu engineering, pricing optimization, and brand positioning for established restaurants looking to refresh and grow. Strategic guidance that increases profitability and customer satisfaction.',
+                    media: 'assets/images/image0.jpeg',
+                    mediaType: 'image',
+                    contain: true,
+                    align: 'left',
+                    button: { text: 'View Case Study', url: 'sms:+1(239)-420-5010' },
+                    palette: [
+                        [252, 249, 245, 0.10],
+                        [254, 241, 194, 0.12],
+                        [188, 149, 117, 0.16],
+                        [249, 234, 202, 0.11]
+                    ]
                 }
             ],
 
-            // Side panel nav: section links are auto-generated from `sections`.
             nav: {
                 before: [{ label: 'Home', href: 'index.html#hero' }],
                 after:  [
@@ -153,9 +171,10 @@
                     { label: 'Services', href: 'services.html#hero' },
                     { label: 'Food Consulting', href: 'food-consulting.html#hero' },
                     { label: 'Media Production', href: 'media-production.html#hero' },
-                    { label: 'Portfolio', href: 'portfolio.html#hero' },
                     { label: 'FAQ', href: 'faq.html#hero' },
                     { label: 'Blog', href: 'blog/index.html#hero' },
+                    { label: '─────────────', href: '#' },
+                    { label: 'Resume & Cover Letter', href: 'secret.html#hero' },
                     { label: '─────────────', href: '#' },
                     { label: 'Email', href: 'mailto:AlexZornes@BKDziti.com' }
                 ]
