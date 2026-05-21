@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media | PopUp Event Coordination | Media Production Services | Culinary Videography & Photography | BKDziti • ベイクドジーティ</title>
+    <title>Media Production Services | Culinary Videography, Photography & Content | BKDziti</title>
 
     <!-- ── Favicons / app icons ── -->
     <link rel="icon"          type="image/svg+xml" href="assets/images/favicon.svg">
@@ -19,12 +19,32 @@
     <meta name="msapplication-TileColor"    content="#371603">
 
     <!-- ── Open Graph ── -->
-    <meta name="description"  content="Professional PopUp coordination, culinary videography / photography, and media production for restaurants, businesses, and brands. We create compelling visual content that drives engagement and sales.">
-    <meta property="og:title" content="Media Services | BKDziti">
+    <meta name="description"  content="Professional culinary videography, photography, and media production for restaurants, brands, and food businesses. Compelling visual content that drives engagement and sales.">
+    <link rel="canonical" href="https://www.bkdziti.com/media-production.html">
+    <meta property="og:title" content="Media Production Services | Culinary Videography & Photography | BKDziti">
     <meta property="og:type"  content="website">
-    <meta property="og:description" content="Professional videography, photography, and media production services. Compelling visual content for restaurants, businesses, and brands.">
+    <meta property="og:description" content="Professional videography, photography, and media production for restaurants and food businesses. Visual content that elevates your brand and drives results.">
     <meta property="og:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
     <meta property="og:url"   content="https://www.bkdziti.com/media-production.html">
+    <meta property="og:site_name" content="BKDziti">
+
+    <!-- ── Twitter Card ── -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Media Production | BKDziti — Culinary Videography & Photography">
+    <meta name="twitter:description" content="Professional videography, photography, and media production for restaurants and food businesses. Visual content that drives results.">
+    <meta name="twitter:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+
+    <!-- ── Schema.org ── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Media Production Services",
+      "provider": { "@type": "LocalBusiness", "name": "BKDziti", "url": "https://bkdziti.com" },
+      "url": "https://bkdziti.com/media-production.html",
+      "description": "Professional videography, photography, and content creation for restaurants, brands, and food businesses."
+    }
+    </script>
 
     <!-- ── External resources ── -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -116,10 +136,10 @@
                     label: "Videography",
                     title: "Videography & Content Creation",
                     body:  'Capture the motion and energy of your food and restaurant. Short social videos for Instagram Reels and TikTok. Dish prep and process videos. Full menu shoots. Restaurant commercials. We create compelling video content that drives engagement, trust, and customer acquisition.',
-                    media: '../assets/images/EatMyBallsAdCompressed.webm',
+                    media: 'assets/images/EatMyBallsAdCompressed.webm',
                     mediaType: 'video',
                     align: 'left',
-                    button: { text: 'Hire', url: '../Blog/restaurant-branding-media-strategy.html' },
+                    button: { text: 'Hire', url: 'blog/restaurant-branding-media-strategy.html' },
                     palette: [
                         [255, 154, 11,  0.18],
                         [249, 234, 202, 0.12],
@@ -132,10 +152,10 @@
                     label: 'Photography',
                     title: 'Photography',
                     body:  'High-quality photography that makes your dishes irresistible. Professional lighting, composition, and styling. Menu photography for print and digital. Social media content. Lifestyle photography. Brand content that tells your restaurant story and builds customer trust.',
-                    media: '../assets/images/food2.webm',
+                    media: 'assets/images/food2.webm',
                     mediaType: 'video',
                     align: 'right',
-                    button: { text: 'Hire', url: '../Blog/food-photography-videography-guide.html' },
+                    button: { text: 'Hire', url: 'blog/food-photography-videography-guide.html' },
                     palette: [
                         [233, 50,  0,   0.22],
                         [249, 83,  1,   0.16],
@@ -148,8 +168,9 @@
                     label: 'Let\'s Create Content',
                     title: 'Let\'s Create Great Content Together',
                     body:  "Professional photography and videography elevate your brand and drive results. Whether you need menu shots, social content, or a full brand photoshoot, we're ready to create visual content that sells.",
-                    media: '../assets/images/Card.png',
+                    media: 'assets/images/Card.png',
                     mediaType: 'image',
+                    contain: true,
                     align: 'left',
                     button: { text: 'Email', url: 'mailto:AlexZornes@BKDziti.com' },
                     palette: [
@@ -161,28 +182,12 @@
                 },{
                     id: 'faq',
                     label: 'FAQ',
-                    title: 'FAQ',
-                    body:  'Quick answers to dumbass questions about our services and how we work.',
-                    media: '../assets/images/EatMyBallsAdCompressed.webm',
+                    title: 'Common Questions',
+                    body:  'What platforms do you post to? How long is a typical shoot? What does post-production include? Find answers on the FAQ page, or reach out directly.',
+                    media: 'assets/images/EatMyBallsAdCompressed.webm',
                     mediaType: 'video',
                     align: 'right',
-                    button: { text: 'FAQ', url: '../FAQ.html' },
-                    palette: [
-                        [233, 50,  0,   0.22],
-                        [249, 83,  1,   0.16],
-                        [231, 54,  2,   0.18],
-                        [255, 154, 11,  0.10]
-                    ]
-                },
-                {
-                    id: 'restaurant-media',
-                    label: 'Restaurant Media Production',
-                    title: 'Restaurant Media Production',
-                    body:  'Complete visual branding: photography, videography, and content creation for restaurant marketing and social media. Professional content that elevates your brand and drives customer engagement.',
-                    media: '../assets/images/food2.webm',
-                    mediaType: 'video',
-                    align: 'right',
-                    button: { text: 'Pricing', url: '../Media-Production.html#hero' },
+                    button: { text: 'Read FAQ', url: 'faq.html' },
                     palette: [
                         [233, 50,  0,   0.22],
                         [249, 83,  1,   0.16],
@@ -195,10 +200,10 @@
                     label: 'Blog',
                     title: "BKDziti's Blog",
                     body:  "Articles, guides, and resources on pop-up restaurants, branding, and media production — read through the BKDziti blog.",
-                    media: '../assets/images/EatMyBalls.png',
+                    media: 'assets/images/EatMyBalls.png',
                     mediaType: 'image',
                     align: 'left',
-                    button: { text: 'Read Blog', url: '../Blog/index.html#hero', target: '_blank' },
+                    button: { text: 'Read Blog', url: 'blog/index.html#hero', target: '_blank' },
                     palette: [
                         [255, 154, 11,  0.18],
                         [249, 234, 202, 0.12],
@@ -219,15 +224,3 @@
                     { label: 'Blog', href: 'blog/index.html#hero' },
                     { label: '─────────────', href: '#' },
                     { label: 'Resume & Cover Letter', href: 'secret.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Email', href: 'mailto:AlexZornes@BKDziti.com' }
-                ]
-            }
-        };
-    </script>
-
-    <script src="assets/js/data.js"></script>
-    <script src="assets/js/site.js"></script>
-
-</body>
-</html>

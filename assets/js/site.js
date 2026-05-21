@@ -314,7 +314,13 @@
         }));
 
         container.innerHTML = [...before, ...sectionLinks, ...after]
-            .map(link => `<a href="${link.href}">${link.label}</a>`)
+            .map(link => {
+                // Render separator entries as visual dividers, not links
+                if (link.label && link.label.startsWith('─')) {
+                    return '<hr class="panel-nav-divider">';
+                }
+                return `<a href="${link.href}">${link.label}</a>`;
+            })
             .join('');
     }
 
@@ -473,14 +479,4 @@
         initHeroParallax();
         initIdlePeek();
 
-        observeReveals();
-        // Re-observe after dynamic content settles
-        setTimeout(observeReveals, 100);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', start);
-    } else {
-        start();
-    }
-})();
+        observeR
