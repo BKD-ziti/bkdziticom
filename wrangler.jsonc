@@ -1,14 +1,11 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  // This project is intended to deploy as a static site on Cloudflare Pages.
+  // The GitHub → Pages integration does not require Wrangler or this file.
+  //
+  // If you *do* deploy via CLI, prefer:
+  //   wrangler pages deploy .
+  //
+  // This file is kept only as a lightweight Wrangler hint for local experimentation.
   "name": "bkdziti",
-  "compatibility_date": "2026-05-14",
-  "observability": {
-    "enabled": true
-  },
-  "assets": {
-    "directory": "."
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  "compatibility_date": "2026-05-14"
 }

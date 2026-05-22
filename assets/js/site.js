@@ -16,12 +16,33 @@
     const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
     const rand = (min, max) => min + Math.random() * (max - min);
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+    const prefersReducedMotion = () =>
+        typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const runWhenIdle = (fn, timeout = 1500) => {
+        if (typeof window.requestIdleCallback === 'function') {
+            window.requestIdleCallback(() => fn(), { timeout });
+        } else {
+            setTimeout(fn, 0);
+        }
+    };
+    const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+    const isProbablyMobile = () =>
+        (typeof window.matchMedia === 'function' && window.matchMedia('(max-width: 768px)').matches)
+        || (navigator && typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 1);
 
     /* ── BACKGROUND PULSE (fullscreen) ─────────────────────────────────── */
     function initBackgroundPulse() {
         const canvas = $('#bgPulse');
         if (!canvas) return;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+        if (!ctx) return;
+
+        const state = {
+            raf: 0,
+            running: false,
+            lastFrameTs: 0,
+            frameIntervalMs: isProbablyMobile() ? 1000 / 24 : 1000 / 32
+        };
 
         const PALETTE = [
             { rgb: [233, 50,  0],   weight: 'dark'  },
@@ -63,15 +84,42 @@
             };
         });
 
-        function resize() {
-            canvas.width  = window.innerWidth;
-            canvas.height = window.innerHeight;
+        function applyCanvasResolution() {
+            const cssW = Math.max(1, window.innerWidth);
+            const cssH = Math.max(1, window.innerHeight);
+            const dpr  = clamp(window.devicePixelRatio || 1, 1, 2);
+
+            const targetPixels = (isProbablyMobile() ? 1.1 : 1.8) * 1_000_000;
+            const fullPixels   = cssW * cssH * dpr * dpr;
+            const quality      = clamp(Math.sqrt(targetPixels / Math.max(1, fullPixels)), 0.45, 1);
+
+            const w = Math.floor(cssW * dpr * quality);
+            const h = Math.floor(cssH * dpr * quality);
+
+            canvas.style.width  = cssW + 'px';
+            canvas.style.height = cssH + 'px';
+            canvas.width  = Math.max(1, w);
+            canvas.height = Math.max(1, h);
+            ctx.setTransform(canvas.width / cssW, 0, 0, canvas.height / cssH, 0, 0);
         }
+
+        const resize = () => applyCanvasResolution();
         resize();
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize', resize, { passive: true });
 
         let t = 0;
-        function draw() {
+        function draw(now) {
+            if (!state.running) return;
+            if (document.hidden) {
+                state.raf = requestAnimationFrame(draw);
+                return;
+            }
+            if (state.lastFrameTs && (now - state.lastFrameTs) < state.frameIntervalMs) {
+                state.raf = requestAnimationFrame(draw);
+                return;
+            }
+            state.lastFrameTs = now;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const diag = Math.hypot(canvas.width, canvas.height);
 
@@ -104,23 +152,60 @@
             });
 
             t++;
-            requestAnimationFrame(draw);
+            state.raf = requestAnimationFrame(draw);
         }
-        draw();
+
+        function start() {
+            if (state.running) return;
+            state.running = true;
+            state.lastFrameTs = 0;
+            state.raf = requestAnimationFrame(draw);
+        }
+
+        function stop() {
+            state.running = false;
+            if (state.raf) cancelAnimationFrame(state.raf);
+            state.raf = 0;
+        }
+
+        const onVis = () => {
+            if (document.hidden) return;
+            if (state.running) resize();
+        };
+        document.addEventListener('visibilitychange', onVis);
+
+        start();
+        return { start, stop, resize };
     }
 
     /* ── PER-SECTION PULSE CANVAS ──────────────────────────────────────── */
-    function initSectionPulse(section) {
+    function createSectionPulseController(section) {
         const canvas = document.getElementById('pulse-' + section.id);
         if (!canvas || !section.palette) return;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+        if (!ctx) return;
+
+        const state = {
+            raf: 0,
+            running: false,
+            t: 0,
+            lastFrameTs: 0,
+            frameIntervalMs: isProbablyMobile() ? 1000 / 24 : 1000 / 30
+        };
 
         function resize() {
-            canvas.width  = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
+            const cssW = Math.max(1, canvas.offsetWidth);
+            const cssH = Math.max(1, canvas.offsetHeight);
+            const dpr  = clamp(window.devicePixelRatio || 1, 1, 2);
+            const quality = isProbablyMobile() ? 0.75 : 1;
+
+            canvas.width  = Math.max(1, Math.floor(cssW * dpr * quality));
+            canvas.height = Math.max(1, Math.floor(cssH * dpr * quality));
+            ctx.setTransform(canvas.width / cssW, 0, 0, canvas.height / cssH, 0, 0);
         }
         resize();
-        new ResizeObserver(resize).observe(canvas);
+        const ro = new ResizeObserver(resize);
+        ro.observe(canvas);
 
         const orbs = [];
         section.palette.forEach(([R, G, B, maxA]) => {
@@ -148,8 +233,18 @@
             }
         });
 
-        let t = 0;
-        function draw() {
+        function draw(now) {
+            if (!state.running) return;
+            if (document.hidden) {
+                state.raf = requestAnimationFrame(draw);
+                return;
+            }
+            if (state.lastFrameTs && (now - state.lastFrameTs) < state.frameIntervalMs) {
+                state.raf = requestAnimationFrame(draw);
+                return;
+            }
+            state.lastFrameTs = now;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             const diag = Math.hypot(canvas.width, canvas.height);
 
@@ -180,10 +275,29 @@
                 ctx.restore();
             });
 
-            t++;
-            requestAnimationFrame(draw);
+            state.t++;
+            state.raf = requestAnimationFrame(draw);
         }
-        draw();
+
+        function start() {
+            if (state.running) return;
+            state.running = true;
+            state.lastFrameTs = 0;
+            state.raf = requestAnimationFrame(draw);
+        }
+
+        function stop() {
+            state.running = false;
+            if (state.raf) cancelAnimationFrame(state.raf);
+            state.raf = 0;
+        }
+
+        function destroy() {
+            stop();
+            ro.disconnect();
+        }
+
+        return { start, stop, destroy };
     }
 
     /* ── SOCIALS RENDER ────────────────────────────────────────────────── */
@@ -211,13 +325,15 @@
                     </div>`;
         }
         if (type === 'video' || type === 'webm') {
-            const mime = src.endsWith('.mp4') ? 'video/mp4' : 'video/webm';
-            return `<video autoplay muted loop playsinline preload="auto">
-                        <source src="${src}" type="${mime}">
-                    </video>`;
+            const lower = src.toLowerCase();
+            const base = lower.endsWith('.webm') ? src.slice(0, -5) : lower.endsWith('.mp4') ? src.slice(0, -4) : src;
+            const webm = base + '.webm';
+            const mp4  = base + '.mp4';
+            return `<video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"
+                        data-src-webm="${webm}" data-src-mp4="${mp4}"></video>`;
         }
         if (type === 'pdf') {
-            return `<iframe src="${src}#view=FitH" title="${section.title}" loading="lazy"></iframe>`;
+            return `<iframe data-bkd-iframe="1" data-src="${src}#view=FitH" title="${section.title}" loading="lazy"></iframe>`;
         }
         return `<img src="${src}" alt="${section.title}" loading="lazy">`;
     }
@@ -357,6 +473,125 @@
         $$('.reveal').forEach(el => observer.observe(el));
     }
 
+    /* ── MEDIA HYDRATION (videos + iframes) ───────────────────────────── */
+    function initDeferredMedia() {
+        const videos  = $$('video[data-bkd-video="1"]');
+        const iframes = $$('iframe[data-bkd-iframe="1"]');
+
+        function hydrateVideo(video) {
+            if (video.dataset.hydrated === '1') return;
+            video.dataset.hydrated = '1';
+
+            const webm = video.dataset.srcWebm;
+            const mp4  = video.dataset.srcMp4;
+
+            const sources = [];
+            if (webm) sources.push({ src: webm, type: 'video/webm' });
+            if (mp4)  sources.push({ src: mp4,  type: 'video/mp4' });
+
+            sources.forEach(s => {
+                const el = document.createElement('source');
+                el.src  = s.src;
+                el.type = s.type;
+                video.appendChild(el);
+            });
+
+            video.load();
+        }
+
+        function maybePlay(video) {
+            if (video.dataset.autoplay !== '1') return;
+            const p = video.play();
+            if (p && typeof p.catch === 'function') p.catch(() => {});
+        }
+
+        function pauseVideo(video) {
+            try { video.pause(); } catch (_) {}
+        }
+
+        function hydrateIframe(frame) {
+            if (frame.dataset.hydrated === '1') return;
+            const src = frame.dataset.src;
+            if (!src) return;
+            frame.dataset.hydrated = '1';
+            frame.src = src;
+        }
+
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                const el = entry.target;
+                const isIn = entry.isIntersecting;
+
+                if (el.tagName === 'VIDEO') {
+                    if (isIn) {
+                        hydrateVideo(el);
+                        maybePlay(el);
+                    } else {
+                        pauseVideo(el);
+                    }
+                    return;
+                }
+
+                if (el.tagName === 'IFRAME') {
+                    if (isIn) hydrateIframe(el);
+                    return;
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '200px 0px 200px 0px' });
+
+        videos.forEach(v => io.observe(v));
+        iframes.forEach(f => io.observe(f));
+
+        const onVis = () => {
+            if (!document.hidden) return;
+            videos.forEach(pauseVideo);
+        };
+        document.addEventListener('visibilitychange', onVis);
+
+        return { disconnect: () => io.disconnect() };
+    }
+
+    /* ── VIEWPORT-ACTIVATED SECTION EFFECTS ───────────────────────────── */
+    function initViewportActivatedEffects() {
+        const controllers = new Map();
+
+        const getController = (section) => {
+            if (controllers.has(section.id)) return controllers.get(section.id);
+            const c = createSectionPulseController(section);
+            controllers.set(section.id, c || null);
+            return c;
+        };
+
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                const id = entry.target.id;
+                const section = SECTIONS.find(s => s.id === id);
+                if (!section) return;
+                const c = getController(section);
+                if (!c) return;
+                if (prefersReducedMotion()) {
+                    c.stop();
+                    return;
+                }
+                if (entry.isIntersecting) c.start();
+                else c.stop();
+            });
+        }, { threshold: 0.12, rootMargin: '120px 0px 120px 0px' });
+
+        SECTIONS.forEach(sec => {
+            const el = document.getElementById(sec.id);
+            if (el) io.observe(el);
+        });
+
+        const onVis = () => {
+            if (!document.hidden) return;
+            controllers.forEach(c => c && c.stop());
+        };
+        document.addEventListener('visibilitychange', onVis);
+
+        return { disconnect: () => io.disconnect() };
+    }
+
     /* ── SCROLL-TO-FIRST-SECTION HINT ──────────────────────────────────── */
     function wireScrollHint() {
         const btn = $('#scrollToAbout');
@@ -463,20 +698,42 @@
 
     /* ── BOOTSTRAP ─────────────────────────────────────────────────────── */
     function start() {
-        initBackgroundPulse();
-
+        // Phase 1: guaranteed-first-paint shell wiring
         renderNav();
         renderSocials('panelSocials',  'panel');
         renderSocials('footerSocials', 'footer');
         renderSocials('heroSocials',   'hero');
-
-        renderContentSections();
-        SECTIONS.forEach(initSectionPulse);
-        wireSectionButtons();
-
         initSidePanel();
         wireScrollHint();
-        initHeroParallax();
-        initIdlePeek();
 
-        observeR
+        // Phase 2: above-fold polish (lightweight listeners)
+        requestAnimationFrame(() => {
+            initHeroParallax();
+            initIdlePeek();
+        });
+
+        // Phase 3: DOM-heavy section render + reveal observer
+        requestAnimationFrame(() => {
+            renderContentSections();
+            wireSectionButtons();
+            observeReveals();
+
+            // Phase 4: viewport-triggered hydration (media + per-section effects)
+            runWhenIdle(() => {
+                initDeferredMedia();
+                initViewportActivatedEffects();
+            }, 2000);
+        });
+
+        // Phase 5: expensive background effect (idle + reduced-motion aware)
+        if (!prefersReducedMotion()) {
+            runWhenIdle(() => initBackgroundPulse(), 2500);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+    } else {
+        start();
+    }
+})();
