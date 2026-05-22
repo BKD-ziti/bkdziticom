@@ -318,6 +318,45 @@
         const src  = section.media;
         const type = section.mediaType || (src ? guessType(src) : 'placeholder');
 
+        if (type === 'form') {
+            const action = (section.form && section.form.action) || '/api/contact';
+            return `
+                <form class="contact-form" data-bkd-contact-form="1" method="POST" action="${action}">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="cf-name">Name</label>
+                            <input id="cf-name" name="name" type="text" autocomplete="name" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="cf-email">Email</label>
+                            <input id="cf-email" name="email" type="email" autocomplete="email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="cf-phone">Phone (optional)</label>
+                            <input id="cf-phone" name="phone" type="tel" autocomplete="tel">
+                        </div>
+                        <div class="form-field">
+                            <label for="cf-topic">Topic (optional)</label>
+                            <input id="cf-topic" name="topic" type="text" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="cf-message">Message</label>
+                        <textarea id="cf-message" name="message" rows="6" required></textarea>
+                    </div>
+
+                    <input class="hp-field" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+                    <button type="submit" class="pill-btn">Send <i class="fas fa-arrow-right"></i></button>
+                    <div class="form-fineprint">
+                        Prefer fast? <a href="sms:+12394205010">Text</a> or <a href="mailto:AlexZornes@BKDziti.com">email</a>.
+                    </div>
+                </form>
+            `;
+        }
         if (!src || type === 'placeholder') {
             return `<div class="media-placeholder">
                         <i class="fas fa-film"></i>
@@ -415,6 +454,58 @@
         }, ms);
     }
 
+    // Allow small per-page scripts to use the same toast UI.
+    window.BKD = window.BKD || {};
+    window.BKD.notify = showNotification;
+
+    /* ── CONTACT FORMS ────────────────────────────────────────────────── */
+    function initContactForms() {
+        const forms = $$('form[data-bkd-contact-form="1"]');
+        if (!forms.length) return;
+
+        forms.forEach(form => {
+            if (form.dataset.bound === '1') return;
+            form.dataset.bound = '1';
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const fd = new FormData(form);
+                if (!fd.has('page')) fd.set('page', location.href);
+
+                try {
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.dataset.prevText = submitBtn.textContent || '';
+                        submitBtn.textContent = 'Sending…';
+                    }
+
+                    const res = await fetch(form.action || '/api/contact', {
+                        method: form.method || 'POST',
+                        body: fd
+                    });
+
+                    const json = await res.json().catch(() => ({}));
+                    if (!res.ok || !json.ok) {
+                        throw new Error(json.error || 'Message failed to send. Try again or text/email me.');
+                    }
+
+                    form.reset();
+                    showNotification('Got it — I’ll get back to you soon.', 4200);
+                } catch (err) {
+                    showNotification(err && err.message ? err.message : 'Something went wrong. Please try again.', 5200);
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = submitBtn.dataset.prevText || 'Send';
+                    }
+                }
+            });
+        });
+    }
+
     /* ── SIDE PANEL NAV (auto-built from sections + extras) ────────────── */
     function renderNav() {
         const container = $('#panelNav');
@@ -429,7 +520,20 @@
             href:  '#' + sec.id
         }));
 
-        container.innerHTML = [...before, ...sectionLinks, ...after]
+        const combined = [...before, ...sectionLinks, ...after];
+
+        const seenLabels = new Set();
+        const deduped = combined.filter(link => {
+            if (!link || !link.label) return false;
+            if (link.label.startsWith('─')) return true;
+            const key = String(link.label).trim().toLowerCase();
+            if (!key) return false;
+            if (seenLabels.has(key)) return false;
+            seenLabels.add(key);
+            return true;
+        });
+
+        container.innerHTML = deduped
             .map(link => {
                 // Render separator entries as visual dividers, not links
                 if (link.label && link.label.startsWith('─')) {
@@ -549,6 +653,41 @@
         document.addEventListener('visibilitychange', onVis);
 
         return { disconnect: () => io.disconnect() };
+    }
+
+    /* ── FEATURED GALLERY (data-driven) ───────────────────────────────── */
+    function initFeaturedGallery() {
+        const container = document.querySelector('[data-bkd-featured-gallery="1"]');
+        if (!container) return;
+        if (container.dataset.hydrated === '1') return;
+        container.dataset.hydrated = '1';
+
+        fetch('/assets/data/featured.json', { cache: 'no-store' })
+            .then(r => r.json())
+            .then(data => {
+                const items = (data && data.items) || [];
+                if (!items.length) {
+                    container.innerHTML = '<div class="featured-empty">No featured posts yet.</div>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="featured-grid">
+                        ${items.map(item => `
+                            <a class="featured-card" href="${item.url}" target="_blank" rel="noopener">
+                                <img class="featured-thumb" src="${item.thumbnail}" alt="${item.title || item.platform}" loading="lazy">
+                                <div class="featured-meta">
+                                    <div class="featured-platform">${item.platform || ''}</div>
+                                    <div class="featured-title">${item.title || ''}</div>
+                                </div>
+                            </a>
+                        `).join('')}
+                    </div>
+                `;
+            })
+            .catch(() => {
+                container.innerHTML = '<div class="featured-empty">Unable to load featured posts.</div>';
+            });
     }
 
     /* ── VIEWPORT-ACTIVATED SECTION EFFECTS ───────────────────────────── */
@@ -717,11 +856,13 @@
             renderContentSections();
             wireSectionButtons();
             observeReveals();
+            initContactForms();
 
             // Phase 4: viewport-triggered hydration (media + per-section effects)
             runWhenIdle(() => {
                 initDeferredMedia();
                 initViewportActivatedEffects();
+                initFeaturedGallery();
             }, 2000);
         });
 

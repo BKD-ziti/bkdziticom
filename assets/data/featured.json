@@ -1,0 +1,33 @@
+{
+  "updatedAt": "2026-05-22",
+  "items": [
+    {
+      "id": "youtube-1",
+      "platform": "YouTube",
+      "title": "Featured video",
+      "url": "https://www.youtube.com/@BKDziti",
+      "thumbnail": "/assets/images/BKDziti_pfp_2.PNG"
+    },
+    {
+      "id": "instagram-1",
+      "platform": "Instagram",
+      "title": "Top post (placeholder)",
+      "url": "https://www.instagram.com/bkdziti/",
+      "thumbnail": "/assets/images/BKDziti_pfp_2.PNG"
+    },
+    {
+      "id": "tiktok-1",
+      "platform": "TikTok",
+      "title": "Top video (placeholder)",
+      "url": "https://www.tiktok.com/@bkdziti",
+      "thumbnail": "/assets/images/BKDziti_pfp_2.PNG"
+    },
+    {
+      "id": "facebook-1",
+      "platform": "Facebook",
+      "title": "Top post (placeholder)",
+      "url": "https://www.facebook.com/TheRealBKDziti/",
+      "thumbnail": "/assets/images/BKDziti_pfp_2.PNG"
+    }
+  ]
+}

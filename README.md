@@ -25,3 +25,17 @@ If you prefer pushing a build manually:
 
 If you see issues during deploy, prefer the GitHub integration above (it does not require Wrangler locally).
 
+## Contact form → SMS (Cloudflare Pages Functions + Twilio)
+
+This repo includes a Cloudflare Pages Function at `POST /api/contact` that can forward form submissions to your work phone via Twilio.
+
+### Cloudflare env vars (Pages → Settings → Environment variables)
+
+Set these for **Production** (and Preview if you want it there too):
+
+- `TWILIO_ACCOUNT_SID`
+- `TWILIO_AUTH_TOKEN`
+- `TWILIO_FROM_NUMBER` (your Twilio number, E.164 format, e.g. `+12345678900`)
+- `WORK_PHONE_NUMBER` (your phone, E.164 format)
+
+If those aren’t set, the form will tell users to text/email instead.
