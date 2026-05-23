@@ -10,7 +10,7 @@ function jsonResponse(body, status = 200) {
 
 function requireEnv(env, key) {
   const val = env && env[key];
-  if (!val) throw new Error(`Missing ${key}`);
+  if (!val) throw new Error(`Missing env var: ${key}`);
   return val;
 }
 
@@ -30,15 +30,15 @@ export async function onRequestPost({ request, env }) {
       data = Object.fromEntries(fd.entries());
     }
 
-    // Honeypot field: bots fill it, humans don't.
+    // Honeypot: bots fill this, humans don't
     if (clean(data.company)) return jsonResponse({ ok: true });
 
-    const name = clean(data.name);
-    const email = clean(data.email);
-    const phone = clean(data.phone);
-    const topic = clean(data.topic);
+    const name    = clean(data.name);
+    const email   = clean(data.email);
+    const phone   = clean(data.phone);
+    const topic   = clean(data.topic);
     const message = clean(data.message);
-    const page = clean(data.page);
+    const page    = clean(data.page);
 
     if (!name || !email || !message) {
       return jsonResponse({ ok: false, error: 'Please include name, email, and a message.' }, 400);
@@ -47,47 +47,48 @@ export async function onRequestPost({ request, env }) {
       return jsonResponse({ ok: false, error: 'Message is too long.' }, 400);
     }
 
-    const sid = requireEnv(env, 'TWILIO_ACCOUNT_SID');
-    const token = requireEnv(env, 'TWILIO_AUTH_TOKEN');
-    const from = requireEnv(env, 'TWILIO_FROM_NUMBER');
-    const to = requireEnv(env, 'WORK_PHONE_NUMBER');
+    const apiKey  = requireEnv(env, 'RESEND_API_KEY');
+    const from    = (env && env['RESEND_FROM']) || 'BKDziti Contact <contact@bkdziti.com>';
+    const to      = (env && env['CONTACT_TO'])  || 'AlexZornes@BKDziti.com';
 
-    const sms = [
-      'BKDziti Contact Form',
+    const lines = [
       topic ? `Topic: ${topic}` : null,
       `Name: ${name}`,
       `Email: ${email}`,
       phone ? `Phone: ${phone}` : null,
-      page ? `Page: ${page}` : null,
+      page  ? `Page: ${page}`   : null,
       '',
       message
-    ].filter(Boolean).join('\n');
+    ].filter(s => s !== null).join('\n');
 
-    const url = `https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(sid)}/Messages.json`;
-    const auth = btoa(`${sid}:${token}`);
+    const subject = topic
+      ? `[BKDziti] ${topic} — from ${name}`
+      : `[BKDziti] New message from ${name}`;
 
-    const body = new URLSearchParams();
-    body.set('From', from);
-    body.set('To', to);
-    body.set('Body', sms.slice(0, 1500));
-
-    const resp = await fetch(url, {
+    const resp = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'authorization': `Basic ${auth}`,
-        'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
       },
-      body
+      body: JSON.stringify({
+        from,
+        to: [to],
+        reply_to: email,
+        subject,
+        text: lines
+      })
     });
 
     if (!resp.ok) {
-      const txt = await resp.text().catch(() => '');
+      const body = await resp.json().catch(() => ({}));
+      console.error('Resend error:', resp.status, JSON.stringify(body));
       return jsonResponse({ ok: false, error: 'Send failed. Please text or email instead.' }, 502);
     }
 
     return jsonResponse({ ok: true });
   } catch (err) {
+    console.error('Contact handler error:', err && err.message);
     return jsonResponse({ ok: false, error: 'Contact form is not configured yet. Please text or email for now.' }, 500);
   }
 }
-
