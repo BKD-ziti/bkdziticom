@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | BKDziti Store</title>
+    <meta name="robots" content="noindex">
+    <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/store.css">
+</head>
+<body>
+
+    <canvas id="bgPulse"></canvas>
+    <div id="notificationOverlay" class="notification-overlay"></div>
+    <div id="notificationBanner"  class="notification-banner"></div>
+
+    <button id="menuTrigger" class="menu-trigger" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+    <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
+        <div class="side-panel-inner">
+            <img src="../assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
+            <h2 class="panel-name">BKDziti</h2>
+            <p class="panel-tagline">ベイクドジーティ</p>
+            <hr class="panel-divider">
+            <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
+            <div class="panel-socials" id="panelSocials"></div>
+            <div class="panel-footer">&copy; 2026 BKDziti LLC &middot; All Rights Reserved</div>
+        </div>
+    </aside>
+
+    <main>
+        <div class="store-page-header">
+            <div class="hero-eyebrow">Secure Checkout</div>
+            <h1>Almost <span>There</span></h1>
+            <p>Enter your info below, then you&rsquo;ll be redirected to Stripe to complete payment securely.</p>
+        </div>
+
+        <div class="store-main">
+            <div class="checkout-grid">
+                <!-- Customer info form -->
+                <div class="checkout-form-card">
+                    <h2><i class="fas fa-user" style="color:var(--orange);margin-right:0.6rem"></i>Your Information</h2>
+                    <form id="checkoutForm" novalidate>
+                        <div class="form-field-store">
+                            <label for="checkout-name">Full Name <span style="color:var(--deep-red)">*</span></label>
+                            <input type="text" id="checkout-name" name="name" required placeholder="Alex Zornes" autocomplete="name">
+                        </div>
+                        <div class="form-field-store">
+                            <label for="checkout-email">Email Address <span style="color:var(--deep-red)">*</span></label>
+                            <input type="email" id="checkout-email" name="email" required placeholder="you@example.com" autocomplete="email">
+                        </div>
+                        <p style="font-size:0.82rem;color:rgba(252,249,245,0.4);margin:0.5rem 0 1rem;line-height:1.5">
+                            Your email is used for your order receipt and to look up past orders. We&rsquo;ll never share it.
+                        </p>
+                        <button type="submit" class="pay-btn">
+                            <i class="fas fa-lock"></i> Pay Securely with Stripe
+                        </button>
+                        <div class="stripe-badge">
+                            <i class="fas fa-shield-alt"></i>
+                            Payments processed securely by Stripe. BKDziti never handles your card details.
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Order summary -->
+                <div class="checkout-summary-card">
+                    <h2><i class="fas fa-receipt" style="color:var(--orange);margin-right:0.6rem"></i>Order Summary</h2>
+                    <div id="checkoutSummary">
+                        <div class="store-loading" style="padding:2rem 0"><i class="fas fa-circle-notch"></i>Loading cart…</div>
+                    </div>
+                    <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(249,83,1,0.1)">
+                        <a href="cart.html" style="font-size:0.85rem;color:rgba(252,249,245,0.4);text-decoration:none;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s" onmouseover="this.style.color='var(--amber)'" onmouseout="this.style.color='rgba(252,249,245,0.4)'">
+                            <i class="fas fa-arrow-left"></i> Edit cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-logo">&bull; ベイクドジーティ &bull;</div>
+            <nav class="footer-nav">
+                <a href="../index.html">Home</a> &middot;
+                <a href="index.html">Store</a> &middot;
+                <a href="../contact.html">Contact</a>
+            </nav>
+            <div class="footer-socials" id="footerSocials"></div>
+            <p class="footer-copy">&copy; 2026 BKDziti LLC &middot; All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        window.PAGE_CONFIG = {
+            sections: [],
+            nav: {
+                before: [{ label: 'Home', href: '../index.html#hero' }],
+                after: [
+                    { label: '─────────────', href: '#' },
+                    { label: 'Store Home',  href: 'index.html' },
+                    { label: 'My Cart',     href: 'cart.html' },
+                    { label: '─────────────', href: '#' },
+                    { label: 'Contact',     href: '../contact.html#hero' }
+                ]
+            }
+        };
+    </script>
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/site.js"></script>
+    <script src="../assets/js/store.js"></script>
+
+</body>
+</html>

@@ -218,6 +218,28 @@
             </div>
         </section>
 
+        <!-- ── SHOP ── -->
+        <section id="shop" class="content-section">
+            <canvas class="section-pulse-canvas" id="pulse-shop"></canvas>
+            <div class="section-container">
+                <div class="content-split reveal">
+                    <div>
+                        <div class="section-label">Shop</div>
+                        <h2 class="section-title">BKDziti Store</h2>
+                        <hr class="section-divider">
+                        <p class="section-body">Book consulting packages, media production sessions, and more &mdash; directly online. Browse current offerings, add to cart, and check out securely via Stripe.</p>
+                        <a href="store/index.html" class="pill-btn" id="btn-shop">Visit the Store <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div style="position:relative;">
+                        <div class="content-glow"></div>
+                        <div class="content-media-wrap contain">
+                            <img src="assets/images/Card.png" alt="BKDziti Store" loading="lazy" width="1050" height="600">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- ── BLOG ── -->
         <section id="blog-posts" class="content-section">
             <canvas class="section-pulse-canvas" id="pulse-blog-posts"></canvas>
@@ -293,6 +315,7 @@
             <div class="footer-logo">&bull; ベイクドジーティ &bull;</div>
             <nav class="footer-nav">
                 <a href="#hero">Home</a> &middot;
+                <a href="store/index.html">Store</a> &middot;
                 <a href="services.html#hero">Services</a> &middot;
                 <a href="portfolio.html#hero">Portfolio</a> &middot;
                 <a href="faq.html#hero">FAQ</a> &middot;
@@ -314,6 +337,7 @@
                 { id: 'work',        label: 'Work',         palette: [[233,50,0,0.22],[249,83,1,0.16],[231,54,2,0.18],[255,154,11,0.10]] },
                 { id: 'the-process', label: 'The Process',  palette: [[233,50,0,0.22],[249,83,1,0.16],[231,54,2,0.18],[255,154,11,0.10]] },
                 { id: 'faq',         label: 'FAQ',           palette: [[233,50,0,0.22],[249,83,1,0.16],[231,54,2,0.18],[255,154,11,0.10]] },
+                { id: 'shop',        label: 'Shop',          palette: [[233,50,0,0.22],[249,83,1,0.16],[231,54,2,0.18],[255,154,11,0.10]] },
                 { id: 'blog-posts',  label: 'Blog',          palette: [[255,154,11,0.18],[249,234,202,0.12],[255,242,194,0.10],[188,149,117,0.14]] },
                 { id: 'featured',    label: 'Featured',      palette: [[255,154,11,0.18],[249,234,202,0.12],[255,242,194,0.10],[188,149,117,0.14]] },
                 { id: 'contact',     label: 'Contact',       palette: [[252,249,245,0.10],[254,241,194,0.12],[188,149,117,0.16],[249,234,202,0.11]] }
@@ -322,6 +346,7 @@
                 before: [{ label: 'Home', href: '#hero' }],
                 after: [
                     { label: '─────────────', href: '#' },
+                    { label: 'Store',                 href: 'store/index.html' },
                     { label: 'Services',              href: 'services.html#hero' },
                     { label: 'Culinary Consulting',   href: 'food-consulting.html#hero' },
                     { label: 'Media Production',      href: 'media-production.html#hero' },

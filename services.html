@@ -115,6 +115,7 @@
             <div class="footer-logo">• ベイクドジーティ •</div>
             <nav class="footer-nav">
                 <a href="index.html#hero">Home</a> ·
+                <a href="store/index.html">Store</a> ·
                 <a href="#hero">Services</a> ·
                 <a href="portfolio.html#hero">Portfolio</a> ·
                 <a href="faq.html#hero">FAQ</a> ·
@@ -197,6 +198,23 @@
                     ]
                 },
                 {
+                    id: 'shop',
+                    label: 'Shop',
+                    title: 'Book & Buy Online',
+                    body:  'Consulting packages, media production sessions, and more — available to purchase directly. Browse current offerings, add to cart, and pay securely via Stripe.',
+                    media: 'assets/images/Card.png',
+                    mediaType: 'image',
+                    contain: true,
+                    align: 'left',
+                    button: { text: 'Visit the Store', url: 'store/index.html' },
+                    palette: [
+                        [233, 50,  0,   0.22],
+                        [249, 83,  1,   0.16],
+                        [231, 54,  2,   0.18],
+                        [255, 154, 11,  0.10]
+                    ]
+                },
+                {
                     id: 'blog',
                     label: 'Blog',
                     title: "Resources & Guides",
@@ -220,6 +238,7 @@
                 before: [{ label: 'Home', href: 'index.html#hero' }],
                 after:  [
                     { label: '─────────────', href: '#' },
+                    { label: 'Store',     href: 'store/index.html' },
                     { label: 'Portfolio', href: 'portfolio.html#hero' },
                     { label: 'FAQ', href: 'faq.html#hero' },
                     { label: 'Blog', href: 'blog/index.html#hero' },

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | BKDziti Store</title>
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="icon" type="image/svg+xml" href="../../assets/images/favicon.svg">
+    <link rel="shortcut icon" href="../../assets/images/favicon.ico">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/styles.css">
+    <link rel="stylesheet" href="../../assets/css/store.css">
+</head>
+<body>
+
+    <canvas id="bgPulse"></canvas>
+
+    <button id="menuTrigger" class="menu-trigger" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+    <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
+        <div class="side-panel-inner">
+            <img src="../../assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
+            <h2 class="panel-name">BKDziti</h2>
+            <p class="panel-tagline">Admin Panel</p>
+            <hr class="panel-divider">
+            <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
+            <div class="panel-footer">&copy; 2026 BKDziti LLC</div>
+        </div>
+    </aside>
+
+    <!-- ── LOGIN SCREEN ── -->
+    <div id="loginScreen" class="admin-login-screen">
+        <div class="admin-login-card">
+            <h1>BKDziti</h1>
+            <p>Admin access only. Enter your admin key to continue.</p>
+            <form id="loginForm" novalidate>
+                <div class="form-field-store" style="margin-bottom:1.25rem">
+                    <label for="adminKey">Admin Key</label>
+                    <input type="password" id="adminKey" placeholder="••••••••••••" autocomplete="current-password" style="text-align:center;letter-spacing:0.1em">
+                </div>
+                <button type="submit" class="pay-btn">
+                    <i class="fas fa-unlock-alt"></i> Sign In
+                </button>
+                <div id="loginError" style="margin-top:1rem;font-size:0.85rem;color:#f08080;min-height:1.2em"></div>
+            </form>
+            <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(249,83,1,0.1)">
+                <a href="../index.html" style="font-size:0.8rem;color:rgba(252,249,245,0.3);text-decoration:none">
+                    <i class="fas fa-arrow-left"></i> Back to Store
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── ADMIN DASHBOARD ── -->
+    <div id="adminDashboard" style="display:none">
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <nav class="admin-sidebar" aria-label="Admin navigation">
+                <div style="padding:0.75rem;margin-bottom:0.5rem">
+                    <div style="font-family:'Dela Gothic One',sans-serif;font-size:1.1rem;color:var(--amber)">BKDziti</div>
+                    <div style="font-size:0.72rem;color:rgba(252,249,245,0.35);letter-spacing:0.1em">ADMIN PANEL</div>
+                </div>
+                <h3>Manage</h3>
+                <button class="admin-nav-btn active" data-panel="products">
+                    <i class="fas fa-box-open"></i> Products
+                </button>
+                <button class="admin-nav-btn" data-panel="orders">
+                    <i class="fas fa-receipt"></i> Orders
+                </button>
+                <h3>Site</h3>
+                <a href="../index.html" class="admin-nav-btn" style="text-decoration:none">
+                    <i class="fas fa-store"></i> View Store
+                </a>
+                <a href="../../index.html" class="admin-nav-btn" style="text-decoration:none">
+                    <i class="fas fa-home"></i> Main Site
+                </a>
+                <div style="margin-top:auto;padding-top:2rem">
+                    <button class="admin-nav-btn" id="logoutBtn" style="color:rgba(240,128,128,0.7)">
+                        <i class="fas fa-sign-out-alt"></i> Sign Out
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <div class="admin-content">
+
+                <!-- Products Panel -->
+                <div class="admin-panel active" id="panel-products">
+                    <div class="admin-panel-header">
+                        <h2>Products</h2>
+                        <button class="admin-btn primary" id="addProductBtn">
+                            <i class="fas fa-plus"></i> Add Product
+                        </button>
+                    </div>
+                    <div style="overflow-x:auto">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <tr><td colspan="6" style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
+                                    <i class="fas fa-circle-notch fa-spin" style="display:block;font-size:1.5rem;margin-bottom:0.75rem"></i>Loading&hellip;
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Orders Panel -->
+                <div class="admin-panel" id="panel-orders">
+                    <div class="admin-panel-header">
+                        <h2>Orders</h2>
+                        <button class="admin-btn" id="refreshOrdersBtn">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div style="overflow-x:auto">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <tr><td colspan="6" style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
+                                    <i class="fas fa-circle-notch fa-spin" style="display:block;font-size:1.5rem;margin-bottom:0.75rem"></i>Loading&hellip;
+                                </td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ── PRODUCT MODAL ── -->
+    <div class="modal-overlay" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="productModalTitle">Add Product</h3>
+                <button class="modal-close" id="productModalClose" aria-label="Close">&times;</button>
+            </div>
+            <form id="productForm" novalidate>
+                <input type="hidden" id="productId">
+                <div class="form-field-store">
+                    <label for="pName">Product Name <span style="color:var(--deep-red)">*</span></label>
+                    <input type="text" id="pName" placeholder="e.g. Culinary Consulting — Starter Package" required maxlength="120">
+                </div>
+                <div class="form-field-store">
+                    <label for="pDesc">Description</label>
+                    <textarea id="pDesc" rows="4" maxlength="2000" placeholder="What's included, what to expect, deliverables…"
+                        style="width:100%;padding:0.8rem 1rem;border-radius:0.75rem;border:1px solid rgba(249,83,1,0.25);background:rgba(0,0,0,0.35);color:var(--offwhite);font-family:'Golos Text',sans-serif;font-size:0.95rem;outline:none;resize:vertical;min-height:100px;transition:border-color 0.2s,box-shadow 0.2s"
+                        onfocus="this.style.borderColor='rgba(255,154,11,0.7)';this.style.boxShadow='0 0 0 3px rgba(255,154,11,0.1)'"
+                        onblur="this.style.borderColor='rgba(249,83,1,0.25)';this.style.boxShadow='none'"></textarea>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                    <div class="form-field-store">
+                        <label for="pPrice">Price (USD) <span style="color:var(--deep-red)">*</span></label>
+                        <input type="number" id="pPrice" placeholder="99.00" step="0.01" min="0.50" required>
+                    </div>
+                    <div class="form-field-store">
+                        <label for="pCategory">Category</label>
+                        <input type="text" id="pCategory" placeholder="consulting" maxlength="60">
+                    </div>
+                </div>
+                <div class="form-field-store">
+                    <label for="pImageUrl">Image URL</label>
+                    <input type="url" id="pImageUrl" placeholder="https://example.com/image.jpg" maxlength="500">
+                    <span style="font-size:0.75rem;color:rgba(252,249,245,0.35);margin-top:0.25rem;display:block">Upload your image to any CDN and paste the URL here.</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem">
+                    <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:rgba(252,249,245,0.7)">
+                        <input type="checkbox" id="pActive" checked style="accent-color:var(--orange);width:1.1rem;height:1.1rem">
+                        Active (visible in store)
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="admin-btn" id="productModalCancel">Cancel</button>
+                    <button type="submit" class="admin-btn primary" id="productSaveBtn">
+                        <i class="fas fa-save"></i> Save Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── ORDER DETAIL MODAL ── -->
+    <div class="modal-overlay" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="orderModalTitle">Order Details</h3>
+                <button class="modal-close" id="orderModalClose" aria-label="Close">&times;</button>
+            </div>
+            <div id="orderModalBody" style="min-height:100px"></div>
+            <div class="modal-footer">
+                <button type="button" class="admin-btn" id="orderModalClose2">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── DELETE CONFIRM MODAL ── -->
+    <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true">
+        <div class="modal" style="max-width:380px;text-align:center">
+            <div style="font-size:3rem;margin-bottom:1rem">&#x26A0;&#xFE0F;</div>
+            <h3 style="font-family:'Dela Gothic One',sans-serif;color:var(--cream);margin:0 0 0.75rem">Delete Product?</h3>
+            <p style="color:rgba(252,249,245,0.55);font-size:0.9rem;margin:0 0 1.5rem">This cannot be undone. The product will be removed from the store immediately.</p>
+            <div style="display:flex;gap:0.75rem;justify-content:center">
+                <button class="admin-btn" id="deleteCancelBtn">Cancel</button>
+                <button class="admin-btn danger" id="deleteConfirmBtn"><i class="fas fa-trash"></i> Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.PAGE_CONFIG = {
+            sections: [],
+            nav: {
+                before: [],
+                after: [
+                    { label: 'Products',    href: '#' },
+                    { label: 'Orders',      href: '#' },
+                    { label: '─────────────', href: '#' },
+                    { label: 'View Store',  href: '../index.html' },
+                    { label: 'Main Site',   href: '../../index.html' }
+                ]
+            }
+        };
+    </script>
+    <script src="../../assets/js/data.js"></script>
+    <script src="../../assets/js/site.js"></script>
+    <script src="../../assets/js/store-admin.js"></script>
+
+</body>
+</html>

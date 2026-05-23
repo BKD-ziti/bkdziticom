@@ -1,7 +1,12 @@
 .git/
 .claude/
+.wrangler/
 functions/
 _worker.js
 wrangler.jsonc
 .assetsignore
+.dev.vars
+DEPLOYMENT.md
+README.md
 node_modules/
+*.map
