@@ -1,0 +1,7 @@
+.git/
+.claude/
+functions/
+_worker.js
+wrangler.jsonc
+.assetsignore
+node_modules/
