@@ -120,12 +120,12 @@
         window.PAGE_CONFIG = {
             sections: [
                 {
-                    id: 'contact-form',
-                    label: 'Contact',
-                    title: 'Send a message',
-                    body:  "Drop a note here and it’ll go straight to my work phone. If you’re in a rush, text or email below.",
-                    mediaType: 'form',
-                    align: 'right',
+                    id: ‘contact-form’,
+                    label: ‘Contact’,
+                    title: ‘Send a message’,
+                    body:  "Drop a note below — name, email, and what you need. I’ll respond fast. If you’re in a rush, text or email directly.",
+                    mediaType: ‘form’,
+                    align: ‘left’,
                     palette: [
                         [255, 154, 11,  0.18],
                         [249, 234, 202, 0.12],
@@ -134,20 +134,36 @@
                     ]
                 },
                 {
-                    id: 'fast-options',
-                    label: 'Fast',
-                    title: 'Text / Email',
-                    body:  'Fastest response: text me. If you prefer email, click below.',
-                    media: 'assets/images/Card.png',
-                    mediaType: 'image',
+                    id: ‘fast-options’,
+                    label: ‘Fast’,
+                    title: ‘Text / Email’,
+                    body:  ‘Fastest response: text me directly. I check texts constantly. Email works too — typically respond within a few hours.’,
+                    media: ‘assets/images/Card.png’,
+                    mediaType: ‘image’,
                     contain: true,
-                    align: 'left',
-                    button: { text: 'Text Me', url: 'sms:+12394205010' },
+                    align: ‘right’,
+                    button: { text: ‘Text Me’, url: ‘sms:+12394205010’ },
                     palette: [
                         [252, 249, 245, 0.10],
                         [254, 241, 194, 0.12],
                         [188, 149, 117, 0.16],
                         [249, 234, 202, 0.11]
+                    ]
+                },
+                {
+                    id: ‘what-to-expect’,
+                    label: ‘What to Expect’,
+                    title: ‘What Happens Next’,
+                    body:  "Send a message and I’ll respond within a few hours to set up a free initial call. We’ll talk about what you need, what you’re building, and whether it’s a good fit. No commitment.",
+                    media: ‘assets/images/ziti.webm’,
+                    mediaType: ‘video’,
+                    align: ‘left’,
+                    button: { text: ‘See Services’, url: ‘services.html#hero’ },
+                    palette: [
+                        [233, 50,  0,   0.22],
+                        [249, 83,  1,   0.16],
+                        [231, 54,  2,   0.18],
+                        [255, 154, 11,  0.10]
                     ]
                 }
             ],
