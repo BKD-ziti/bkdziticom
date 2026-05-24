@@ -1232,6 +1232,72 @@
 .review-form-msg.error { color: #f08080; }
 .review-form-msg.success { color: #7de87d; }
 
+/* ── QUOTE CARD & FORM ──────────────────────────────────────────────── */
+.product-card.quote-card {
+    border-color: rgba(249,83,1,0.35);
+}
+.product-card.quote-card:hover {
+    border-color: var(--orange);
+    box-shadow: 0 0 24px rgba(249,83,1,0.15);
+}
+.quote-price {
+    font-size: 1.05rem !important;
+    color: var(--orange) !important;
+    letter-spacing: 0.02em;
+}
+.quote-form-inline {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+.quote-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+.quote-form input,
+.quote-form select,
+.quote-form textarea {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(249,83,1,0.25);
+    background: rgba(0,0,0,0.3);
+    color: var(--cream);
+    font-family: 'Golos Text', sans-serif;
+    font-size: 0.88rem;
+    transition: border-color 0.2s;
+}
+.quote-form input:focus,
+.quote-form select:focus,
+.quote-form textarea:focus {
+    outline: none;
+    border-color: var(--orange);
+}
+.quote-form select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%23f95301' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    padding-right: 2.2rem;
+}
+.quote-form select option {
+    background: #1a0a02;
+    color: var(--cream);
+}
+.quote-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+.quote-submit-btn {
+    align-self: flex-start;
+}
+.quote-form-msg {
+    font-size: 0.82rem;
+    min-height: 1.2em;
+}
+.quote-form-msg.error { color: #f08080; }
+.quote-form-msg.success { color: #7de87d; }
+
 /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
     .store-toolbar { flex-direction: column; align-items: stretch; }

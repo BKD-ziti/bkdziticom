@@ -237,6 +237,141 @@ async function handleSubmitReview(request, env, productId) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// STORE: QUOTE REQUEST HANDLER
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function handleQuoteRequest(request, env) {
+  try {
+    const data = await request.json().catch(() => null);
+    if (!data) return jsonResponse({ ok: false, error: 'Invalid request' }, 400);
+
+    const name    = clean(data.name);
+    const email   = clean(data.email);
+    const phone   = clean(data.phone);
+    const service = clean(data.service);
+    const details = clean(data.details);
+
+    if (!name || !email || !details) {
+      return jsonResponse({ ok: false, error: 'Name, email, and project details are required.' }, 400);
+    }
+    if (name.length > 80 || email.length > 120 || phone.length > 40 || service.length > 120 || details.length > 3000) {
+      return jsonResponse({ ok: false, error: 'One or more fields are too long.' }, 400);
+    }
+
+    const apiKey = requireEnv(env, 'RESEND_API_KEY');
+    const from   = env.RESEND_FROM || 'BKDziti Store <contact@bkdziti.com>';
+    const to     = 'info@bkdziti.com';
+
+    const body = [
+      `Custom Quote Request`,
+      ``,
+      `Name: ${name}`,
+      `Email: ${email}`,
+      phone ? `Phone: ${phone}` : null,
+      service ? `Service interest: ${service}` : null,
+      ``,
+      `Project Details:`,
+      details
+    ].filter(s => s !== null).join('\n');
+
+    const subject = `[BKDziti Store] Custom Quote Request — ${name}`;
+
+    const resp = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from, to, subject, text: body, reply_to: email })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.message || 'Email send failed');
+    }
+
+    return jsonResponse({ ok: true });
+  } catch (err) {
+    return jsonResponse({ ok: false, error: err.message || 'Failed to send quote request' }, 500);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STORE: SEED PRODUCTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+const SEED_PRODUCTS = [
+  {
+    id: 'prod_popup_coordination',
+    name: 'Pop-Up Coordination',
+    description: 'End-to-end pop-up event coordination. Concept development, menu design, vendor sourcing, logistics, marketing campaigns, media production, and on-site execution. We bring unique dining experiences to life with less stress and more impact.',
+    price: 250000,
+    imageUrl: '/assets/images/IMG_0326.JPG',
+    category: 'Consulting',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_culinary_consulting',
+    name: 'Culinary Consulting',
+    description: 'Strategic guidance for business concepts, pop-ups, menu development, and restaurant operations. Includes concept development, menu strategy, business & operations guidance, digital & marketing strategy, and strategic partnership facilitation.',
+    price: 150000,
+    imageUrl: '/assets/images/IMG_1123.PNG',
+    category: 'Consulting',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_videography',
+    name: 'Videography & Content Creation',
+    description: 'Professional video production for your food and restaurant brand. Short social videos for Instagram Reels and TikTok, dish prep and process videos, full menu shoots, and restaurant commercials. Compelling video content that drives engagement and customer acquisition.',
+    price: 80000,
+    imageUrl: '/assets/images/Datamosh-Dream.webm',
+    category: 'Media Production',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_photography',
+    name: 'Photography',
+    description: 'High-quality food and restaurant photography. Professional lighting, composition, and styling. Menu photography for print and digital, social media content, lifestyle photography, and brand content that tells your story and builds customer trust.',
+    price: 50000,
+    imageUrl: '/assets/images/IMG_2339(1).JPG',
+    category: 'Media Production',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_custom_package',
+    name: 'Custom Package',
+    description: "Need something tailored? Tell us what you're looking for — we'll put together a custom package and send you a quote. Mix and match consulting, media production, pop-up coordination, or anything else.",
+    price: 0,
+    imageUrl: '/assets/images/Card.png',
+    category: 'Custom',
+    type: 'service',
+    pricingModel: 'quote',
+    billingInterval: '',
+    active: true
+  }
+];
+
+async function handleAdminSeedProducts(env) {
+  const existing = await getProductList(env);
+  const seededIds = SEED_PRODUCTS.map(p => p.id);
+  const kept = existing.filter(p => !seededIds.includes(p.id));
+  const now = new Date().toISOString();
+  const seeded = SEED_PRODUCTS.map(p => ({ ...p, createdAt: now, updatedAt: now }));
+  const merged = [...seeded, ...kept];
+  await saveProductList(env, merged);
+  return jsonResponse({ ok: true, seeded: seeded.length, total: merged.length });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // STORE: ADMIN AUTH
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -648,7 +783,7 @@ async function handleAdminCreateProduct(request, env) {
   const price = Math.round(parseFloat(data.price) * 100);
   if (isNaN(price) || price <= 0) return jsonResponse({ ok: false, error: 'Invalid price' }, 400);
 
-  const validPricingModels = ['one-time', 'monthly', 'yearly', 'custom'];
+  const validPricingModels = ['one-time', 'monthly', 'yearly', 'custom', 'quote'];
   const pricingModel = validPricingModels.includes(clean(data.pricingModel)) ? clean(data.pricingModel) : 'one-time';
 
   const product = {
@@ -681,7 +816,7 @@ async function handleAdminUpdateProduct(request, env, id) {
   if (idx < 0) return jsonResponse({ ok: false, error: 'Product not found' }, 404);
 
   const product = { ...list[idx] };
-  const validPM = ['one-time', 'monthly', 'yearly', 'custom'];
+  const validPM = ['one-time', 'monthly', 'yearly', 'custom', 'quote'];
   if (data.name           !== undefined) product.name           = clean(data.name).slice(0, 120);
   if (data.description    !== undefined) product.description    = clean(data.description).slice(0, 2000);
   if (data.price          !== undefined) product.price          = Math.round(parseFloat(data.price) * 100);
@@ -750,6 +885,7 @@ export default {
     // ── Store: Public ─────────────────────────────────────────────────────────
     if (path === '/api/store/products'   && method === 'GET')  return handleGetProducts(env);
     if (path === '/api/store/checkout'   && method === 'POST') return handleCreateCheckout(request, env);
+    if (path === '/api/store/quote'      && method === 'POST') return handleQuoteRequest(request, env);
     if (path === '/api/store/verify-session' && method === 'GET') return handleVerifySession(env, request);
     if (path === '/api/store/customer-orders' && method === 'GET') return handleGetCustomerOrders(env, request);
     if (path === '/api/store/stripe-webhook' && method === 'POST') return handleStripeWebhook(request, env);
@@ -772,6 +908,7 @@ export default {
 
       if (!isAdmin(request, env)) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
 
+      if (path === '/api/store/admin/seed' && method === 'POST') return handleAdminSeedProducts(env);
       if (path === '/api/store/admin/products') {
         if (method === 'GET')  return handleAdminGetProducts(env);
         if (method === 'POST') return handleAdminCreateProduct(request, env);

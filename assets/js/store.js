@@ -80,6 +80,7 @@
 
   function billingPeriodLabel(pricingModel, billingInterval) {
     if (!pricingModel || pricingModel === 'one-time') return '';
+    if (pricingModel === 'quote') return '';
     if (pricingModel === 'monthly') return '/mo';
     if (pricingModel === 'yearly')  return '/yr';
     if (pricingModel === 'custom')  return billingInterval ? ' / ' + billingInterval : '/period';
@@ -88,6 +89,7 @@
 
   function billingFullLabel(pricingModel, billingInterval) {
     if (!pricingModel || pricingModel === 'one-time') return 'One-time purchase';
+    if (pricingModel === 'quote') return 'Custom quote';
     if (pricingModel === 'monthly') return 'Billed monthly';
     if (pricingModel === 'yearly')  return 'Billed yearly';
     if (pricingModel === 'custom')  return billingInterval ? 'Billed ' + billingInterval : 'Recurring billing';
@@ -169,19 +171,91 @@
       // Price
       const pm = product.pricingModel || 'one-time';
       const bi = product.billingInterval || '';
-      if (pdModalPrice)   pdModalPrice.textContent  = formatPrice(product.price);
-      if (pdModalBilling) pdModalBilling.textContent = billingFullLabel(pm, bi);
+      const isQuote = pm === 'quote';
+
+      if (pdModalPrice) pdModalPrice.textContent = isQuote ? 'Custom Quote' : formatPrice(product.price);
+      if (pdModalBilling) pdModalBilling.textContent = isQuote ? 'Tell us what you need — we\'ll send a quote' : billingFullLabel(pm, bi);
 
       // Description
       if (pdModalDesc) pdModalDesc.textContent = product.description || 'No description provided.';
 
-      // Reset add button
-      if (pdModalAddBtn) {
-        pdModalAddBtn.classList.remove('added');
-        pdModalAddBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
-        pdModalAddBtn.disabled = false;
+      // Quote form in modal actions area
+      const actionsEl = document.querySelector('.pd-modal-actions');
+      const existingQuoteForm = actionsEl && actionsEl.querySelector('.quote-form-inline');
+      if (existingQuoteForm) existingQuoteForm.remove();
+
+      if (isQuote) {
+        if (pdModalAddBtn) pdModalAddBtn.style.display = 'none';
+        if (pdModalCart) pdModalCart.style.display = 'none';
+        if (actionsEl) {
+          actionsEl.insertAdjacentHTML('beforeend', `
+            <div class="quote-form-inline">
+              <form class="quote-form">
+                <input type="text" name="name" placeholder="Your name" required maxlength="80">
+                <input type="email" name="email" placeholder="Your email" required maxlength="120">
+                <input type="tel" name="phone" placeholder="Phone (optional)" maxlength="40">
+                <select name="service">
+                  <option value="">Interested in… (optional)</option>
+                  <option value="Pop-Up Coordination">Pop-Up Coordination</option>
+                  <option value="Culinary Consulting">Culinary Consulting</option>
+                  <option value="Videography">Videography & Content</option>
+                  <option value="Photography">Photography</option>
+                  <option value="Full Package">Full Package (multiple services)</option>
+                  <option value="Other">Other</option>
+                </select>
+                <textarea name="details" placeholder="Tell us about your project — what do you need?" required maxlength="3000" rows="4"></textarea>
+                <button type="submit" class="add-to-cart-btn quote-submit-btn"><i class="fas fa-paper-plane"></i> Request Quote</button>
+                <div class="quote-form-msg"></div>
+              </form>
+            </div>`);
+          const qForm = actionsEl.querySelector('.quote-form');
+          qForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = qForm.querySelector('.quote-submit-btn');
+            const msg = qForm.querySelector('.quote-form-msg');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending…';
+            msg.textContent = '';
+            msg.className = 'quote-form-msg';
+            try {
+              const resp = await fetch('/api/store/quote', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  name: qForm.name.value.trim(),
+                  email: qForm.email.value.trim(),
+                  phone: qForm.phone.value.trim(),
+                  service: qForm.service.value,
+                  details: qForm.details.value.trim()
+                })
+              });
+              const data = await resp.json();
+              if (data.ok) {
+                msg.textContent = 'Quote request sent! We\'ll get back to you soon.';
+                msg.classList.add('success');
+                btn.innerHTML = '<i class="fas fa-check"></i> Sent!';
+                qForm.reset();
+              } else {
+                throw new Error(data.error || 'Failed to send');
+              }
+            } catch (err) {
+              msg.textContent = err.message || 'Something went wrong. Try again.';
+              msg.classList.add('error');
+              btn.disabled = false;
+              btn.innerHTML = '<i class="fas fa-paper-plane"></i> Request Quote';
+            }
+          });
+        }
+      } else {
+        // Reset add button for normal products
+        if (pdModalAddBtn) {
+          pdModalAddBtn.style.display = '';
+          pdModalAddBtn.classList.remove('added');
+          pdModalAddBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+          pdModalAddBtn.disabled = false;
+        }
+        if (pdModalCart) pdModalCart.style.display = 'none';
       }
-      if (pdModalCart) pdModalCart.style.display = 'none';
 
       // Reviews section
       const reviewsContainer = document.getElementById('pdModalReviews');
@@ -388,8 +462,12 @@
         const bi    = p.billingInterval || '';
         const label = billingPeriodLabel(pm, bi);
         const type  = p.type || 'product';
+        const isQuote = pm === 'quote';
+        const priceHtml = isQuote
+          ? `<div class="product-card-price quote-price">Custom Quote</div>`
+          : `<div class="product-card-price">${formatPrice(p.price)}<span class="product-card-billing">${escHtml(label)}</span></div>`;
         return `
-        <div class="product-card" data-id="${p.id}" role="button" tabindex="0" aria-label="View ${escHtml(p.name)}">
+        <div class="product-card${isQuote ? ' quote-card' : ''}" data-id="${p.id}" role="button" tabindex="0" aria-label="View ${escHtml(p.name)}">
           ${p.imageUrl
             ? /\.(webm|mp4)$/i.test(p.imageUrl)
               ? `<video class="product-card-img" src="${escHtml(p.imageUrl)}" muted loop playsinline preload="metadata" autoplay></video>`
@@ -404,8 +482,8 @@
             <div class="product-card-desc">${escHtml(p.description || '')}</div>
             <div class="product-card-rating" data-product-id="${p.id}"></div>
             <div class="product-card-footer">
-              <div class="product-card-price">${formatPrice(p.price)}<span class="product-card-billing">${escHtml(label)}</span></div>
-              <span style="font-size:0.78rem;color:rgba(252,249,245,0.35)">Click to view</span>
+              ${priceHtml}
+              <span style="font-size:0.78rem;color:rgba(252,249,245,0.35)">${isQuote ? 'Request a quote' : 'Click to view'}</span>
             </div>
           </div>
         </div>`;
