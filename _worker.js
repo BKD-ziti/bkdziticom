@@ -298,107 +298,40 @@ async function handleQuoteRequest(request, env) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const SEED_PRODUCTS = [
+  // ── CONSULTATION ──────────────────────────────────────────────────────────
   {
-    id: 'prod_popup_coordination',
-    name: 'Pop-Up Coordination',
-    description: 'End-to-end pop-up event coordination. Concept development, menu design, vendor sourcing, logistics, marketing campaigns, media production, and on-site execution. We bring unique dining experiences to life with less stress and more impact.',
-    price: 250000,
-    imageUrl: '/assets/images/IMG_0326.JPG',
-    category: 'Consulting',
-    type: 'service',
-    pricingModel: 'one-time',
-    billingInterval: '',
-    active: true
-  },
-  {
-    id: 'prod_culinary_consulting',
-    name: 'Culinary Consulting',
-    description: 'Strategic guidance for business concepts, pop-ups, menu development, and restaurant operations. Includes concept development, menu strategy, business & operations guidance, digital & marketing strategy, and strategic partnership facilitation.',
-    price: 150000,
-    imageUrl: '/assets/images/IMG_1123.PNG',
-    category: 'Consulting',
-    type: 'service',
-    pricingModel: 'one-time',
-    billingInterval: '',
-    active: true
-  },
-  {
-    id: 'prod_videography',
-    name: 'Videography & Content Creation',
-    description: 'Professional video production for your food and restaurant brand. Short social videos for Instagram Reels and TikTok, dish prep and process videos, full menu shoots, and restaurant commercials. Compelling video content that drives engagement and customer acquisition.',
-    price: 80000,
-    imageUrl: '/assets/images/Datamosh-Dream.webm',
-    category: 'Media Production',
-    type: 'service',
-    pricingModel: 'one-time',
-    billingInterval: '',
-    active: true
-  },
-  {
-    id: 'prod_photography',
-    name: 'Photography',
-    description: 'High-quality food and restaurant photography. Professional lighting, composition, and styling. Menu photography for print and digital, social media content, lifestyle photography, and brand content that tells your story and builds customer trust.',
-    price: 50000,
-    imageUrl: '/assets/images/IMG_2339(1).JPG',
-    category: 'Media Production',
-    type: 'service',
-    pricingModel: 'one-time',
-    billingInterval: '',
-    active: true
-  },
-  {
-    id: 'prod_service_request',
-    name: 'Service Request',
-    description: "Have a project in mind? Submit a service request and we'll reach out within 24 hours to discuss scope, timeline, and pricing. No commitment — just a conversation to see if we're the right fit.",
-    price: 0,
-    imageUrl: '/assets/images/Card.png',
-    category: 'Custom',
-    type: 'service',
-    pricingModel: 'quote',
-    billingInterval: '',
-    active: true
-  },
-  {
-    id: 'prod_strategy_review',
-    name: 'Strategy Review',
-    description: 'A focused brand and business review session. We audit your current positioning, social presence, menu strategy, and operations — then deliver a concise report with actionable next steps. Includes a 60-minute consultation call.',
-    price: 35000,
-    imageUrl: '/assets/images/IMG_2340(1).JPG',
-    category: 'Consulting',
-    type: 'service',
-    pricingModel: 'one-time',
-    billingInterval: '',
-    active: true
-  },
-  {
-    id: 'prod_hourly_rate',
-    name: 'Consulting Rate',
-    description: 'Book consulting time at an hourly rate. Strategy calls, creative direction, menu feedback, brand reviews, social media audits — whatever you need guidance on. Billed per hour, minimum 1 hour.',
+    id: 'prod_consultation_hourly',
+    name: 'Consultation — Hourly',
+    description: 'One-on-one consulting time billed per hour. Strategy calls, menu feedback, brand reviews, social media audits, operations guidance — whatever you need. Minimum 1 hour booking. Schedule at a time that works for you.',
+    features: ['Strategy & concept calls', 'Menu & brand feedback', 'Social media audits', 'Operations guidance', 'Min. 1 hour booking', 'Flexible scheduling'],
     price: 15000,
     imageUrl: '/assets/images/IMG_2336.JPG',
-    category: 'Consulting',
+    category: 'Consultation',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
     active: true
   },
   {
-    id: 'prod_custom_package',
-    name: 'Custom Package',
-    description: "Need something tailored? Tell us what you're looking for — we'll put together a custom package and send you a quote. Mix and match consulting, media production, pop-up coordination, or anything else.",
-    price: 0,
-    imageUrl: '/assets/images/Card.png',
-    category: 'Custom',
+    id: 'prod_consultation_retainer',
+    name: 'Consultation Retainer',
+    description: 'Monthly consulting retainer for ongoing strategic support. Priority access with 4+ hours per month, unlimited email Q&A, a monthly strategy call, and dedicated project support. Best for businesses in active growth phases.',
+    features: ['4+ consulting hours/month', 'Priority access & scheduling', 'Unlimited email Q&A', 'Monthly strategy call', 'Ongoing project support', 'Cancel anytime'],
+    price: 80000,
+    imageUrl: '/assets/images/IMG_2336.JPG',
+    category: 'Consultation',
     type: 'service',
-    pricingModel: 'quote',
+    pricingModel: 'monthly',
     billingInterval: '',
     active: true
   },
+  // ── MEDIA PRODUCTION ──────────────────────────────────────────────────────
   {
-    id: 'prod_menu_photography_package',
-    name: 'Menu Photography Package',
-    description: 'Professional photography for your restaurant menu. We handle lighting, composition, and styling to showcase your dishes beautifully. Perfect for print menus, websites, and social media. Includes 20-30 edited images.',
-    price: 45000,
+    id: 'prod_media_photography',
+    name: 'Photography Session',
+    description: 'Professional food and brand photography. High-quality images with expert lighting, composition, and styling. Perfect for menus, websites, social media, and marketing materials. Delivered as edited, high-resolution files.',
+    features: ['30–50 edited images', 'Expert lighting & styling', 'Food & lifestyle photography', 'Social-ready formats', 'High-res file delivery', '1-week turnaround'],
+    price: 30000,
     imageUrl: '/assets/images/IMG_2339(1).JPG',
     category: 'Media Production',
     type: 'service',
@@ -407,10 +340,11 @@ const SEED_PRODUCTS = [
     active: true
   },
   {
-    id: 'prod_social_media_content_package',
-    name: 'Social Media Content Package',
-    description: 'Curated content strategy and 8 weeks of professional social media content creation for Instagram, TikTok, and Facebook. Includes food photography, short-form videos, design, and posting schedule. Elevate your brand presence online.',
-    price: 120000,
+    id: 'prod_media_videography',
+    name: 'Videography',
+    description: 'Professional video production for your brand. Short-form social videos for Instagram Reels and TikTok, dish prep videos, full menu showcases, and brand promos. Color-graded and music-licensed for immediate publication.',
+    features: ['Short-form social videos', 'Color grading & music', 'Scripting support', 'Reels / TikTok / YouTube ready', 'Platform-optimized cuts', '2-week turnaround'],
+    price: 60000,
     imageUrl: '/assets/images/Datamosh-Dream.webm',
     category: 'Media Production',
     type: 'service',
@@ -419,69 +353,157 @@ const SEED_PRODUCTS = [
     active: true
   },
   {
-    id: 'prod_brand_photography_shoot',
-    name: 'Brand Photography Shoot',
-    description: 'Full-day photography session for your restaurant or food business. Captures everything from interior ambiance and staff in action to finished plating. Perfect for websites, marketing materials, and social media. Includes 100+ edited images.',
-    price: 75000,
+    id: 'prod_media_editing',
+    name: 'Video Editing',
+    description: "Send us your raw footage and we'll edit it into polished, platform-ready content. Includes color grading, music, captions, and graphics. Perfect if you shoot your own content but need professional post-production.",
+    features: ['Bring your own footage', 'Color grading', 'Captions & on-screen graphics', 'Platform-optimized cuts', 'Up to 10 min raw footage', '1-week turnaround'],
+    price: 20000,
+    imageUrl: '/assets/images/Datamosh-Dream.webm',
+    category: 'Media Production',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_media_bundle',
+    name: 'Monthly Content Bundle',
+    description: 'Consistent, professional content every month. Includes a monthly photo + video shoot, 10+ edited images, 2 short-form social videos, and a content calendar to keep your brand looking fresh across all platforms.',
+    features: ['Monthly photo + video shoot', '10+ edited images', '2 short-form social videos', 'Content calendar included', 'All platforms covered', 'Cancel anytime'],
+    price: 100000,
+    imageUrl: '/assets/images/Datamosh-Dream.webm',
+    category: 'Media Production',
+    type: 'service',
+    pricingModel: 'monthly',
+    billingInterval: '',
+    active: true
+  },
+  // ── POP-UP COORDINATION ───────────────────────────────────────────────────
+  {
+    id: 'prod_popup_starter',
+    name: 'Pop-Up — Starter',
+    description: 'Get your pop-up off the ground with expert planning support. Includes concept development, menu planning, vendor recommendations, and a marketing template to promote your event. Virtual support throughout.',
+    features: ['Concept development', 'Menu planning', 'Vendor list & recommendations', 'Marketing template', 'Virtual support throughout', 'Up to 50 covers'],
+    price: 100000,
+    imageUrl: '/assets/images/IMG_0326.JPG',
+    category: 'Pop-Up Coordination',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_popup_standard',
+    name: 'Pop-Up — Standard',
+    description: 'Full-service pop-up coordination from concept to execution. We handle concept + menu design, vendor sourcing, marketing campaign creation, and are on-site for the event. Includes a post-event report with insights.',
+    features: ['Full concept + menu design', 'Vendor sourcing & logistics', 'Marketing campaign creation', 'On-site coordination', 'Post-event report', 'Up to 100 covers'],
+    price: 250000,
+    imageUrl: '/assets/images/IMG_0326.JPG',
+    category: 'Pop-Up Coordination',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_popup_premium',
+    name: 'Pop-Up — Premium',
+    description: 'The full BKDziti experience. Everything in Standard plus professional media production (photo + video), a paid social ad campaign, custom brand activation design, and a dedicated project manager from start to finish.',
+    features: ['Everything in Standard', 'Professional photo + video', 'Paid social ad campaign', 'Brand activation design', 'Dedicated project manager', 'Unlimited covers'],
+    price: 500000,
+    imageUrl: '/assets/images/IMG_0326.JPG',
+    category: 'Pop-Up Coordination',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  // ── BRANDING & MARKETING ──────────────────────────────────────────────────
+  {
+    id: 'prod_brand_strategy',
+    name: 'Brand Strategy',
+    description: 'A comprehensive brand audit and positioning report. We analyze your current brand, competitors, and target audience — then deliver a clear, actionable 60-day plan to strengthen your presence and grow your customer base.',
+    features: ['Brand & competitor audit', 'Target audience research', 'Brand positioning report', '60-day action plan', '1-hour debrief call', 'Delivered in 2 weeks'],
+    price: 100000,
     imageUrl: '/assets/images/IMG_2340(1).JPG',
-    category: 'Media Production',
+    category: 'Branding & Marketing',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
     active: true
   },
   {
-    id: 'prod_restaurant_commercial',
-    name: 'Restaurant Commercial',
-    description: 'Professional 30-60 second restaurant commercial showcasing your brand story, menu, and atmosphere. Perfect for Instagram Reels, TikTok, YouTube, and advertising. Includes scripting, filming, editing, and color grading.',
-    price: 150000,
-    imageUrl: '/assets/images/Datamosh-Dream.webm',
-    category: 'Media Production',
-    type: 'service',
-    pricingModel: 'one-time',
-    billingInterval: '',
-    active: true
-  },
-  {
-    id: 'prod_menu_development_consulting',
-    name: 'Menu Development Consulting',
-    description: 'Work with us to develop or refine your menu. We analyze your concept, target market, and operations to create a menu that drives profitability and customer satisfaction. Includes pricing strategy and seasonal variations.',
-    price: 80000,
-    imageUrl: '/assets/images/IMG_1123.PNG',
-    category: 'Consulting',
-    type: 'service',
-    pricingModel: 'one-time',
-    billingInterval: '',
-    active: true
-  },
-  {
-    id: 'prod_restaurant_branding',
-    name: 'Restaurant Branding Package',
-    description: 'Complete branding package for your restaurant or food business. Includes logo design, color palette, typography, visual guidelines, and marketing materials. Establishes a cohesive brand identity that stands out.',
+    id: 'prod_brand_identity',
+    name: 'Brand Identity',
+    description: 'A complete brand identity system for your restaurant or food business. Three logo concepts, refined to one final design, with a full visual system: color palette, typography, brand guidelines PDF, and social media templates.',
+    features: ['3 logo concepts', 'Color palette & typography', 'Brand guidelines PDF', 'Social media templates', 'All file formats (SVG, PNG, PDF)', '3-week delivery'],
     price: 200000,
     imageUrl: '/assets/images/IMG_2340(1).JPG',
-    category: 'Consulting',
+    category: 'Branding & Marketing',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
     active: true
   },
   {
-    id: 'prod_popup_restaurant_launch',
-    name: 'Pop-Up Restaurant Launch',
-    description: 'Complete pop-up restaurant launch from concept to execution. We handle venue selection, menu planning, sourcing, licensing, marketing, and on-site management. Perfect for testing concepts or special events. Minimum 8-10 covers.',
-    price: 350000,
-    imageUrl: '/assets/images/IMG_0326.JPG',
-    category: 'Consulting',
+    id: 'prod_brand_social',
+    name: 'Social Media Management',
+    description: 'Done-for-you social media management. We create 12 posts per month (photo + caption), develop your platform strategy, handle hashtag research, and deliver a monthly performance report. Keep your brand visible and growing.',
+    features: ['12 posts/month (photo + caption)', 'Platform strategy', 'Hashtag research', 'Monthly performance report', 'Instagram & Facebook covered', 'Cancel anytime'],
+    price: 50000,
+    imageUrl: '/assets/images/IMG_2340(1).JPG',
+    category: 'Branding & Marketing',
     type: 'service',
-    pricingModel: 'one-time',
+    pricingModel: 'monthly',
     billingInterval: '',
     active: true
   },
+  // ── MEAL PREP ─────────────────────────────────────────────────────────────
+  {
+    id: 'prod_meal_weekly',
+    name: 'Meal Prep — Weekly',
+    description: '7-day meal plan, prepped fresh and ready to go. Nutritious, flavorful meals made with fresh ingredients — portioned and packaged for the week. Dietary preferences and restrictions accommodated. Delivered weekly.',
+    features: ['7 days of meals', 'Fresh ingredient prep', 'Portion-controlled', 'Dietary accommodations', 'Weekly delivery', 'Cancel anytime'],
+    price: 10000,
+    imageUrl: '/assets/images/IMG_1123.PNG',
+    category: 'Meal Prep',
+    type: 'service',
+    pricingModel: 'weekly',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_meal_biweekly',
+    name: 'Meal Prep — Bi-Weekly',
+    description: '14 meals delivered every two weeks. A flexible option for those who want consistent meal prep without a weekly commitment. Variety of recipes each cycle, with dietary preferences and restrictions accommodated.',
+    features: ['14 meals per cycle', 'Fresh ingredient prep', 'Recipe variety each cycle', 'Dietary accommodations', 'Bi-weekly delivery', 'Cancel anytime'],
+    price: 18000,
+    imageUrl: '/assets/images/IMG_1123.PNG',
+    category: 'Meal Prep',
+    type: 'service',
+    pricingModel: 'biweekly',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_meal_monthly',
+    name: 'Meal Prep — Monthly',
+    description: 'A full month of meal prep planning and preparation. Includes a seasonal menu rotation, detailed prep instructions, a grocery list you can shop yourself or let us handle, and priority scheduling for your delivery slot.',
+    features: ['Full month coverage (4 weeks)', 'Seasonal menu rotation', 'Detailed prep instructions', 'Grocery list included', 'Priority scheduling', 'Cancel anytime'],
+    price: 30000,
+    imageUrl: '/assets/images/IMG_1123.PNG',
+    category: 'Meal Prep',
+    type: 'service',
+    pricingModel: 'monthly',
+    billingInterval: '',
+    active: true
+  },
+  // ── CUSTOM QUOTE ──────────────────────────────────────────────────────────
   {
     id: 'prod_custom_quote',
     name: 'Request a Custom Quote',
-    description: 'Have a specific project or service combination in mind? Fill out our contact form and we\'ll create a custom quote tailored to your needs. Whether it\'s a unique mix of services or a specialized project, we\'ll work with you to find the perfect solution.',
+    description: "Have a project in mind that doesn't fit a standard package? Tell us what you need — we'll put together a custom solution and send you a quote within 24 hours. No commitment required.",
+    features: ['Mix and match services', 'Custom package pricing', '24-hour response guarantee', 'No commitment required', 'Tailored to your goals', 'Free to request'],
     price: 0,
     imageUrl: '/assets/images/Card.png',
     category: 'Custom',
@@ -592,11 +614,13 @@ async function createStripeSession(env, { orderId, items, customerEmail, origin 
       priceData.recurring = { interval: 'month' };
     } else if (item.pricingModel === 'yearly') {
       priceData.recurring = { interval: 'year' };
-    }
-    // custom intervals default to month in Stripe; label shown in product name
-    else if (item.pricingModel === 'custom') {
+    } else if (item.pricingModel === 'weekly') {
+      priceData.recurring = { interval: 'week' };
+    } else if (item.pricingModel === 'biweekly') {
+      priceData.recurring = { interval: 'week', interval_count: 2 };
+      priceData.product_data.name = `${item.name} (Bi-Weekly)`;
+    } else if (item.pricingModel === 'custom') {
       priceData.recurring = { interval: 'month' };
-      // Append billing interval label to product name for clarity
       if (item.billingInterval) {
         priceData.product_data.name = `${item.name} (${item.billingInterval})`;
       }
@@ -919,7 +943,7 @@ async function handleAdminCreateProduct(request, env) {
   const price = Math.round(parseFloat(data.price) * 100);
   if (isNaN(price) || price <= 0) return jsonResponse({ ok: false, error: 'Invalid price' }, 400);
 
-  const validPricingModels = ['one-time', 'monthly', 'yearly', 'custom', 'quote'];
+  const validPricingModels = ['one-time', 'monthly', 'yearly', 'weekly', 'biweekly', 'custom', 'quote'];
   const pricingModel = validPricingModels.includes(clean(data.pricingModel)) ? clean(data.pricingModel) : 'one-time';
 
   const product = {
@@ -952,7 +976,7 @@ async function handleAdminUpdateProduct(request, env, id) {
   if (idx < 0) return jsonResponse({ ok: false, error: 'Product not found' }, 404);
 
   const product = { ...list[idx] };
-  const validPM = ['one-time', 'monthly', 'yearly', 'custom', 'quote'];
+  const validPM = ['one-time', 'monthly', 'yearly', 'weekly', 'biweekly', 'custom', 'quote'];
   if (data.name           !== undefined) product.name           = clean(data.name).slice(0, 120);
   if (data.description    !== undefined) product.description    = clean(data.description).slice(0, 2000);
   if (data.price          !== undefined) product.price          = Math.round(parseFloat(data.price) * 100);

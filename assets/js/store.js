@@ -80,19 +80,23 @@
 
   function billingPeriodLabel(pricingModel, billingInterval) {
     if (!pricingModel || pricingModel === 'one-time') return '';
-    if (pricingModel === 'quote') return '';
-    if (pricingModel === 'monthly') return '/mo';
-    if (pricingModel === 'yearly')  return '/yr';
-    if (pricingModel === 'custom')  return billingInterval ? ' / ' + billingInterval : '/period';
+    if (pricingModel === 'quote')    return '';
+    if (pricingModel === 'monthly')  return '/mo';
+    if (pricingModel === 'yearly')   return '/yr';
+    if (pricingModel === 'weekly')   return '/wk';
+    if (pricingModel === 'biweekly') return '/2 wks';
+    if (pricingModel === 'custom')   return billingInterval ? ' / ' + billingInterval : '/period';
     return '';
   }
 
   function billingFullLabel(pricingModel, billingInterval) {
     if (!pricingModel || pricingModel === 'one-time') return 'One-time purchase';
-    if (pricingModel === 'quote') return 'Custom quote';
-    if (pricingModel === 'monthly') return 'Billed monthly';
-    if (pricingModel === 'yearly')  return 'Billed yearly';
-    if (pricingModel === 'custom')  return billingInterval ? 'Billed ' + billingInterval : 'Recurring billing';
+    if (pricingModel === 'quote')    return 'Custom quote';
+    if (pricingModel === 'monthly')  return 'Billed monthly';
+    if (pricingModel === 'yearly')   return 'Billed yearly';
+    if (pricingModel === 'weekly')   return 'Billed weekly';
+    if (pricingModel === 'biweekly') return 'Billed bi-weekly';
+    if (pricingModel === 'custom')   return billingInterval ? 'Billed ' + billingInterval : 'Recurring billing';
     return '';
   }
 
@@ -179,6 +183,19 @@
       // Description
       if (pdModalDesc) pdModalDesc.textContent = product.description || 'No description provided.';
 
+      // Features list
+      const featuresEl = document.getElementById('pdModalFeatures');
+      if (featuresEl) {
+        const feats = product.features;
+        if (Array.isArray(feats) && feats.length) {
+          featuresEl.innerHTML = feats.map(f => `<li>${escHtml(f)}</li>`).join('');
+          featuresEl.style.display = '';
+        } else {
+          featuresEl.innerHTML = '';
+          featuresEl.style.display = 'none';
+        }
+      }
+
       // Quote form in modal actions area
       const actionsEl = document.querySelector('.pd-modal-actions');
       const existingQuoteForm = actionsEl && actionsEl.querySelector('.quote-form-inline');
@@ -247,11 +264,14 @@
           });
         }
       } else {
-        // Reset add button for normal products
+        // Reset add button — show Subscribe for recurring, Add to Cart for one-time
         if (pdModalAddBtn) {
+          const isSub = pm !== 'one-time' && pm !== 'quote';
           pdModalAddBtn.style.display = '';
           pdModalAddBtn.classList.remove('added');
-          pdModalAddBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+          pdModalAddBtn.innerHTML = isSub
+            ? '<i class="fas fa-sync-alt"></i> Subscribe'
+            : '<i class="fas fa-cart-plus"></i> Add to Cart';
           pdModalAddBtn.disabled = false;
         }
         if (pdModalCart) pdModalCart.style.display = 'none';
@@ -292,13 +312,16 @@
       pdModalAddBtn.addEventListener('click', () => {
         if (!currentProduct) return;
         addToCart(currentProduct, 1);
+        const isSub = currentProduct.pricingModel && currentProduct.pricingModel !== 'one-time' && currentProduct.pricingModel !== 'quote';
         pdModalAddBtn.classList.add('added');
         pdModalAddBtn.innerHTML = '<i class="fas fa-check"></i> Added!';
         pdModalAddBtn.disabled = true;
         if (pdModalCart) pdModalCart.style.display = '';
         setTimeout(() => {
           pdModalAddBtn.classList.remove('added');
-          pdModalAddBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+          pdModalAddBtn.innerHTML = isSub
+            ? '<i class="fas fa-sync-alt"></i> Subscribe'
+            : '<i class="fas fa-cart-plus"></i> Add to Cart';
           pdModalAddBtn.disabled = false;
         }, 2000);
       });
@@ -463,9 +486,13 @@
         const label = billingPeriodLabel(pm, bi);
         const type  = p.type || 'product';
         const isQuote = pm === 'quote';
+        const isSub = !isQuote && pm !== 'one-time';
         const priceHtml = isQuote
           ? `<div class="product-card-price quote-price">Custom Quote</div>`
           : `<div class="product-card-price">${formatPrice(p.price)}<span class="product-card-billing">${escHtml(label)}</span></div>`;
+        const subBadge = isSub
+          ? `<span class="product-card-sub-badge"><i class="fas fa-sync-alt" style="font-size:0.55rem"></i> Subscription</span>`
+          : '';
         return `
         <div class="product-card${isQuote ? ' quote-card' : ''}" data-id="${p.id}" role="button" tabindex="0" aria-label="View ${escHtml(p.name)}">
           ${p.imageUrl
@@ -477,6 +504,7 @@
             <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap">
               <div class="product-card-category">${escHtml(p.category)}</div>
               <span class="product-type-badge ${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+              ${subBadge}
             </div>
             <div class="product-card-name">${escHtml(p.name)}</div>
             <div class="product-card-desc">${escHtml(p.description || '')}</div>
