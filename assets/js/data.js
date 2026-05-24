@@ -32,4 +32,16 @@ window.BKD.SOCIALS = [
         icon:     'fab fa-tiktok',
         url:      'https://www.tiktok.com/@bkdziti'
     }
+    ,
+    {
+        platform: 'Github',
+        icon:     'fab fa-github',
+        url:      'https://www.github.com/bkd-ziti'
+    }
+    ,
+    {
+        platform: 'Patreon',
+        icon:     'fab fa-patreon',
+        url:      'https://patreon.bkdziti.com/'
+    }
 ];
