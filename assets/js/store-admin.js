@@ -1,6 +1,6 @@
 /* =========================================================================
    BKDziti Store Admin — frontend JavaScript
-   Handles: login, product CRUD, order management.
+   Handles: login, product CRUD (with type + pricing model), order management.
    ========================================================================= */
 (function () {
   'use strict';
@@ -18,11 +18,20 @@
 
   function formatPrice(cents) { return '$' + (cents / 100).toFixed(2); }
 
+  function billingLabel(pricingModel, billingInterval) {
+    if (!pricingModel || pricingModel === 'one-time') return '';
+    if (pricingModel === 'monthly') return '/mo';
+    if (pricingModel === 'yearly')  return '/yr';
+    if (pricingModel === 'custom')  return billingInterval ? ' / ' + billingInterval : '/period';
+    return '';
+  }
+
   function apiHeaders() {
     return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` };
   }
 
-  async function apiFetch(path, opts = {}) {
+  async function apiFetch(path, opts) {
+    opts = opts || {};
     const resp = await fetch(path, { headers: apiHeaders(), ...opts });
     const data = await resp.json().catch(() => ({ ok: false, error: 'Invalid response' }));
     if (resp.status === 401) {
@@ -32,7 +41,8 @@
     return data;
   }
 
-  function showToast(msg, isError = false) {
+  function showToast(msg, isError) {
+    isError = isError || false;
     const existing = document.getElementById('adminToast');
     if (existing) existing.remove();
     const toast = document.createElement('div');
@@ -57,12 +67,25 @@
     }, 3500);
   }
 
-  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function openModal(id)  { document.getElementById(id).classList.add('open'); }
   function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
   function statusBadge(status) {
     const icons = { pending: 'fa-clock', paid: 'fa-check-circle', processing: 'fa-cog', fulfilled: 'fa-box', cancelled: 'fa-times-circle' };
     return `<span class="order-status-badge ${status}"><i class="fas ${icons[status] || 'fa-question-circle'}"></i>${status}</span>`;
+  }
+
+  // ── Pricing model toggle ─────────────────────────────────────────────────
+
+  function initPricingModelToggle() {
+    const modelSel = document.getElementById('pPricingModel');
+    const biWrap   = document.getElementById('pBillingIntervalWrap');
+    if (!modelSel || !biWrap) return;
+    function update() {
+      biWrap.style.display = modelSel.value === 'custom' ? '' : 'none';
+    }
+    modelSel.addEventListener('change', update);
+    update();
   }
 
   // ── Auth ─────────────────────────────────────────────────────────────────
@@ -86,7 +109,6 @@
     const err   = document.getElementById('loginError');
     const input = document.getElementById('adminKey');
 
-    // Auto-login if token in sessionStorage
     if (adminToken) {
       apiFetch('/api/store/admin/products')
         .then(d => { if (d.ok) showDashboard(); else signOut(); })
@@ -145,11 +167,16 @@
   function renderProductsTable() {
     const tbody = document.getElementById('productsTableBody');
     if (!products.length) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">No products yet. Click "Add Product" to create your first one.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">No products yet. Click "Add Product" to create your first one.</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = products.map(p => `
+    tbody.innerHTML = products.map(p => {
+      const pm    = p.pricingModel || 'one-time';
+      const bi    = p.billingInterval || '';
+      const label = billingLabel(pm, bi);
+      const type  = p.type || 'product';
+      return `
       <tr>
         <td>
           ${p.imageUrl
@@ -161,7 +188,14 @@
           ${p.description ? `<div style="font-size:0.78rem;color:rgba(252,249,245,0.4);margin-top:0.2rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${escHtml(p.description)}</div>` : ''}
         </td>
         <td style="text-transform:capitalize">${escHtml(p.category || '—')}</td>
-        <td style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">${formatPrice(p.price)}</td>
+        <td>
+          <span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.18rem 0.55rem;border-radius:1rem;font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;${type === 'service' ? 'background:rgba(100,149,237,0.15);color:#8bb4f5;border:1px solid rgba(100,149,237,0.25)' : 'background:rgba(255,154,11,0.12);color:var(--amber);border:1px solid rgba(255,154,11,0.2)'}">
+            ${type}
+          </span>
+        </td>
+        <td style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">
+          ${formatPrice(p.price)}<span style="font-size:0.72rem;font-family:'Golos Text',sans-serif;color:rgba(252,249,245,0.4)">${escHtml(label)}</span>
+        </td>
         <td>
           ${p.active
             ? `<span><span class="active-dot"></span>Active</span>`
@@ -177,8 +211,8 @@
             </button>
           </div>
         </td>
-      </tr>
-    `).join('');
+      </tr>`;
+    }).join('');
 
     tbody.querySelectorAll('[data-edit]').forEach(btn => {
       btn.addEventListener('click', () => openEditProduct(btn.dataset.edit));
@@ -190,26 +224,34 @@
 
   async function loadProducts() {
     const tbody = document.getElementById('productsTableBody');
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:rgba(252,249,245,0.4)"><i class="fas fa-circle-notch fa-spin"></i> Loading…</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:rgba(252,249,245,0.4)"><i class="fas fa-circle-notch fa-spin"></i> Loading…</td></tr>`;
     try {
       const data = await apiFetch('/api/store/admin/products');
       if (!data.ok) throw new Error(data.error);
       products = data.products || [];
       renderProductsTable();
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#f08080">${escHtml(err.message)}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;color:#f08080">${escHtml(err.message)}</td></tr>`;
     }
   }
 
+  function resetProductForm() {
+    document.getElementById('productId').value      = '';
+    document.getElementById('pName').value          = '';
+    document.getElementById('pDesc').value          = '';
+    document.getElementById('pPrice').value         = '';
+    document.getElementById('pCategory').value      = '';
+    document.getElementById('pType').value          = 'product';
+    document.getElementById('pPricingModel').value  = 'one-time';
+    document.getElementById('pBillingInterval').value = '';
+    document.getElementById('pBillingIntervalWrap').style.display = 'none';
+    document.getElementById('pImageUrl').value      = '';
+    document.getElementById('pActive').checked      = true;
+  }
+
   function openAddProduct() {
-    document.getElementById('productModalTitle').textContent = 'Add Product';
-    document.getElementById('productId').value   = '';
-    document.getElementById('pName').value       = '';
-    document.getElementById('pDesc').value       = '';
-    document.getElementById('pPrice').value      = '';
-    document.getElementById('pCategory').value   = '';
-    document.getElementById('pImageUrl').value   = '';
-    document.getElementById('pActive').checked   = true;
+    document.getElementById('productModalTitle').textContent = 'Add Product / Service';
+    resetProductForm();
     openModal('productModal');
     document.getElementById('pName').focus();
   }
@@ -217,15 +259,31 @@
   function openEditProduct(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
-    document.getElementById('productModalTitle').textContent = 'Edit Product';
-    document.getElementById('productId').value   = p.id;
-    document.getElementById('pName').value       = p.name;
-    document.getElementById('pDesc').value       = p.description || '';
-    document.getElementById('pPrice').value      = (p.price / 100).toFixed(2);
-    document.getElementById('pCategory').value   = p.category || '';
-    document.getElementById('pImageUrl').value   = p.imageUrl || '';
-    document.getElementById('pActive').checked   = p.active;
+    document.getElementById('productModalTitle').textContent = 'Edit Product / Service';
+    document.getElementById('productId').value      = p.id;
+    document.getElementById('pName').value          = p.name;
+    document.getElementById('pDesc').value          = p.description || '';
+    document.getElementById('pPrice').value         = (p.price / 100).toFixed(2);
+    document.getElementById('pCategory').value      = p.category || '';
+    document.getElementById('pType').value          = p.type || 'product';
+    document.getElementById('pPricingModel').value  = p.pricingModel || 'one-time';
+    document.getElementById('pBillingInterval').value = p.billingInterval || '';
+    document.getElementById('pBillingIntervalWrap').style.display = (p.pricingModel === 'custom') ? '' : 'none';
+    document.getElementById('pImageUrl').value      = p.imageUrl || '';
+    document.getElementById('pActive').checked      = p.active;
     openModal('productModal');
+  }
+
+  function validateProductForm() {
+    const name  = document.getElementById('pName').value.trim();
+    const price = parseFloat(document.getElementById('pPrice').value);
+    const pm    = document.getElementById('pPricingModel').value;
+    const bi    = document.getElementById('pBillingInterval').value.trim();
+
+    if (!name) { showToast('Product name is required.', true); return false; }
+    if (isNaN(price) || price < 0.5) { showToast('Price must be at least $0.50.', true); return false; }
+    if (pm === 'custom' && !bi) { showToast('Please enter a billing interval for custom pricing.', true); return false; }
+    return true;
   }
 
   function initProductModal() {
@@ -241,20 +299,34 @@
       if (e.target === e.currentTarget) closeModal('productModal');
     });
 
+    // Pricing model → billing interval toggle
+    const modelSel = document.getElementById('pPricingModel');
+    const biWrap   = document.getElementById('pBillingIntervalWrap');
+    if (modelSel && biWrap) {
+      modelSel.addEventListener('change', () => {
+        biWrap.style.display = modelSel.value === 'custom' ? '' : 'none';
+      });
+    }
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!validateProductForm()) return;
+
       const saveBtn = document.getElementById('productSaveBtn');
       saveBtn.disabled = true;
       saveBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
 
       const id      = document.getElementById('productId').value;
       const payload = {
-        name:        document.getElementById('pName').value.trim(),
-        description: document.getElementById('pDesc').value.trim(),
-        price:       parseFloat(document.getElementById('pPrice').value),
-        category:    document.getElementById('pCategory').value.trim(),
-        imageUrl:    document.getElementById('pImageUrl').value.trim(),
-        active:      document.getElementById('pActive').checked
+        name:            document.getElementById('pName').value.trim(),
+        description:     document.getElementById('pDesc').value.trim(),
+        price:           parseFloat(document.getElementById('pPrice').value),
+        category:        document.getElementById('pCategory').value.trim(),
+        type:            document.getElementById('pType').value,
+        pricingModel:    document.getElementById('pPricingModel').value,
+        billingInterval: document.getElementById('pBillingInterval').value.trim(),
+        imageUrl:        document.getElementById('pImageUrl').value.trim(),
+        active:          document.getElementById('pActive').checked
       };
 
       try {
@@ -397,7 +469,7 @@
           <tbody>
             ${o.items.map(item => `
               <tr>
-                <td style="padding:8px 0;border-bottom:1px solid rgba(249,83,1,0.06);color:rgba(252,249,245,0.8);font-size:0.88rem">${escHtml(item.name)}</td>
+                <td style="padding:8px 0;border-bottom:1px solid rgba(249,83,1,0.06);color:rgba(252,249,245,0.8);font-size:0.88rem">${escHtml(item.name)}${item.pricingModel && item.pricingModel !== 'one-time' ? ` <span style="font-size:0.7rem;color:rgba(100,149,237,0.7)">(${item.pricingModel})</span>` : ''}</td>
                 <td style="padding:8px 0;border-bottom:1px solid rgba(249,83,1,0.06);text-align:center;font-size:0.88rem">×${item.quantity}</td>
                 <td style="padding:8px 0;border-bottom:1px solid rgba(249,83,1,0.06);text-align:right;font-family:'Dela Gothic One',sans-serif;color:var(--amber)">${formatPrice(item.price * item.quantity)}</td>
               </tr>
@@ -467,6 +539,7 @@
     initProductModal();
     initDeleteModal();
     initOrderModal();
+    initPricingModelToggle();
   });
 
 })();

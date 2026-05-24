@@ -232,13 +232,58 @@
                     </div>
                     <div style="position:relative;">
                         <div class="content-glow"></div>
-                        <div class="content-media-wrap contain">
-                            <img src="assets/images/Card.png" alt="BKDziti Store" loading="lazy" width="1050" height="600">
-                        </div>
+                        <div class="content-media-wrap contain" id="shopMediaWrap"></div>
                     </div>
                 </div>
             </div>
         </section>
+        <script>
+        /* Auto-detect store image: tries store.webm → store.png → store.jpg → fallback */
+        (function () {
+            var wrap = document.getElementById('shopMediaWrap');
+            if (!wrap) return;
+            var base = 'assets/images/store';
+            var fallbackSrc = 'assets/images/Card.png';
+
+            function showFallback() {
+                var img = document.createElement('img');
+                img.src = fallbackSrc; img.alt = 'BKDziti Store';
+                img.loading = 'lazy'; img.width = 1050; img.height = 600;
+                wrap.appendChild(img);
+            }
+            function tryImg(src, next) {
+                var img = new Image();
+                img.onload = function () {
+                    img.alt = 'BKDziti Store'; img.loading = 'lazy';
+                    img.width = 1050; img.height = 600;
+                    wrap.appendChild(img);
+                };
+                img.onerror = next; img.src = src;
+            }
+            function tryVideo(src, next) {
+                fetch(src, { method: 'HEAD' }).then(function (r) {
+                    if (!r.ok) { next(); return; }
+                    var v = document.createElement('video');
+                    v.muted = true; v.loop = true;
+                    v.setAttribute('playsinline', '');
+                    v.setAttribute('preload', 'metadata');
+                    v.setAttribute('data-bkd-video', '1');
+                    v.setAttribute('data-autoplay', '1');
+                    var s = document.createElement('source');
+                    s.type = 'video/webm'; s.src = src;
+                    v.appendChild(s);
+                    v.onerror = next;
+                    wrap.appendChild(v);
+                    v.play().catch(function () {});
+                }).catch(next);
+            }
+            tryVideo(base + '.webm', function () {
+                tryImg(base + '.png', function () {
+                    tryImg(base + '.jpg', showFallback);
+                });
+            });
+        })();
+        </script>
 
         <!-- ── BLOG ── -->
         <section id="blog-posts" class="content-section">
@@ -256,29 +301,6 @@
                         <div class="content-glow"></div>
                         <div class="content-media-wrap">
                             <img src="assets/images/EatMyBalls.png" alt="BKDziti Blog" loading="lazy" width="1050" height="600">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ── FEATURED ── -->
-        <section id="featured" class="content-section">
-            <canvas class="section-pulse-canvas" id="pulse-featured"></canvas>
-            <div class="section-container">
-                <div class="content-split reverse reveal">
-                    <div>
-                        <div class="section-label">Featured</div>
-                        <h2 class="section-title">Best Performing Posts</h2>
-                        <hr class="section-divider">
-                        <p class="section-body">A quick gallery of posts that are currently doing the best across platforms.</p>
-                    </div>
-                    <div style="position:relative;">
-                        <div class="content-glow"></div>
-                        <div class="content-media-wrap" style="padding: 1rem; line-height: normal;">
-                            <div data-bkd-featured-gallery="1">
-                                <div class="featured-empty">Loading…</div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -339,7 +361,6 @@
                 { id: 'faq',         label: 'FAQ',           palette: [[233,50,0,0.22],[249,83,1,0.16],[231,54,2,0.18],[255,154,11,0.10]] },
                 { id: 'shop',        label: 'Shop',          palette: [[233,50,0,0.22],[249,83,1,0.16],[231,54,2,0.18],[255,154,11,0.10]] },
                 { id: 'blog-posts',  label: 'Blog',          palette: [[255,154,11,0.18],[249,234,202,0.12],[255,242,194,0.10],[188,149,117,0.14]] },
-                { id: 'featured',    label: 'Featured',      palette: [[255,154,11,0.18],[249,234,202,0.12],[255,242,194,0.10],[188,149,117,0.14]] },
                 { id: 'contact',     label: 'Contact',       palette: [[252,249,245,0.10],[254,241,194,0.12],[188,149,117,0.16],[249,234,202,0.11]] }
             ],
             nav: {

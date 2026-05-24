@@ -63,6 +63,36 @@
         </div>
     </main>
 
+    <!-- ── PRODUCT DETAIL MODAL ── -->
+    <div class="modal-overlay" id="productDetailModal" role="dialog" aria-modal="true" aria-labelledby="pdModalName">
+        <div class="modal product-detail-modal">
+            <button class="pd-modal-close" id="pdModalClose" aria-label="Close">&times;</button>
+            <div class="pd-modal-media" id="pdModalMedia">
+                <div class="pd-modal-img-placeholder" id="pdModalImgPlaceholder"><i class="fas fa-image"></i></div>
+            </div>
+            <div class="pd-modal-body">
+                <div class="pd-modal-meta">
+                    <span class="pd-modal-category" id="pdModalCategory"></span>
+                    <span class="product-type-badge" id="pdModalTypeBadge"></span>
+                </div>
+                <h2 class="pd-modal-name" id="pdModalName"></h2>
+                <div class="pd-modal-price-wrap">
+                    <span class="pd-modal-price" id="pdModalPrice"></span>
+                    <span class="pd-modal-billing" id="pdModalBilling"></span>
+                </div>
+                <p class="pd-modal-desc" id="pdModalDesc"></p>
+                <div class="pd-modal-actions">
+                    <button class="add-to-cart-btn pd-add-to-cart" id="pdModalAddBtn">
+                        <i class="fas fa-cart-plus"></i> Add to Cart
+                    </button>
+                    <a href="cart.html" class="pill-btn pd-view-cart" id="pdModalCartLink" style="display:none;margin-top:0">
+                        View Cart <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Floating cart icon -->
     <div class="cart-icon-wrap">
         <a href="cart.html" class="cart-icon-btn" aria-label="View cart">

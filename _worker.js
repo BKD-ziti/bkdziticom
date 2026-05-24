@@ -218,17 +218,45 @@ function flattenForStripe(obj, prefix = '') {
 async function createStripeSession(env, { orderId, items, customerEmail, origin }) {
   const stripeKey = requireEnv(env, 'STRIPE_SECRET_KEY');
 
-  const lineItems = items.map(item => ({
-    price_data: {
+  // Determine checkout mode based on items
+  const hasSub = items.some(i => i.pricingModel && i.pricingModel !== 'one-time');
+  const hasOne = items.some(i => !i.pricingModel || i.pricingModel === 'one-time');
+
+  if (hasSub && hasOne) {
+    throw new Error('Cannot mix subscription and one-time items in the same checkout. Please purchase them separately.');
+  }
+
+  const mode = hasSub ? 'subscription' : 'payment';
+
+  const lineItems = items.map(item => {
+    const priceData = {
       currency: 'usd',
       product_data: { name: item.name },
       unit_amount: String(item.price)
-    },
-    quantity: String(item.quantity)
-  }));
+    };
+
+    if (item.pricingModel === 'monthly') {
+      priceData.recurring = { interval: 'month' };
+    } else if (item.pricingModel === 'yearly') {
+      priceData.recurring = { interval: 'year' };
+    }
+    // custom intervals default to month in Stripe; label shown in product name
+    else if (item.pricingModel === 'custom') {
+      priceData.recurring = { interval: 'month' };
+      // Append billing interval label to product name for clarity
+      if (item.billingInterval) {
+        priceData.product_data.name = `${item.name} (${item.billingInterval})`;
+      }
+    }
+
+    return {
+      price_data: priceData,
+      quantity: String(item.quantity)
+    };
+  });
 
   const params = {
-    mode: 'payment',
+    mode,
     success_url: `${origin}/store/confirmation.html?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${origin}/store/cart.html`,
     customer_email: customerEmail,
@@ -388,7 +416,15 @@ async function handleCreateCheckout(request, env) {
       const product = products.find(p => p.id === cartItem.productId && p.active);
       if (!product) return jsonResponse({ ok: false, error: `Product unavailable: ${cartItem.productId}` }, 400);
       const qty = Math.max(1, Math.min(100, parseInt(cartItem.quantity) || 1));
-      validatedItems.push({ productId: product.id, name: product.name, price: product.price, quantity: qty });
+      validatedItems.push({
+        productId:       product.id,
+        name:            product.name,
+        price:           product.price,
+        quantity:        qty,
+        type:            product.type || 'product',
+        pricingModel:    product.pricingModel || 'one-time',
+        billingInterval: product.billingInterval || ''
+      });
     }
 
     const total   = validatedItems.reduce((s, i) => s + i.price * i.quantity, 0);
@@ -526,16 +562,22 @@ async function handleAdminCreateProduct(request, env) {
   const price = Math.round(parseFloat(data.price) * 100);
   if (isNaN(price) || price <= 0) return jsonResponse({ ok: false, error: 'Invalid price' }, 400);
 
+  const validPricingModels = ['one-time', 'monthly', 'yearly', 'custom'];
+  const pricingModel = validPricingModels.includes(clean(data.pricingModel)) ? clean(data.pricingModel) : 'one-time';
+
   const product = {
-    id:          genId('prod'),
-    name:        clean(data.name).slice(0, 120),
-    description: clean(data.description).slice(0, 2000),
+    id:              genId('prod'),
+    name:            clean(data.name).slice(0, 120),
+    description:     clean(data.description).slice(0, 2000),
     price,
-    imageUrl:    clean(data.imageUrl).slice(0, 500),
-    category:    clean(data.category).slice(0, 60) || 'general',
-    active:      data.active !== false,
-    createdAt:   new Date().toISOString(),
-    updatedAt:   new Date().toISOString()
+    imageUrl:        clean(data.imageUrl).slice(0, 500),
+    category:        clean(data.category).slice(0, 60) || 'general',
+    type:            clean(data.type) === 'service' ? 'service' : 'product',
+    pricingModel,
+    billingInterval: pricingModel === 'custom' ? clean(data.billingInterval).slice(0, 60) : '',
+    active:          data.active !== false,
+    createdAt:       new Date().toISOString(),
+    updatedAt:       new Date().toISOString()
   };
 
   const list = await getProductList(env);
@@ -553,12 +595,16 @@ async function handleAdminUpdateProduct(request, env, id) {
   if (idx < 0) return jsonResponse({ ok: false, error: 'Product not found' }, 404);
 
   const product = { ...list[idx] };
-  if (data.name        !== undefined) product.name        = clean(data.name).slice(0, 120);
-  if (data.description !== undefined) product.description = clean(data.description).slice(0, 2000);
-  if (data.price       !== undefined) product.price       = Math.round(parseFloat(data.price) * 100);
-  if (data.imageUrl    !== undefined) product.imageUrl    = clean(data.imageUrl).slice(0, 500);
-  if (data.category    !== undefined) product.category    = clean(data.category).slice(0, 60);
-  if (data.active      !== undefined) product.active      = Boolean(data.active);
+  const validPM = ['one-time', 'monthly', 'yearly', 'custom'];
+  if (data.name           !== undefined) product.name           = clean(data.name).slice(0, 120);
+  if (data.description    !== undefined) product.description    = clean(data.description).slice(0, 2000);
+  if (data.price          !== undefined) product.price          = Math.round(parseFloat(data.price) * 100);
+  if (data.imageUrl       !== undefined) product.imageUrl       = clean(data.imageUrl).slice(0, 500);
+  if (data.category       !== undefined) product.category       = clean(data.category).slice(0, 60);
+  if (data.type           !== undefined) product.type           = clean(data.type) === 'service' ? 'service' : 'product';
+  if (data.pricingModel   !== undefined) product.pricingModel   = validPM.includes(clean(data.pricingModel)) ? clean(data.pricingModel) : 'one-time';
+  if (data.billingInterval !== undefined) product.billingInterval = product.pricingModel === 'custom' ? clean(data.billingInterval).slice(0, 60) : '';
+  if (data.active         !== undefined) product.active         = Boolean(data.active);
   product.updatedAt = new Date().toISOString();
 
   list[idx] = product;

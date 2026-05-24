@@ -898,6 +898,163 @@
 .store-error h3 { color: var(--cream); margin: 0 0 0.75rem; }
 .store-error p { color: rgba(252,249,245,0.5); font-size: 0.9rem; }
 
+/* ── PRODUCT TYPE BADGE ───────────────────────────────────────────────── */
+.product-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 1rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+.product-type-badge.service {
+    background: rgba(100,149,237,0.15);
+    color: #8bb4f5;
+    border: 1px solid rgba(100,149,237,0.25);
+}
+.product-type-badge.product {
+    background: rgba(255,154,11,0.12);
+    color: var(--amber);
+    border: 1px solid rgba(255,154,11,0.2);
+}
+
+/* ── PRODUCT CARD BILLING LABEL ───────────────────────────────────────── */
+.product-card-billing {
+    font-size: 0.72rem;
+    color: rgba(252,249,245,0.4);
+    font-weight: 400;
+    margin-left: 0.15rem;
+}
+.product-card { cursor: pointer; }
+
+/* ── PRODUCT DETAIL MODAL ─────────────────────────────────────────────── */
+.product-detail-modal {
+    max-width: 680px;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+}
+.pd-modal-close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(252,249,245,0.15);
+    color: var(--offwhite);
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.2s, color 0.2s;
+}
+.pd-modal-close:hover { background: rgba(249,83,1,0.5); color: #fff; }
+
+.pd-modal-media {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: linear-gradient(135deg, var(--dark-brown), var(--darker));
+    overflow: hidden;
+    position: relative;
+}
+.pd-modal-media img,
+.pd-modal-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.pd-modal-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: rgba(252,249,245,0.08);
+}
+
+.pd-modal-body {
+    padding: 1.75rem 2rem 2rem;
+}
+.pd-modal-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+.pd-modal-category {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--orange);
+}
+.pd-modal-name {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    color: var(--cream);
+    margin: 0 0 0.75rem;
+    line-height: 1.2;
+}
+.pd-modal-price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    margin-bottom: 1.1rem;
+    flex-wrap: wrap;
+}
+.pd-modal-price {
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 1.9rem;
+    color: var(--amber);
+}
+.pd-modal-billing {
+    font-size: 0.9rem;
+    color: rgba(252,249,245,0.45);
+}
+.pd-modal-desc {
+    color: rgba(252,249,245,0.72);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1.75rem;
+    white-space: pre-wrap;
+}
+.pd-modal-actions {
+    display: flex;
+    gap: 0.85rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.pd-add-to-cart {
+    padding: 0.75rem 1.75rem !important;
+    font-size: 1rem !important;
+}
+.pd-add-to-cart.added {
+    background: rgba(80,200,80,0.2);
+    border-color: #5dd15d;
+    color: #7de87d;
+}
+
+/* Cart subscription label */
+.cart-item-sub {
+    font-size: 0.7rem;
+    color: rgba(100,149,237,0.85);
+    letter-spacing: 0.06em;
+    margin-top: 0.15rem;
+    text-transform: capitalize;
+}
+
 /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
     .store-toolbar { flex-direction: column; align-items: stretch; }
@@ -908,6 +1065,8 @@
     .admin-sidebar h3 { display: none; }
     .admin-nav-btn { width: auto; padding: 0.6rem 1rem; }
     .admin-content { padding: 1.25rem; }
+    .pd-modal-body { padding: 1.25rem 1.25rem 1.5rem; }
+    .pd-modal-price { font-size: 1.5rem; }
 }
 @media (max-width: 480px) {
     .store-main { padding: 1.5rem 1rem 4rem; }

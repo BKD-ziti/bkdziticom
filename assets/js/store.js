@@ -1,6 +1,7 @@
 /* =========================================================================
    BKDziti Store — frontend JavaScript
-   Handles: storefront, cart, checkout, confirmation, order lookup.
+   Handles: storefront (product grid + modal), cart, checkout,
+            confirmation, order lookup.
    ========================================================================= */
 (function () {
   'use strict';
@@ -19,13 +20,24 @@
     updateCartBadge();
   }
 
-  function addToCart(product, qty = 1) {
+  function addToCart(product, qty) {
+    qty = qty || 1;
     const cart = getCart();
     const existing = cart.find(i => i.productId === product.id);
     if (existing) {
       existing.quantity = Math.min(99, existing.quantity + qty);
     } else {
-      cart.push({ productId: product.id, name: product.name, price: product.price, imageUrl: product.imageUrl || '', category: product.category, quantity: qty });
+      cart.push({
+        productId:    product.id,
+        name:         product.name,
+        price:        product.price,
+        imageUrl:     product.imageUrl || '',
+        category:     product.category,
+        type:         product.type || 'product',
+        pricingModel: product.pricingModel || 'one-time',
+        billingInterval: product.billingInterval || '',
+        quantity:     qty
+      });
     }
     saveCart(cart);
   }
@@ -64,6 +76,24 @@
     badge.setAttribute('data-count', String(n));
   }
 
+  // ── Billing label helpers ────────────────────────────────────────────────
+
+  function billingPeriodLabel(pricingModel, billingInterval) {
+    if (!pricingModel || pricingModel === 'one-time') return '';
+    if (pricingModel === 'monthly') return '/mo';
+    if (pricingModel === 'yearly')  return '/yr';
+    if (pricingModel === 'custom')  return billingInterval ? ' / ' + billingInterval : '/period';
+    return '';
+  }
+
+  function billingFullLabel(pricingModel, billingInterval) {
+    if (!pricingModel || pricingModel === 'one-time') return 'One-time purchase';
+    if (pricingModel === 'monthly') return 'Billed monthly';
+    if (pricingModel === 'yearly')  return 'Billed yearly';
+    if (pricingModel === 'custom')  return billingInterval ? 'Billed ' + billingInterval : 'Recurring billing';
+    return '';
+  }
+
   // ── Status badge helper ──────────────────────────────────────────────────
 
   function statusBadgeHtml(status) {
@@ -82,6 +112,118 @@
     let activeCategory = 'all';
     let searchQuery = '';
 
+    // ── Product detail modal ──
+    const detailModal    = document.getElementById('productDetailModal');
+    const pdModalClose   = document.getElementById('pdModalClose');
+    const pdModalMedia   = document.getElementById('pdModalMedia');
+    const pdModalPH      = document.getElementById('pdModalImgPlaceholder');
+    const pdModalCat     = document.getElementById('pdModalCategory');
+    const pdModalBadge   = document.getElementById('pdModalTypeBadge');
+    const pdModalName    = document.getElementById('pdModalName');
+    const pdModalPrice   = document.getElementById('pdModalPrice');
+    const pdModalBilling = document.getElementById('pdModalBilling');
+    const pdModalDesc    = document.getElementById('pdModalDesc');
+    const pdModalAddBtn  = document.getElementById('pdModalAddBtn');
+    const pdModalCart    = document.getElementById('pdModalCartLink');
+
+    let currentProduct = null;
+
+    function openProductModal(product) {
+      currentProduct = product;
+
+      // Media
+      // Remove any previous dynamic media element
+      const prevMedia = pdModalMedia.querySelector('img, video');
+      if (prevMedia) prevMedia.remove();
+      if (pdModalPH)  pdModalPH.style.display = product.imageUrl ? 'none' : 'flex';
+
+      if (product.imageUrl) {
+        const isVideo = /\.(webm|mp4)$/i.test(product.imageUrl);
+        if (isVideo) {
+          const v = document.createElement('video');
+          v.muted = true; v.loop = true;
+          v.setAttribute('playsinline', '');
+          v.setAttribute('preload', 'metadata');
+          v.src = product.imageUrl;
+          v.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+          pdModalMedia.insertBefore(v, pdModalPH);
+          v.play().catch(() => {});
+        } else {
+          const img = document.createElement('img');
+          img.src = product.imageUrl;
+          img.alt = escHtml(product.name);
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+          pdModalMedia.insertBefore(img, pdModalPH);
+        }
+      }
+
+      // Type badge
+      const type = product.type || 'product';
+      if (pdModalBadge) {
+        pdModalBadge.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+        pdModalBadge.className = 'product-type-badge ' + type;
+      }
+      if (pdModalCat) pdModalCat.textContent = product.category || '';
+      if (pdModalName) pdModalName.textContent = product.name;
+
+      // Price
+      const pm = product.pricingModel || 'one-time';
+      const bi = product.billingInterval || '';
+      if (pdModalPrice)   pdModalPrice.textContent  = formatPrice(product.price);
+      if (pdModalBilling) pdModalBilling.textContent = billingFullLabel(pm, bi);
+
+      // Description
+      if (pdModalDesc) pdModalDesc.textContent = product.description || 'No description provided.';
+
+      // Reset add button
+      if (pdModalAddBtn) {
+        pdModalAddBtn.classList.remove('added');
+        pdModalAddBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+        pdModalAddBtn.disabled = false;
+      }
+      if (pdModalCart) pdModalCart.style.display = 'none';
+
+      // Open modal
+      if (detailModal) detailModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProductModal() {
+      if (detailModal) detailModal.classList.remove('open');
+      document.body.style.overflow = '';
+      // Pause video if any
+      const vid = pdModalMedia && pdModalMedia.querySelector('video');
+      if (vid) vid.pause();
+    }
+
+    if (pdModalClose) pdModalClose.addEventListener('click', closeProductModal);
+    if (detailModal) {
+      detailModal.addEventListener('click', e => {
+        if (e.target === detailModal) closeProductModal();
+      });
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && detailModal && detailModal.classList.contains('open')) closeProductModal();
+    });
+
+    // Add to cart from modal
+    if (pdModalAddBtn) {
+      pdModalAddBtn.addEventListener('click', () => {
+        if (!currentProduct) return;
+        addToCart(currentProduct, 1);
+        pdModalAddBtn.classList.add('added');
+        pdModalAddBtn.innerHTML = '<i class="fas fa-check"></i> Added!';
+        pdModalAddBtn.disabled = true;
+        if (pdModalCart) pdModalCart.style.display = '';
+        setTimeout(() => {
+          pdModalAddBtn.classList.remove('added');
+          pdModalAddBtn.innerHTML = '<i class="fas fa-cart-plus"></i> Add to Cart';
+          pdModalAddBtn.disabled = false;
+        }, 2000);
+      });
+    }
+
+    // ── Grid rendering ──
     function renderGrid() {
       let filtered = allProducts;
       if (activeCategory !== 'all') {
@@ -90,46 +232,52 @@
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
         filtered = filtered.filter(p =>
-          p.name.toLowerCase().includes(q) || (p.description || '').toLowerCase().includes(q)
+          p.name.toLowerCase().includes(q) ||
+          (p.description || '').toLowerCase().includes(q) ||
+          (p.type || '').toLowerCase().includes(q)
         );
       }
 
       if (!filtered.length) {
-        grid.innerHTML = `<div class="product-grid-empty"><i class="fas fa-search" style="font-size:2rem;color:rgba(249,83,1,0.2);display:block;margin-bottom:1rem"></i>${searchQuery || activeCategory !== 'all' ? 'No products match your search.' : 'No products yet — check back soon!'}</div>`;
+        grid.innerHTML = `<div class="product-grid-empty"><i class="fas fa-search" style="font-size:2rem;color:rgba(249,83,1,0.2);display:block;margin-bottom:1rem"></i>${searchQuery || activeCategory !== 'all' ? 'No items match your search.' : 'No products yet — check back soon!'}</div>`;
         return;
       }
 
-      grid.innerHTML = filtered.map(p => `
-        <div class="product-card" data-id="${p.id}">
+      grid.innerHTML = filtered.map(p => {
+        const pm    = p.pricingModel || 'one-time';
+        const bi    = p.billingInterval || '';
+        const label = billingPeriodLabel(pm, bi);
+        const type  = p.type || 'product';
+        return `
+        <div class="product-card" data-id="${p.id}" role="button" tabindex="0" aria-label="View ${escHtml(p.name)}">
           ${p.imageUrl
-            ? `<img class="product-card-img" src="${p.imageUrl}" alt="${escHtml(p.name)}" loading="lazy">`
+            ? /\.(webm|mp4)$/i.test(p.imageUrl)
+              ? `<video class="product-card-img" src="${escHtml(p.imageUrl)}" muted loop playsinline preload="metadata" autoplay></video>`
+              : `<img class="product-card-img" src="${escHtml(p.imageUrl)}" alt="${escHtml(p.name)}" loading="lazy">`
             : `<div class="product-card-img-placeholder"><i class="fas fa-image"></i></div>`}
           <div class="product-card-body">
-            <div class="product-card-category">${escHtml(p.category)}</div>
+            <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap">
+              <div class="product-card-category">${escHtml(p.category)}</div>
+              <span class="product-type-badge ${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+            </div>
             <div class="product-card-name">${escHtml(p.name)}</div>
             <div class="product-card-desc">${escHtml(p.description || '')}</div>
             <div class="product-card-footer">
-              <div class="product-card-price">${formatPrice(p.price)}</div>
-              <button class="add-to-cart-btn" data-id="${p.id}" aria-label="Add ${escHtml(p.name)} to cart">
-                <i class="fas fa-cart-plus"></i> Add
-              </button>
+              <div class="product-card-price">${formatPrice(p.price)}<span class="product-card-billing">${escHtml(label)}</span></div>
+              <span style="font-size:0.78rem;color:rgba(252,249,245,0.35)">Click to view</span>
             </div>
           </div>
-        </div>
-      `).join('');
+        </div>`;
+      }).join('');
 
-      grid.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const id = btn.dataset.id;
-          const product = allProducts.find(p => p.id === id);
-          if (!product) return;
-          addToCart(product);
-          btn.classList.add('added');
-          btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-          setTimeout(() => {
-            btn.classList.remove('added');
-            btn.innerHTML = '<i class="fas fa-cart-plus"></i> Add';
-          }, 1400);
+      // Click handlers for cards
+      grid.querySelectorAll('.product-card').forEach(card => {
+        const id = card.dataset.id;
+        const product = allProducts.find(p => p.id === id);
+        if (!product) return;
+        card.addEventListener('click', () => openProductModal(product));
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProductModal(product); }
         });
       });
     }
@@ -160,7 +308,10 @@
       });
     }
 
-    grid.innerHTML = `<div class="store-loading"><i class="fas fa-circle-notch"></i>Loading products…</div>`;
+    // Also update search placeholder to mention services
+    if (searchEl) searchEl.placeholder = 'Search products & services…';
+
+    grid.innerHTML = `<div class="store-loading"><i class="fas fa-circle-notch"></i>Loading…</div>`;
     fetch('/api/store/products')
       .then(r => r.json())
       .then(data => {
@@ -192,8 +343,15 @@
         return;
       }
 
+      // Warn about mixed carts
+      const hasSub = cart.some(i => i.pricingModel && i.pricingModel !== 'one-time');
+      const hasOne = cart.some(i => !i.pricingModel || i.pricingModel === 'one-time');
+      const mixedWarning = (hasSub && hasOne)
+        ? `<div style="background:rgba(255,154,11,0.12);border:1px solid rgba(255,154,11,0.3);border-radius:var(--radius-md);padding:0.9rem 1.25rem;margin-bottom:1.5rem;font-size:0.88rem;color:rgba(255,154,11,0.9)"><i class="fas fa-info-circle"></i> Your cart contains both one-time and subscription items. Please checkout subscriptions and one-time purchases separately.</div>`
+        : '';
+
       const total = cartTotal(cart);
-      container.innerHTML = `
+      container.innerHTML = mixedWarning + `
         <div style="overflow-x:auto">
           <table class="cart-table">
             <thead><tr>
@@ -203,16 +361,22 @@
               <th></th>
             </tr></thead>
             <tbody>
-              ${cart.map(item => `
+              ${cart.map(item => {
+                const pm = item.pricingModel || 'one-time';
+                const bi = item.billingInterval || '';
+                const periodLabel = billingPeriodLabel(pm, bi);
+                const subLabel = pm !== 'one-time' ? `<div class="cart-item-sub"><i class="fas fa-sync-alt" style="font-size:0.6rem"></i> ${billingFullLabel(pm, bi)}</div>` : '';
+                return `
                 <tr class="cart-row" data-id="${item.productId}">
                   <td>
                     <div class="cart-item-info">
                       ${item.imageUrl
-                        ? `<img class="cart-item-img" src="${item.imageUrl}" alt="">`
+                        ? `<img class="cart-item-img" src="${escHtml(item.imageUrl)}" alt="">`
                         : `<div class="cart-item-img-placeholder"><i class="fas fa-image"></i></div>`}
                       <div>
                         <div class="cart-item-name">${escHtml(item.name)}</div>
-                        <div class="cart-item-category">${escHtml(item.category || '')}</div>
+                        <div class="cart-item-category">${escHtml(item.category || '')}${item.type === 'service' ? ' · service' : ''}</div>
+                        ${subLabel}
                       </div>
                     </div>
                   </td>
@@ -223,10 +387,10 @@
                       <button class="qty-btn" data-action="inc" data-id="${item.productId}" aria-label="Increase">+</button>
                     </div>
                   </td>
-                  <td><span class="cart-price">${formatPrice(item.price * item.quantity)}</span></td>
+                  <td><span class="cart-price">${formatPrice(item.price * item.quantity)}${periodLabel ? `<span class="product-card-billing">${escHtml(periodLabel)}</span>` : ''}</span></td>
                   <td><button class="remove-btn" data-id="${item.productId}" aria-label="Remove"><i class="fas fa-times"></i></button></td>
-                </tr>
-              `).join('')}
+                </tr>`;
+              }).join('')}
             </tbody>
           </table>
         </div>
@@ -269,16 +433,32 @@
     const cart = getCart();
     if (!cart.length) { window.location.href = 'cart.html'; return; }
 
+    // Check for mixed cart
+    const hasSub = cart.some(i => i.pricingModel && i.pricingModel !== 'one-time');
+    const hasOne = cart.some(i => !i.pricingModel || i.pricingModel === 'one-time');
+
+    if (hasSub && hasOne) {
+      // Show warning but still allow checkout — server will catch it
+      const warn = document.createElement('div');
+      warn.style.cssText = 'background:rgba(255,154,11,0.12);border:1px solid rgba(255,154,11,0.3);border-radius:var(--radius-md);padding:0.9rem 1.25rem;margin-bottom:1.25rem;font-size:0.85rem;color:rgba(255,154,11,0.9)';
+      warn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Mixed cart: subscriptions and one-time purchases must be bought separately. Please go back and split your cart.';
+      form.parentElement.insertBefore(warn, form);
+    }
+
     const total = cartTotal(cart);
-    summary.innerHTML = cart.map(item => `
+    summary.innerHTML = cart.map(item => {
+      const pm = item.pricingModel || 'one-time';
+      const bi = item.billingInterval || '';
+      const periodLabel = billingPeriodLabel(pm, bi);
+      return `
       <div class="checkout-order-item">
         <div>
-          <div class="checkout-order-item-name">${escHtml(item.name)}</div>
-          <div class="checkout-order-item-qty">×${item.quantity}</div>
+          <div class="checkout-order-item-name">${escHtml(item.name)}${item.type === 'service' ? ' <span style="font-size:0.7rem;opacity:0.5">(service)</span>' : ''}</div>
+          <div class="checkout-order-item-qty">×${item.quantity}${pm !== 'one-time' ? ` · <span style="color:rgba(100,149,237,0.8)">${billingFullLabel(pm, bi)}</span>` : ''}</div>
         </div>
-        <div style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">${formatPrice(item.price * item.quantity)}</div>
-      </div>
-    `).join('') + `<div class="checkout-order-total"><span>Total</span><span>${formatPrice(total)}</span></div>`;
+        <div style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">${formatPrice(item.price * item.quantity)}${periodLabel ? `<span style="font-size:0.75rem;font-family:'Golos Text',sans-serif;color:rgba(252,249,245,0.4)">${escHtml(periodLabel)}</span>` : ''}</div>
+      </div>`;
+    }).join('') + `<div class="checkout-order-total"><span>Total</span><span>${formatPrice(total)}</span></div>`;
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -299,7 +479,6 @@
         const data = await resp.json();
         if (!data.ok) throw new Error(data.error || 'Checkout failed');
 
-        // Clear cart before redirect so confirmation page is clean
         saveCart([]);
         window.location.href = data.url;
       } catch (err) {
@@ -422,7 +601,8 @@
 
   // ── Toast notification ───────────────────────────────────────────────────
 
-  function showStoreToast(msg, isError = false) {
+  function showStoreToast(msg, isError) {
+    isError = isError || false;
     const existing = document.getElementById('storeToast');
     if (existing) existing.remove();
 

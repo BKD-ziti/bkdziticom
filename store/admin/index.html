@@ -105,6 +105,7 @@
                                     <th>Image</th>
                                     <th>Name</th>
                                     <th>Category</th>
+                                    <th>Type</th>
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -181,6 +182,29 @@
                         <label for="pCategory">Category</label>
                         <input type="text" id="pCategory" placeholder="consulting" maxlength="60">
                     </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                    <div class="form-field-store">
+                        <label for="pType">Type <span style="color:var(--deep-red)">*</span></label>
+                        <select id="pType" style="width:100%;padding:0.8rem 1rem;border-radius:var(--radius-md);border:1px solid rgba(249,83,1,0.25);background:rgba(0,0,0,0.35);color:var(--offwhite);font-family:'Golos Text',sans-serif;font-size:0.95rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s" onfocus="this.style.borderColor='rgba(255,154,11,0.7)';this.style.boxShadow='0 0 0 3px rgba(255,154,11,0.1)'" onblur="this.style.borderColor='rgba(249,83,1,0.25)';this.style.boxShadow='none'">
+                            <option value="product">Product</option>
+                            <option value="service">Service</option>
+                        </select>
+                    </div>
+                    <div class="form-field-store">
+                        <label for="pPricingModel">Pricing Model <span style="color:var(--deep-red)">*</span></label>
+                        <select id="pPricingModel" style="width:100%;padding:0.8rem 1rem;border-radius:var(--radius-md);border:1px solid rgba(249,83,1,0.25);background:rgba(0,0,0,0.35);color:var(--offwhite);font-family:'Golos Text',sans-serif;font-size:0.95rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s" onfocus="this.style.borderColor='rgba(255,154,11,0.7)';this.style.boxShadow='0 0 0 3px rgba(255,154,11,0.1)'" onblur="this.style.borderColor='rgba(249,83,1,0.25)';this.style.boxShadow='none'">
+                            <option value="one-time">One-time Purchase</option>
+                            <option value="monthly">Monthly Subscription</option>
+                            <option value="yearly">Yearly Subscription</option>
+                            <option value="custom">Custom Interval</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-field-store" id="pBillingIntervalWrap" style="display:none">
+                    <label for="pBillingInterval">Billing Interval Description</label>
+                    <input type="text" id="pBillingInterval" placeholder="e.g. quarterly, every 6 months" maxlength="60">
+                    <span style="font-size:0.75rem;color:rgba(252,249,245,0.35);margin-top:0.25rem;display:block">Shown to customers (e.g. "quarterly" displays as "$X / quarterly").</span>
                 </div>
                 <div class="form-field-store">
                     <label for="pImageUrl">Image URL</label>
