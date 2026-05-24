@@ -10,3 +10,5 @@ DEPLOYMENT.md
 README.md
 node_modules/
 *.map
+# Too large for Cloudflare's 25 MiB per-file limit — host on R2 or CDN instead
+assets/images/store.webm

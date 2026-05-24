@@ -20,6 +20,7 @@
 
   function billingLabel(pricingModel, billingInterval) {
     if (!pricingModel || pricingModel === 'one-time') return '';
+    if (pricingModel === 'quote')   return ' (quote)';
     if (pricingModel === 'monthly') return '/mo';
     if (pricingModel === 'yearly')  return '/yr';
     if (pricingModel === 'custom')  return billingInterval ? ' / ' + billingInterval : '/period';
@@ -194,7 +195,7 @@
           </span>
         </td>
         <td style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">
-          ${formatPrice(p.price)}<span style="font-size:0.72rem;font-family:'Golos Text',sans-serif;color:rgba(252,249,245,0.4)">${escHtml(label)}</span>
+          ${pm === 'quote' ? '<span style="font-size:0.85rem;font-family:\'Golos Text\',sans-serif;color:rgba(100,149,237,0.8)">Custom Quote</span>' : formatPrice(p.price) + `<span style="font-size:0.72rem;font-family:'Golos Text',sans-serif;color:rgba(252,249,245,0.4)">${escHtml(label)}</span>`}
         </td>
         <td>
           ${p.active
