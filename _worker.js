@@ -393,6 +393,102 @@ const SEED_PRODUCTS = [
     pricingModel: 'quote',
     billingInterval: '',
     active: true
+  },
+  {
+    id: 'prod_menu_photography_package',
+    name: 'Menu Photography Package',
+    description: 'Professional photography for your restaurant menu. We handle lighting, composition, and styling to showcase your dishes beautifully. Perfect for print menus, websites, and social media. Includes 20-30 edited images.',
+    price: 45000,
+    imageUrl: '/assets/images/IMG_2339(1).JPG',
+    category: 'Media Production',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_social_media_content_package',
+    name: 'Social Media Content Package',
+    description: 'Curated content strategy and 8 weeks of professional social media content creation for Instagram, TikTok, and Facebook. Includes food photography, short-form videos, design, and posting schedule. Elevate your brand presence online.',
+    price: 120000,
+    imageUrl: '/assets/images/Datamosh-Dream.webm',
+    category: 'Media Production',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_brand_photography_shoot',
+    name: 'Brand Photography Shoot',
+    description: 'Full-day photography session for your restaurant or food business. Captures everything from interior ambiance and staff in action to finished plating. Perfect for websites, marketing materials, and social media. Includes 100+ edited images.',
+    price: 75000,
+    imageUrl: '/assets/images/IMG_2340(1).JPG',
+    category: 'Media Production',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_restaurant_commercial',
+    name: 'Restaurant Commercial',
+    description: 'Professional 30-60 second restaurant commercial showcasing your brand story, menu, and atmosphere. Perfect for Instagram Reels, TikTok, YouTube, and advertising. Includes scripting, filming, editing, and color grading.',
+    price: 150000,
+    imageUrl: '/assets/images/Datamosh-Dream.webm',
+    category: 'Media Production',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_menu_development_consulting',
+    name: 'Menu Development Consulting',
+    description: 'Work with us to develop or refine your menu. We analyze your concept, target market, and operations to create a menu that drives profitability and customer satisfaction. Includes pricing strategy and seasonal variations.',
+    price: 80000,
+    imageUrl: '/assets/images/IMG_1123.PNG',
+    category: 'Consulting',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_restaurant_branding',
+    name: 'Restaurant Branding Package',
+    description: 'Complete branding package for your restaurant or food business. Includes logo design, color palette, typography, visual guidelines, and marketing materials. Establishes a cohesive brand identity that stands out.',
+    price: 200000,
+    imageUrl: '/assets/images/IMG_2340(1).JPG',
+    category: 'Consulting',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_popup_restaurant_launch',
+    name: 'Pop-Up Restaurant Launch',
+    description: 'Complete pop-up restaurant launch from concept to execution. We handle venue selection, menu planning, sourcing, licensing, marketing, and on-site management. Perfect for testing concepts or special events. Minimum 8-10 covers.',
+    price: 350000,
+    imageUrl: '/assets/images/IMG_0326.JPG',
+    category: 'Consulting',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_custom_quote',
+    name: 'Request a Custom Quote',
+    description: 'Have a specific project or service combination in mind? Fill out our contact form and we\'ll create a custom quote tailored to your needs. Whether it\'s a unique mix of services or a specialized project, we\'ll work with you to find the perfect solution.',
+    price: 0,
+    imageUrl: '/assets/images/Card.png',
+    category: 'Custom',
+    type: 'service',
+    pricingModel: 'quote',
+    billingInterval: '',
+    active: true
   }
 ];
 

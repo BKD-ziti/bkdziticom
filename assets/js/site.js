@@ -605,6 +605,7 @@
 
         function maybePlay(video) {
             if (video.dataset.autoplay !== '1') return;
+            if (!video.muted) video.muted = true;
             const p = video.play();
             if (p && typeof p.catch === 'function') p.catch(() => {});
         }
@@ -811,10 +812,14 @@
                 clearTimeout(peekTimer);
                 return;
             }
-            if (!isAnimating) {
-                if (window.scrollY > window.innerHeight * 0.15) clearTimeout(peekTimer);
-                else schedulePeek();
+            if (isAnimating) {
+                isAnimating = false;
+                window.scrollTo(0, window.scrollY);
+                clearTimeout(peekTimer);
+                return;
             }
+            if (window.scrollY > window.innerHeight * 0.15) clearTimeout(peekTimer);
+            else schedulePeek();
         }, { passive: true });
 
         schedulePeek();
