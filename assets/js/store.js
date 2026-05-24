@@ -183,6 +183,13 @@
       }
       if (pdModalCart) pdModalCart.style.display = 'none';
 
+      // Reviews section
+      const reviewsContainer = document.getElementById('pdModalReviews');
+      if (reviewsContainer) {
+        reviewsContainer.innerHTML = '<div class="reviews-loading"><i class="fas fa-circle-notch fa-spin"></i> Loading reviews…</div>';
+        loadProductReviews(product.id, reviewsContainer);
+      }
+
       // Open modal
       if (detailModal) detailModal.classList.add('open');
       document.body.style.overflow = 'hidden';
@@ -221,6 +228,139 @@
           pdModalAddBtn.disabled = false;
         }, 2000);
       });
+    }
+
+    // ── Reviews ──
+    function starHtml(rating, max) {
+      max = max || 5;
+      let html = '';
+      for (let i = 1; i <= max; i++) {
+        html += '<i class="fas fa-star' + (i <= rating ? ' filled' : '') + '"></i>';
+      }
+      return html;
+    }
+
+    function renderReviewForm(productId, container) {
+      const formHtml = `
+        <div class="review-form-wrap">
+          <h4>Leave a Review</h4>
+          <form class="review-form" data-product-id="${productId}">
+            <div class="review-form-row">
+              <input type="text" name="name" placeholder="Your name" required maxlength="80">
+              <input type="email" name="email" placeholder="Email used at checkout" required maxlength="120">
+            </div>
+            <div class="review-stars-input" data-rating="0">
+              <span>Rating:</span>
+              ${[1,2,3,4,5].map(n => '<button type="button" class="star-pick" data-val="' + n + '"><i class="fas fa-star"></i></button>').join('')}
+            </div>
+            <textarea name="comment" placeholder="Share your experience… (optional)" maxlength="1000" rows="3"></textarea>
+            <button type="submit" class="pill-btn review-submit-btn" style="margin-top:0">Submit Review <i class="fas fa-arrow-right"></i></button>
+            <div class="review-form-msg"></div>
+          </form>
+        </div>`;
+      container.insertAdjacentHTML('beforeend', formHtml);
+
+      const form = container.querySelector('.review-form');
+      const starsInput = form.querySelector('.review-stars-input');
+      let selectedRating = 0;
+
+      starsInput.querySelectorAll('.star-pick').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedRating = parseInt(btn.dataset.val, 10);
+          starsInput.dataset.rating = selectedRating;
+          starsInput.querySelectorAll('.star-pick').forEach((b, idx) => {
+            b.classList.toggle('active', idx < selectedRating);
+          });
+        });
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgEl = form.querySelector('.review-form-msg');
+        const submitBtn = form.querySelector('.review-submit-btn');
+        if (!selectedRating) { msgEl.textContent = 'Please select a rating.'; msgEl.className = 'review-form-msg error'; return; }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Submitting…';
+        msgEl.textContent = '';
+
+        try {
+          const resp = await fetch('/api/store/products/' + productId + '/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: form.querySelector('[name=name]').value.trim(),
+              email: form.querySelector('[name=email]').value.trim(),
+              rating: selectedRating,
+              comment: form.querySelector('[name=comment]').value.trim()
+            })
+          });
+          const data = await resp.json();
+          if (!data.ok) throw new Error(data.error || 'Failed to submit');
+          msgEl.textContent = 'Review submitted!';
+          msgEl.className = 'review-form-msg success';
+          form.reset();
+          selectedRating = 0;
+          starsInput.dataset.rating = 0;
+          starsInput.querySelectorAll('.star-pick').forEach(b => b.classList.remove('active'));
+          loadProductReviews(productId, container);
+        } catch (err) {
+          msgEl.textContent = err.message;
+          msgEl.className = 'review-form-msg error';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Submit Review <i class="fas fa-arrow-right"></i>';
+        }
+      });
+    }
+
+    function loadProductReviews(productId, container) {
+      fetch('/api/store/products/' + productId + '/reviews')
+        .then(r => r.json())
+        .then(data => {
+          if (!data.ok) throw new Error(data.error);
+          const reviews = data.reviews || [];
+          const avg = data.average || 0;
+          const count = data.count || 0;
+
+          let html = '<div class="reviews-section">';
+          html += '<div class="reviews-header">';
+          html += '<h3>Reviews</h3>';
+          if (count > 0) {
+            html += '<div class="reviews-summary">';
+            html += '<span class="reviews-avg">' + avg.toFixed(1) + '</span>';
+            html += '<span class="reviews-stars">' + starHtml(Math.round(avg)) + '</span>';
+            html += '<span class="reviews-count">(' + count + ' review' + (count !== 1 ? 's' : '') + ')</span>';
+            html += '</div>';
+          }
+          html += '</div>';
+
+          if (reviews.length) {
+            html += '<div class="reviews-list">';
+            reviews.forEach(r => {
+              const date = new Date(r.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+              html += '<div class="review-item">';
+              html += '<div class="review-item-header">';
+              html += '<span class="review-author">' + escHtml(r.name) + '</span>';
+              html += '<span class="review-date">' + date + '</span>';
+              html += '</div>';
+              html += '<div class="review-item-stars">' + starHtml(r.rating) + '</div>';
+              if (r.comment) html += '<p class="review-comment">' + escHtml(r.comment) + '</p>';
+              html += '</div>';
+            });
+            html += '</div>';
+          } else {
+            html += '<p class="reviews-empty">No reviews yet. Be the first!</p>';
+          }
+          html += '</div>';
+
+          container.innerHTML = html;
+          renderReviewForm(productId, container);
+        })
+        .catch(() => {
+          container.innerHTML = '<div class="reviews-section"><h3>Reviews</h3><p class="reviews-empty">Could not load reviews.</p></div>';
+          renderReviewForm(productId, container);
+        });
     }
 
     // ── Grid rendering ──
@@ -262,6 +402,7 @@
             </div>
             <div class="product-card-name">${escHtml(p.name)}</div>
             <div class="product-card-desc">${escHtml(p.description || '')}</div>
+            <div class="product-card-rating" data-product-id="${p.id}"></div>
             <div class="product-card-footer">
               <div class="product-card-price">${formatPrice(p.price)}<span class="product-card-billing">${escHtml(label)}</span></div>
               <span style="font-size:0.78rem;color:rgba(252,249,245,0.35)">Click to view</span>
@@ -269,6 +410,20 @@
           </div>
         </div>`;
       }).join('');
+
+      // Load card ratings
+      grid.querySelectorAll('.product-card-rating').forEach(el => {
+        const pid = el.dataset.productId;
+        fetch('/api/store/products/' + pid + '/reviews')
+          .then(r => r.json())
+          .then(data => {
+            if (data.ok && data.count > 0) {
+              el.innerHTML = '<span class="card-stars">' + starHtml(Math.round(data.average)) +
+                '</span><span class="card-rating-count">(' + data.count + ')</span>';
+            }
+          })
+          .catch(() => {});
+      });
 
       // Click handlers for cards
       grid.querySelectorAll('.product-card').forEach(card => {

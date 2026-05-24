@@ -151,6 +151,92 @@ async function saveOrder(env, order) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// STORE: REVIEWS KV HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function getProductReviews(env, productId) {
+  if (!env.STORE_KV) return [];
+  const raw = await env.STORE_KV.get(`reviews:${productId}`);
+  return raw ? JSON.parse(raw) : [];
+}
+
+async function saveProductReviews(env, productId, reviews) {
+  await env.STORE_KV.put(`reviews:${productId}`, JSON.stringify(reviews));
+}
+
+async function handleGetReviews(env, productId) {
+  const reviews = await getProductReviews(env, productId);
+  const avg = reviews.length
+    ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
+    : 0;
+  return jsonResponse({ ok: true, reviews, average: Math.round(avg * 10) / 10, count: reviews.length });
+}
+
+async function handleSubmitReview(request, env, productId) {
+  try {
+    const body = await request.json();
+    const email   = clean(body.email).toLowerCase();
+    const name    = clean(body.name);
+    const rating  = parseInt(body.rating, 10);
+    const comment = clean(body.comment);
+
+    if (!email || !name || !rating) {
+      return jsonResponse({ ok: false, error: 'Name, email, and rating are required.' }, 400);
+    }
+    if (rating < 1 || rating > 5) {
+      return jsonResponse({ ok: false, error: 'Rating must be between 1 and 5.' }, 400);
+    }
+    if (comment.length > 1000) {
+      return jsonResponse({ ok: false, error: 'Review must be under 1000 characters.' }, 400);
+    }
+
+    const emailKey = `orders:email:${email}`;
+    const rawOrders = env.STORE_KV ? await env.STORE_KV.get(emailKey) : null;
+    if (!rawOrders) {
+      return jsonResponse({ ok: false, error: 'No orders found for this email. You must purchase before reviewing.' }, 403);
+    }
+
+    const orderIds = JSON.parse(rawOrders);
+    let hasPurchased = false;
+    for (const oid of orderIds) {
+      const order = await getOrder(env, oid);
+      if (order && (order.status === 'paid' || order.status === 'fulfilled') &&
+          order.items && order.items.some(i => i.productId === productId)) {
+        hasPurchased = true;
+        break;
+      }
+    }
+    if (!hasPurchased) {
+      return jsonResponse({ ok: false, error: 'You must purchase this item before leaving a review.' }, 403);
+    }
+
+    const reviews = await getProductReviews(env, productId);
+    const existing = reviews.findIndex(r => r.email === email);
+    const review = {
+      id: genId('rev'),
+      email,
+      name,
+      rating,
+      comment,
+      createdAt: new Date().toISOString()
+    };
+
+    if (existing >= 0) {
+      reviews[existing] = review;
+    } else {
+      reviews.unshift(review);
+    }
+
+    await saveProductReviews(env, productId, reviews);
+
+    const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+    return jsonResponse({ ok: true, review, average: Math.round(avg * 10) / 10, count: reviews.length });
+  } catch (err) {
+    return jsonResponse({ ok: false, error: err.message || 'Failed to submit review' }, 500);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // STORE: ADMIN AUTH
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -668,6 +754,11 @@ export default {
     if (path === '/api/store/customer-orders' && method === 'GET') return handleGetCustomerOrders(env, request);
     if (path === '/api/store/stripe-webhook' && method === 'POST') return handleStripeWebhook(request, env);
 
+    if (path.startsWith('/api/store/products/') && path.endsWith('/reviews')) {
+      const productId = path.slice('/api/store/products/'.length, path.length - '/reviews'.length);
+      if (method === 'GET')  return handleGetReviews(env, productId);
+      if (method === 'POST') return handleSubmitReview(request, env, productId);
+    }
     if (path.startsWith('/api/store/products/') && method === 'GET') {
       return handleGetProduct(env, path.slice('/api/store/products/'.length));
     }
