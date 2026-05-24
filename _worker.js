@@ -347,6 +347,42 @@ const SEED_PRODUCTS = [
     active: true
   },
   {
+    id: 'prod_service_request',
+    name: 'Service Request',
+    description: "Have a project in mind? Submit a service request and we'll reach out within 24 hours to discuss scope, timeline, and pricing. No commitment — just a conversation to see if we're the right fit.",
+    price: 0,
+    imageUrl: '/assets/images/Card.png',
+    category: 'Custom',
+    type: 'service',
+    pricingModel: 'quote',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_strategy_review',
+    name: 'Strategy Review',
+    description: 'A focused brand and business review session. We audit your current positioning, social presence, menu strategy, and operations — then deliver a concise report with actionable next steps. Includes a 60-minute consultation call.',
+    price: 35000,
+    imageUrl: '/assets/images/IMG_2340(1).JPG',
+    category: 'Consulting',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
+    id: 'prod_hourly_rate',
+    name: 'Consulting Rate',
+    description: 'Book consulting time at an hourly rate. Strategy calls, creative direction, menu feedback, brand reviews, social media audits — whatever you need guidance on. Billed per hour, minimum 1 hour.',
+    price: 15000,
+    imageUrl: '/assets/images/IMG_2336.JPG',
+    category: 'Consulting',
+    type: 'service',
+    pricingModel: 'one-time',
+    billingInterval: '',
+    active: true
+  },
+  {
     id: 'prod_custom_package',
     name: 'Custom Package',
     description: "Need something tailored? Tell us what you're looking for — we'll put together a custom package and send you a quote. Mix and match consulting, media production, pop-up coordination, or anything else.",
@@ -608,7 +644,11 @@ async function sendOrderEmails(env, order) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function handleGetProducts(env) {
-  const products = await getProductList(env);
+  let products = await getProductList(env);
+  if (!products.length && env.STORE_KV) {
+    await handleAdminSeedProducts(env);
+    products = await getProductList(env);
+  }
   return jsonResponse({ ok: true, products: products.filter(p => p.active) });
 }
 

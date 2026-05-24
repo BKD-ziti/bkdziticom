@@ -232,58 +232,13 @@
                     </div>
                     <div style="position:relative;">
                         <div class="content-glow"></div>
-                        <div class="content-media-wrap contain" id="shopMediaWrap"></div>
+                        <div class="content-media-wrap contain">
+                            <img src="assets/images/Card.png" alt="BKDziti Store" loading="lazy" width="1050" height="600">
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-        <script>
-        /* Auto-detect store image: tries store.webm → store.png → store.jpg → fallback */
-        (function () {
-            var wrap = document.getElementById('shopMediaWrap');
-            if (!wrap) return;
-            var base = 'assets/images/store';
-            var fallbackSrc = 'assets/images/Card.png';
-
-            function showFallback() {
-                var img = document.createElement('img');
-                img.src = fallbackSrc; img.alt = 'BKDziti Store';
-                img.loading = 'lazy'; img.width = 1050; img.height = 600;
-                wrap.appendChild(img);
-            }
-            function tryImg(src, next) {
-                var img = new Image();
-                img.onload = function () {
-                    img.alt = 'BKDziti Store'; img.loading = 'lazy';
-                    img.width = 1050; img.height = 600;
-                    wrap.appendChild(img);
-                };
-                img.onerror = next; img.src = src;
-            }
-            function tryVideo(src, next) {
-                fetch(src, { method: 'HEAD' }).then(function (r) {
-                    if (!r.ok) { next(); return; }
-                    var v = document.createElement('video');
-                    v.muted = true; v.loop = true;
-                    v.setAttribute('playsinline', '');
-                    v.setAttribute('preload', 'metadata');
-                    v.setAttribute('data-bkd-video', '1');
-                    v.setAttribute('data-autoplay', '1');
-                    var s = document.createElement('source');
-                    s.type = 'video/webm'; s.src = src;
-                    v.appendChild(s);
-                    v.onerror = next;
-                    wrap.appendChild(v);
-                    v.play().catch(function () {});
-                }).catch(next);
-            }
-            tryVideo(base + '.webm', function () {
-                tryImg(base + '.png', function () {
-                    tryImg(base + '.jpg', showFallback);
-                });
-            });
-        })();
-        </script>
 
         <!-- ── BLOG ── -->
         <section id="blog-posts" class="content-section">
