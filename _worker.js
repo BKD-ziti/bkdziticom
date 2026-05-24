@@ -763,10 +763,16 @@ async function sendOrderEmails(env, order) {
 // STORE: PUBLIC API HANDLERS
 // ─────────────────────────────────────────────────────────────────────────────
 
+const SEED_VERSION = '3';
+
 async function handleGetProducts(env) {
   let products = await getProductList(env);
-  if (!products.length && env.STORE_KV) {
+  const storedVersion = env.STORE_KV ? await env.STORE_KV.get('seed_version') : null;
+  const seedIds = SEED_PRODUCTS.map(p => p.id);
+  const missingSeeds = seedIds.some(id => !products.find(p => p.id === id));
+  if (env.STORE_KV && (storedVersion !== SEED_VERSION || missingSeeds)) {
     await handleAdminSeedProducts(env);
+    await env.STORE_KV.put('seed_version', SEED_VERSION);
     products = await getProductList(env);
   }
   return jsonResponse({ ok: true, products: products.filter(p => p.active) });
