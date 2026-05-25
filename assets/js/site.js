@@ -863,9 +863,12 @@
             observeReveals();
             initContactForms();
 
-            // Phase 4: viewport-triggered hydration (media + per-section effects)
+            // Phase 4a: set up media IO immediately so videos hydrate as soon as
+            // the user scrolls to them — no idle-callback delay.
+            initDeferredMedia();
+
+            // Phase 4b: heavier per-section effects deferred to idle time
             runWhenIdle(() => {
-                initDeferredMedia();
                 initViewportActivatedEffects();
                 initFeaturedGallery();
             }, 2000);
