@@ -5,7 +5,14 @@
       "WebSearch",
       "PowerShell(git add _worker.js assets/css/store.css assets/js/store.js contact.html faq.html food-consulting.html index.html media-production.html portfolio.html services.html store/index.html \"assets/images/Datamosh-Dream.webm\" \"assets/images/IMG_0326.JPG\" \"assets/images/IMG_1123.PNG\" \"assets/images/IMG_2336.JPG\" \"assets/images/IMG_2339\\(1\\).JPG\" \"assets/images/IMG_2340\\(1\\).JPG\" \"assets/images/IMG_2456.JPG\" \"assets/images/bkdziti_intro.webm\")",
       "PowerShell(\\(Get-Content \"C:\\\\Users\\\\BKDziti\\\\Documents\\\\GitHub\\\\bkdziticom\\\\assets\\\\css\\\\store.css\" | Measure-Object -Line\\).Lines)",
-      "mcp__Claude_in_Chrome__tabs_context_mcp"
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(findstr /i card)",
+      "Bash(dir \"C:\\\\Users\\\\BKDziti\\\\Documents\\\\GitHub\\\\bkdziticom\\\\assets\\\\images\" /b)",
+      "Bash(findstr /i \"card\")"
     ]
   }
 }
