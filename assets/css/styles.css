@@ -530,6 +530,30 @@ body::before {
     display: block;
 }
 
+/* ── MEDIA LOADER SPINNER ─────────────────────────────────────────────── */
+.media-loader {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+.media-loader.hidden { opacity: 0; }
+.media-loader-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top-color: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    animation: mediaSpinnerRotate 0.8s linear infinite;
+}
+@keyframes mediaSpinnerRotate {
+    to { transform: rotate(360deg); }
+}
+
 /* `contain` modifier — used by the contact section's transparent logo */
 .content-media-wrap.contain {
     background: transparent;

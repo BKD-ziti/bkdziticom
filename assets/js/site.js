@@ -364,12 +364,11 @@
                     </div>`;
         }
         if (type === 'video' || type === 'webm') {
-            const lower = src.toLowerCase();
-            const base = lower.endsWith('.webm') ? src.slice(0, -5) : lower.endsWith('.mp4') ? src.slice(0, -4) : src;
-            const webm = base + '.webm';
-            const mp4  = base + '.mp4';
-            return `<video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"
-                        data-src-webm="${webm}" data-src-mp4="${mp4}"></video>`;
+            const webm = src;
+            const mp4  = section.mp4 || '';
+            const poster = section.poster ? ` poster="${section.poster}"` : '';
+            return `<video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"${poster}
+                        data-src-webm="${webm}"${mp4 ? ` data-src-mp4="${mp4}"` : ''}></video>`;
         }
         if (type === 'pdf') {
             return `<iframe data-bkd-iframe="1" data-src="${src}#view=FitH" title="${section.title}" loading="lazy"></iframe>`;
@@ -582,6 +581,11 @@
         const videos  = $$('video[data-bkd-video="1"]');
         const iframes = $$('iframe[data-bkd-iframe="1"]');
 
+        function getLoader(video) {
+            const wrap = video.closest('.content-media-wrap');
+            return wrap ? wrap.querySelector('.media-loader') : null;
+        }
+
         function hydrateVideo(video) {
             if (video.dataset.hydrated === '1') return;
             video.dataset.hydrated = '1';
@@ -589,25 +593,31 @@
             const webm = video.dataset.srcWebm;
             const mp4  = video.dataset.srcMp4;
 
-            const sources = [];
-            if (webm) sources.push({ src: webm, type: 'video/webm' });
-            if (mp4)  sources.push({ src: mp4,  type: 'video/mp4' });
-
-            sources.forEach(s => {
+            if (webm) {
                 const el = document.createElement('source');
-                el.src  = s.src;
-                el.type = s.type;
+                el.src  = webm;
+                el.type = 'video/webm';
                 video.appendChild(el);
-            });
+            }
+            if (mp4) {
+                const el = document.createElement('source');
+                el.src  = mp4;
+                el.type = 'video/mp4';
+                video.appendChild(el);
+            }
+
+            if (video.dataset.autoplay === '1') {
+                video.addEventListener('canplay', function onCanPlay() {
+                    video.removeEventListener('canplay', onCanPlay);
+                    const loader = getLoader(video);
+                    if (loader) loader.classList.add('hidden');
+                    if (!video.muted) video.muted = true;
+                    const p = video.play();
+                    if (p && typeof p.catch === 'function') p.catch(() => {});
+                }, { once: true });
+            }
 
             video.load();
-        }
-
-        function maybePlay(video) {
-            if (video.dataset.autoplay !== '1') return;
-            if (!video.muted) video.muted = true;
-            const p = video.play();
-            if (p && typeof p.catch === 'function') p.catch(() => {});
         }
 
         function pauseVideo(video) {
@@ -622,6 +632,17 @@
             frame.src = src;
         }
 
+        // Inject spinner into each deferred video's media wrap
+        videos.forEach(v => {
+            const wrap = v.closest('.content-media-wrap');
+            if (wrap && !wrap.querySelector('.media-loader')) {
+                const loader = document.createElement('div');
+                loader.className = 'media-loader';
+                loader.innerHTML = '<div class="media-loader-spinner"></div>';
+                wrap.appendChild(loader);
+            }
+        });
+
         const io = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 const el = entry.target;
@@ -630,7 +651,12 @@
                 if (el.tagName === 'VIDEO') {
                     if (isIn) {
                         hydrateVideo(el);
-                        maybePlay(el);
+                        // Re-play already-hydrated autoplay videos that scrolled back into view
+                        if (el.dataset.hydrated === '1' && el.dataset.autoplay === '1' && el.paused) {
+                            if (!el.muted) el.muted = true;
+                            const p = el.play();
+                            if (p && typeof p.catch === 'function') p.catch(() => {});
+                        }
                     } else {
                         pauseVideo(el);
                     }
