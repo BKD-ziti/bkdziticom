@@ -32,7 +32,6 @@
         name:         product.name,
         price:        product.price,
         imageUrl:     product.imageUrl || '',
-        category:     product.category,
         type:         product.type || 'product',
         pricingModel: product.pricingModel || 'one-time',
         billingInterval: product.billingInterval || '',
@@ -169,7 +168,7 @@
         pdModalBadge.textContent = type.charAt(0).toUpperCase() + type.slice(1);
         pdModalBadge.className = 'product-type-badge ' + type;
       }
-      if (pdModalCat) pdModalCat.textContent = product.category || '';
+      if (pdModalCat) pdModalCat.textContent = (product.type || 'product').charAt(0).toUpperCase() + (product.type || 'product').slice(1);
       if (pdModalName) pdModalName.textContent = product.name;
 
       // Price
@@ -464,7 +463,7 @@
     function renderGrid() {
       let filtered = allProducts;
       if (activeCategory !== 'all') {
-        filtered = filtered.filter(p => p.category === activeCategory);
+        filtered = filtered.filter(p => (p.type || 'product') === activeCategory);
       }
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
@@ -502,7 +501,7 @@
             : `<div class="product-card-img-placeholder"><i class="fas fa-image"></i></div>`}
           <div class="product-card-body">
             <div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap">
-              <div class="product-card-category">${escHtml(p.category)}</div>
+              <div class="product-card-category">${escHtml((p.type || 'product').charAt(0).toUpperCase() + (p.type || 'product').slice(1))}</div>
               <span class="product-type-badge ${type}">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
               ${subBadge}
             </div>
@@ -546,8 +545,8 @@
     function buildCategoryFilters(products) {
       const filterWrap = document.getElementById('categoryFilters');
       if (!filterWrap) return;
-      const categories = [...new Set(products.map(p => p.category))].filter(Boolean);
-      const all = [{ id: 'all', label: 'All' }, ...categories.map(c => ({ id: c, label: c }))];
+      const types = [...new Set(products.map(p => p.type || 'product'))].filter(Boolean).sort();
+      const all = [{ id: 'all', label: 'All' }, ...types.map(t => ({ id: t, label: t.charAt(0).toUpperCase() + t.slice(1) }))];
       filterWrap.innerHTML = all.map(c =>
         `<button class="store-filter-btn${c.id === 'all' ? ' active' : ''}" data-cat="${c.id}">${escHtml(c.label)}</button>`
       ).join('');
@@ -636,7 +635,7 @@
                         : `<div class="cart-item-img-placeholder"><i class="fas fa-image"></i></div>`}
                       <div>
                         <div class="cart-item-name">${escHtml(item.name)}</div>
-                        <div class="cart-item-category">${escHtml(item.category || '')}${item.type === 'service' ? ' · service' : ''}</div>
+                        <div class="cart-item-category">${item.type === 'service' ? 'Service' : 'Product'}</div>
                         ${subLabel}
                       </div>
                     </div>

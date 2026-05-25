@@ -306,7 +306,6 @@ const SEED_PRODUCTS = [
     features: ['Strategy & concept calls', 'Menu & brand feedback', 'Social media audits', 'Operations guidance', 'Min. 1 hour booking', 'Flexible scheduling'],
     price: 15000,
     imageUrl: '/assets/images/IMG_2336.JPG',
-    category: 'Consultation',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -319,7 +318,6 @@ const SEED_PRODUCTS = [
     features: ['4+ consulting hours/month', 'Priority access & scheduling', 'Unlimited email Q&A', 'Monthly strategy call', 'Ongoing project support', 'Cancel anytime'],
     price: 80000,
     imageUrl: '/assets/images/IMG_2336.JPG',
-    category: 'Consultation',
     type: 'service',
     pricingModel: 'monthly',
     billingInterval: '',
@@ -333,7 +331,6 @@ const SEED_PRODUCTS = [
     features: ['30–50 edited images', 'Expert lighting & styling', 'Food & lifestyle photography', 'Social-ready formats', 'High-res file delivery', '1-week turnaround'],
     price: 30000,
     imageUrl: '/assets/images/IMG_2339(1).JPG',
-    category: 'Media Production',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -346,7 +343,6 @@ const SEED_PRODUCTS = [
     features: ['Short-form social videos', 'Color grading & music', 'Scripting support', 'Reels / TikTok / YouTube ready', 'Platform-optimized cuts', '2-week turnaround'],
     price: 60000,
     imageUrl: '/assets/images/Datamosh-Dream.webm',
-    category: 'Media Production',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -359,7 +355,6 @@ const SEED_PRODUCTS = [
     features: ['Bring your own footage', 'Color grading', 'Captions & on-screen graphics', 'Platform-optimized cuts', 'Up to 10 min raw footage', '1-week turnaround'],
     price: 20000,
     imageUrl: '/assets/images/Datamosh-Dream.webm',
-    category: 'Media Production',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -372,7 +367,6 @@ const SEED_PRODUCTS = [
     features: ['Monthly photo + video shoot', '10+ edited images', '2 short-form social videos', 'Content calendar included', 'All platforms covered', 'Cancel anytime'],
     price: 100000,
     imageUrl: '/assets/images/Datamosh-Dream.webm',
-    category: 'Media Production',
     type: 'service',
     pricingModel: 'monthly',
     billingInterval: '',
@@ -386,7 +380,6 @@ const SEED_PRODUCTS = [
     features: ['Concept development', 'Menu planning', 'Vendor list & recommendations', 'Marketing template', 'Virtual support throughout', 'Up to 50 covers'],
     price: 100000,
     imageUrl: '/assets/images/IMG_0326.JPG',
-    category: 'Pop-Up Coordination',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -399,7 +392,6 @@ const SEED_PRODUCTS = [
     features: ['Full concept + menu design', 'Vendor sourcing & logistics', 'Marketing campaign creation', 'On-site coordination', 'Post-event report', 'Up to 100 covers'],
     price: 250000,
     imageUrl: '/assets/images/IMG_0326.JPG',
-    category: 'Pop-Up Coordination',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -412,7 +404,6 @@ const SEED_PRODUCTS = [
     features: ['Everything in Standard', 'Professional photo + video', 'Paid social ad campaign', 'Brand activation design', 'Dedicated project manager', 'Unlimited covers'],
     price: 500000,
     imageUrl: '/assets/images/IMG_0326.JPG',
-    category: 'Pop-Up Coordination',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -426,7 +417,6 @@ const SEED_PRODUCTS = [
     features: ['Brand & competitor audit', 'Target audience research', 'Brand positioning report', '60-day action plan', '1-hour debrief call', 'Delivered in 2 weeks'],
     price: 100000,
     imageUrl: '/assets/images/IMG_2340(1).JPG',
-    category: 'Branding & Marketing',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -439,7 +429,6 @@ const SEED_PRODUCTS = [
     features: ['3 logo concepts', 'Color palette & typography', 'Brand guidelines PDF', 'Social media templates', 'All file formats (SVG, PNG, PDF)', '3-week delivery'],
     price: 200000,
     imageUrl: '/assets/images/IMG_2340(1).JPG',
-    category: 'Branding & Marketing',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -452,7 +441,6 @@ const SEED_PRODUCTS = [
     features: ['12 posts/month (photo + caption)', 'Platform strategy', 'Hashtag research', 'Monthly performance report', 'Instagram & Facebook covered', 'Cancel anytime'],
     price: 50000,
     imageUrl: '/assets/images/IMG_2340(1).JPG',
-    category: 'Branding & Marketing',
     type: 'service',
     pricingModel: 'monthly',
     billingInterval: '',
@@ -466,8 +454,7 @@ const SEED_PRODUCTS = [
     features: ['7 days of meals', 'Fresh ingredient prep', 'Portion-controlled', 'Dietary accommodations', 'Weekly delivery', 'Cancel anytime'],
     price: 10000,
     imageUrl: '/assets/images/IMG_1123.PNG',
-    category: 'Meal Prep',
-    type: 'service',
+    type: 'product',
     pricingModel: 'weekly',
     billingInterval: '',
     active: true
@@ -479,8 +466,7 @@ const SEED_PRODUCTS = [
     features: ['14 meals per cycle', 'Fresh ingredient prep', 'Recipe variety each cycle', 'Dietary accommodations', 'Bi-weekly delivery', 'Cancel anytime'],
     price: 18000,
     imageUrl: '/assets/images/IMG_1123.PNG',
-    category: 'Meal Prep',
-    type: 'service',
+    type: 'product',
     pricingModel: 'biweekly',
     billingInterval: '',
     active: true
@@ -492,8 +478,7 @@ const SEED_PRODUCTS = [
     features: ['Full month coverage (4 weeks)', 'Seasonal menu rotation', 'Detailed prep instructions', 'Grocery list included', 'Priority scheduling', 'Cancel anytime'],
     price: 30000,
     imageUrl: '/assets/images/IMG_1123.PNG',
-    category: 'Meal Prep',
-    type: 'service',
+    type: 'product',
     pricingModel: 'monthly',
     billingInterval: '',
     active: true
@@ -506,7 +491,6 @@ const SEED_PRODUCTS = [
     features: ['Mix and match services', 'Custom package pricing', '24-hour response guarantee', 'No commitment required', 'Tailored to your goals', 'Free to request'],
     price: 0,
     imageUrl: '/assets/images/Card.png',
-    category: 'Custom',
     type: 'service',
     pricingModel: 'quote',
     billingInterval: '',
@@ -763,7 +747,7 @@ async function sendOrderEmails(env, order) {
 // STORE: PUBLIC API HANDLERS
 // ─────────────────────────────────────────────────────────────────────────────
 
-const SEED_VERSION = '3';
+const SEED_VERSION = '4';
 
 async function handleGetProducts(env) {
   let products = await getProductList(env);
@@ -958,7 +942,6 @@ async function handleAdminCreateProduct(request, env) {
     description:     clean(data.description).slice(0, 2000),
     price,
     imageUrl:        clean(data.imageUrl).slice(0, 500),
-    category:        clean(data.category).slice(0, 60) || 'general',
     type:            clean(data.type) === 'service' ? 'service' : 'product',
     pricingModel,
     billingInterval: pricingModel === 'custom' ? clean(data.billingInterval).slice(0, 60) : '',
@@ -987,7 +970,6 @@ async function handleAdminUpdateProduct(request, env, id) {
   if (data.description    !== undefined) product.description    = clean(data.description).slice(0, 2000);
   if (data.price          !== undefined) product.price          = Math.round(parseFloat(data.price) * 100);
   if (data.imageUrl       !== undefined) product.imageUrl       = clean(data.imageUrl).slice(0, 500);
-  if (data.category       !== undefined) product.category       = clean(data.category).slice(0, 60);
   if (data.type           !== undefined) product.type           = clean(data.type) === 'service' ? 'service' : 'product';
   if (data.pricingModel   !== undefined) product.pricingModel   = validPM.includes(clean(data.pricingModel)) ? clean(data.pricingModel) : 'one-time';
   if (data.billingInterval !== undefined) product.billingInterval = product.pricingModel === 'custom' ? clean(data.billingInterval).slice(0, 60) : '';

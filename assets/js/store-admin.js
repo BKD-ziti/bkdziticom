@@ -181,14 +181,15 @@
       <tr>
         <td>
           ${p.imageUrl
-            ? `<img class="admin-table-img" src="${escHtml(p.imageUrl)}" alt="" loading="lazy">`
+            ? /\.(webm|mp4)$/i.test(p.imageUrl)
+              ? `<video class="admin-table-img" src="${escHtml(p.imageUrl)}" muted loop playsinline preload="metadata" autoplay style="object-fit:cover"></video>`
+              : `<img class="admin-table-img" src="${escHtml(p.imageUrl)}" alt="" loading="lazy">`
             : `<div class="admin-table-img-ph"><i class="fas fa-image"></i></div>`}
         </td>
         <td style="max-width:220px">
           <div style="font-weight:600;color:var(--cream);line-height:1.3">${escHtml(p.name)}</div>
           ${p.description ? `<div style="font-size:0.78rem;color:rgba(252,249,245,0.4);margin-top:0.2rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${escHtml(p.description)}</div>` : ''}
         </td>
-        <td style="text-transform:capitalize">${escHtml(p.category || '—')}</td>
         <td>
           <span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.18rem 0.55rem;border-radius:1rem;font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;${type === 'service' ? 'background:rgba(100,149,237,0.15);color:#8bb4f5;border:1px solid rgba(100,149,237,0.25)' : 'background:rgba(255,154,11,0.12);color:var(--amber);border:1px solid rgba(255,154,11,0.2)'}">
             ${type}
@@ -241,7 +242,6 @@
     document.getElementById('pName').value          = '';
     document.getElementById('pDesc').value          = '';
     document.getElementById('pPrice').value         = '';
-    document.getElementById('pCategory').value      = '';
     document.getElementById('pType').value          = 'product';
     document.getElementById('pPricingModel').value  = 'one-time';
     document.getElementById('pBillingInterval').value = '';
@@ -265,7 +265,6 @@
     document.getElementById('pName').value          = p.name;
     document.getElementById('pDesc').value          = p.description || '';
     document.getElementById('pPrice').value         = (p.price / 100).toFixed(2);
-    document.getElementById('pCategory').value      = p.category || '';
     document.getElementById('pType').value          = p.type || 'product';
     document.getElementById('pPricingModel').value  = p.pricingModel || 'one-time';
     document.getElementById('pBillingInterval').value = p.billingInterval || '';
@@ -322,7 +321,6 @@
         name:            document.getElementById('pName').value.trim(),
         description:     document.getElementById('pDesc').value.trim(),
         price:           parseFloat(document.getElementById('pPrice').value),
-        category:        document.getElementById('pCategory').value.trim(),
         type:            document.getElementById('pType').value,
         pricingModel:    document.getElementById('pPricingModel').value,
         billingInterval: document.getElementById('pBillingInterval').value.trim(),
