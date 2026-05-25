@@ -947,6 +947,14 @@
     padding: 0;
     overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+}
+.pd-modal-media { flex-shrink: 0; }
+.pd-modal-body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .pd-modal-close {
     position: absolute;
