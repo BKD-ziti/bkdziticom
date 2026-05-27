@@ -12,7 +12,12 @@
       "Bash(git push *)",
       "Bash(findstr /i card)",
       "Bash(dir \"C:\\\\Users\\\\BKDziti\\\\Documents\\\\GitHub\\\\bkdziticom\\\\assets\\\\images\" /b)",
-      "Bash(findstr /i \"card\")"
+      "Bash(findstr /i \"card\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\BKDziti\\\\Documents\\\\GitHub\\\\bkdziticom\" -Recurse -Name)",
+      "Bash(awk '{print $9, $5}')",
+      "Bash(grep -v \"^$\")",
+      "Bash(ls -la assets/images/store*.webm assets/images/store*.mp4)",
+      "Bash(ls -la assets/images/*.mp4)"
     ]
   }
 }
