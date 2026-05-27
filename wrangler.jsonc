@@ -1,6 +1,8 @@
 {
   "name": "bkdziti",
   "compatibility_date": "2026-05-14",
+  "main": "_worker.js",
+  "assets": { "directory": "." },
   "kv_namespaces": [
     {
       "binding": "STORE_KV",
