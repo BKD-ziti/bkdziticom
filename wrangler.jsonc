@@ -13,7 +13,7 @@
   "r2_buckets": [
     {
       "binding": "MEDIA",
-      "bucket_name": "bkdziti-media"
+      "bucket_name": "bkdziti-assets"
     }
   ]
 }
