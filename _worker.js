@@ -1076,6 +1076,38 @@ export default {
       return jsonResponse({ ok: false, error: 'Not found' }, 404);
     }
 
+    // ── R2 media assets ───────────────────────────────────────────────────────
+    // Intercept /assets/images/* and serve from R2 bucket (key = bare filename).
+    // Falls through to static assets if the key isn't in R2 yet.
+    if (path.startsWith('/assets/images/') && env.MEDIA) {
+      const key = path.slice('/assets/images/'.length);
+      if (key) {
+        const object = await env.MEDIA.get(key);
+        if (object) {
+          const headers = new Headers();
+          object.writeHttpMetadata(headers);
+          headers.set('cache-control', 'public, max-age=31536000, immutable');
+          if (!headers.has('content-type')) {
+            const ext = (key.split('.').pop() || '').toLowerCase();
+            const mime = {
+              webm: 'video/webm', mp4: 'video/mp4',
+              jpg: 'image/jpeg', jpeg: 'image/jpeg',
+              png: 'image/png', svg: 'image/svg+xml',
+              gif: 'image/gif', ico: 'image/x-icon',
+              pdf: 'application/pdf', heic: 'image/heic',
+              webmanifest: 'application/manifest+json',
+            };
+            if (mime[ext]) headers.set('content-type', mime[ext]);
+          }
+          const ifNoneMatch = request.headers.get('if-none-match');
+          if (ifNoneMatch && ifNoneMatch === object.httpEtag) {
+            return new Response(null, { status: 304, headers });
+          }
+          return new Response(object.body, { headers });
+        }
+      }
+    }
+
     // ── Static assets ─────────────────────────────────────────────────────────
     return env.ASSETS.fetch(request);
   }

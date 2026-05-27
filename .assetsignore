@@ -10,4 +10,9 @@ DEPLOYMENT.md
 README.md
 node_modules/
 *.map
-# Too large for Cloudflare's 25 MiB per-file limit — host on R2 or CDN instead
+# Large media — served from R2 (bkdziti-media bucket) instead of static assets.
+# Upload these with the wrangler commands in DEPLOYMENT.md before deploying beta.
+# NOTE: Do NOT deploy beta until these files are in the R2 bucket or they will 404.
+*.webm
+*.mp4
+*.HEIC

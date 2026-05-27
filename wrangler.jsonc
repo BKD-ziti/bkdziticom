@@ -9,5 +9,11 @@
       "id": "d39a4ee999f44c4ea2106cae326877f1",
       "preview_id": "c47dc5ad10bc499cb46b8e50e295985c"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "bkdziti-media"
+    }
   ]
 }
