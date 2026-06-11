@@ -59,7 +59,7 @@ const SAMPLE_DATA = [
         category: "arrests",
         source: "FDLE - Florida Department of Law Enforcement",
         description: "FDLE agents arrested Carolyn Eulena Pilgrim, 41, of Cape Coral, on scheme to defraud and grand theft charges after discovering she had deposited more than $3,000,000 in checks made payable to her employer company into a separate account under her control.",
-        articleUrl: "http://www.fdle.state.fl.us/news/2023/january/fdle-arrests-cape-coral-woman-in-seven-figure-embezzlement-scheme",
+        articleUrl: "https://www.capecoralbreeze.com/news/local-news/2023/01/25/fdle-arrests-cape-coral-woman-in-connection-with-seven-figure-embezzlement-scheme/",
         videoUrl: "",
         notes: "Major embezzlement scheme targeting employer"
     },
@@ -209,8 +209,8 @@ const SAMPLE_DATA = [
         category: "city-council",
         source: "WGCU PBS & NPR for Southwest Florida",
         description: "Cape Coral City Council moved citizen input time from beginning of meetings to the end, after all votes have been completed. Citizens waited up to three hours to provide input that came after council decisions were already made, severely limiting the ability of residents to influence voting outcomes.",
-        articleUrl: "https://www.wgcu.org/government-politics/2025-07-24/publicinput0724",
-        videoUrl: "",
+        articleUrl: "https://www.capecoralbreeze.com/news/local-news/2025/07/24/cape-coral-city-council-restricts-citizen-input-time-meeting-changes/",
+        videoUrl: "https://www.winknews.com/news/lee/cape-coral-residents-demand-recall-of-mayor-gunter-amid-controversy/article_f5efb33e-a64a-4042-9ae9-4ab8def5c59a.html",
         notes: "Reduced citizen input power; meeting management issue"
     },
     {
