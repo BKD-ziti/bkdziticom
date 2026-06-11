@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lee County Research - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1419;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 2px solid #d4a574;
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: #d4a574;
+            margin-bottom: 10px;
+        }
+
+        .nav-links {
+            margin-top: 15px;
+        }
+
+        .nav-links a {
+            color: #d4a574;
+            text-decoration: none;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        .form-section {
+            background: #1a1f29;
+            border: 1px solid #d4a574;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #d4a574;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            background: #0f1419;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            font-family: inherit;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #d4a574;
+            background: #151a23;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #d4a574;
+            color: #0f1419;
+        }
+
+        .btn-primary:hover {
+            background: #e8c08a;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn-danger {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #f44336;
+        }
+
+        .entries-list {
+            margin-top: 40px;
+        }
+
+        .entry-card {
+            background: #1a1f29;
+            border-left: 4px solid #d4a574;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .entry-title {
+            color: #d4a574;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .entry-date {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .entry-category {
+            display: inline-block;
+            background: #d4a574;
+            color: #0f1419;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .entry-meta {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .entry-description {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .entry-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .message.success {
+            background: #1b5e20;
+            color: #c8e6c9;
+            border: 1px solid #388e3c;
+        }
+
+        .message.error {
+            background: #b71c1c;
+            color: #ffcdd2;
+            border: 1px solid #d32f2f;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            color: #e0e0e0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Lee County Research Timeline</h1>
+            <p>Admin Control Panel</p>
+            <div class="nav-links">
+                <a href="index.html" target="_blank">← View Public Timeline</a>
+                <a href="#" onclick="clearAllData(); return false;">Clear All Data</a>
+            </div>
+        </header>
+
+        <div id="message"></div>
+
+        <div class="form-section">
+            <h2 style="color: #d4a574; margin-bottom: 20px;">Add New Entry</h2>
+            
+            <form id="entryForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="title">Title *</label>
+                        <input type="text" id="title" placeholder="e.g., Police Chief Indicted on Corruption Charges" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date *</label>
+                        <input type="date" id="date" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select id="category" required>
+                            <option value="">Select a category...</option>
+                            <option value="police-corruption">Police Corruption</option>
+                            <option value="financial-mismanagement">Financial Mismanagement</option>
+                            <option value="arrests">Arrests</option>
+                            <option value="investigations">Investigations</option>
+                            <option value="government-scandal">Government Scandal</option>
+                            <option value="sheriff-office">Sheriff's Office</option>
+                            <option value="city-council">City Council</option>
+                            <option value="legal-action">Legal Action</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="source">Source/News Outlet *</label>
+                        <input type="text" id="source" placeholder="e.g., NBC2, Cape Coral Police Dept, Court Records" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description/Summary *</label>
+                    <textarea id="description" placeholder="Detailed description of the incident or news story..." required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articleUrl">Article URL (Optional)</label>
+                        <input type="url" id="articleUrl" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label for="videoUrl">Video URL (Optional)</label>
+                        <input type="url" id="videoUrl" placeholder="https://youtube.com/...">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Research Notes (Optional)</label>
+                    <textarea id="notes" placeholder="Your personal notes, context, follow-up items..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">Add Entry</button>
+                    <button type="reset" class="btn-secondary">Clear Form</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="entries-list">
+            <h2 style="color: #d4a574; margin-bottom: 20px;">Entries (<span id="entryCount">0</span>)</h2>
+            <div id="entriesContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Storage key
+        const STORAGE_KEY = 'leecountyresearch_entries';
+
+        // Load and display entries on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            displayEntries();
+            setTodayDate();
+        });
+
+        // Form submission
+        document.getElementById('entryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            addEntry();
+        });
+
+        function setTodayDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+        }
+
+        function addEntry() {
+            const entry = {
+                id: Date.now(),
+                title: document.getElementById('title').value,
+                date: document.getElementById('date').value,
+                category: document.getElementById('category').value,
+                source: document.getElementById('source').value,
+                description: document.getElementById('description').value,
+                articleUrl: document.getElementById('articleUrl').value,
+                videoUrl: document.getElementById('videoUrl').value,
+                notes: document.getElementById('notes').value,
+                createdAt: new Date().toISOString()
+            };
+
+            // Get existing entries
+            let entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            entries.push(entry);
+
+            // Save
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+
+            // Reset form
+            document.getElementById('entryForm').reset();
+            setTodayDate();
+
+            // Show message
+            showMessage('Entry added successfully!', 'success');
+
+            // Refresh display
+            displayEntries();
+        }
+
+        function displayEntries() {
+            const entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            const container = document.getElementById('entriesContainer');
+            document.getElementById('entryCount').textContent = entries.length;
+
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="empty-state">No entries yet. Add your first entry above.</div>';
+                return;
+            }
+
+            // Sort by date descending
+            entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            container.innerHTML = entries.map(entry => `
+                <div class="entry-card">
+                    <div class="entry-header">
+                        <div>
+                            <div class="entry-title">${escapeHtml(entry.title)}</div>
+                            <div class="entry-date">${formatDate(entry.date)}</div>
+                        </div>
+                    </div>
+                    <div class="entry-category">${entry.category}</div>
+                    <div class="entry-meta">Source: ${escapeHtml(entry.source)}</div>
+                    <div class="entry-description">${escapeHtml(entry.description)}</div>
+                    ${entry.articleUrl ? `<div class="entry-meta"><a href="${entry.articleUrl}" target="_blank" style="color: #d4a574;">📄 View Article</a></div>` : ''}
+                    ${entry.videoUrl ? `<div class="entry-meta"><a href="${entry.videoUrl}" target="_blank" style="color: #d4a574;">🎥 View Video</a></div>` : ''}
+                    ${entry.notes ? `<div class="entry-meta"><strong>Notes:</strong> ${escapeHtml(entry.notes)}</div>` : ''}
+                    <div class="entry-actions">
+                        <button class="btn-small btn-secondary" onclick="editEntry(${entry.id})">Edit</button>
+                        <button class="btn-small btn-danger" onclick="deleteEntry(${entry.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteEntry(id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                let entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                entries = entries.filter(e => e.id !== id);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+                showMessage('Entry deleted.', 'success');
+                displayEntries();
+            }
+        }
+
+        function editEntry(id) {
+            const entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            const entry = entries.find(e => e.id === id);
+            
+            if (entry) {
+                document.getElementById('title').value = entry.title;
+                document.getElementById('date').value = entry.date;
+                document.getElementById('category').value = entry.category;
+                document.getElementById('source').value = entry.source;
+                document.getElementById('description').value = entry.description;
+                document.getElementById('articleUrl').value = entry.articleUrl;
+                document.getElementById('videoUrl').value = entry.videoUrl;
+                document.getElementById('notes').value = entry.notes;
+
+                // Delete the old entry
+                deleteEntry(id);
+
+                // Scroll to form
+                document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('WARNING: This will delete ALL entries. Are you absolutely sure?')) {
+                if (confirm('Last chance - this cannot be undone. Clear everything?')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    showMessage('All data cleared.', 'success');
+                    displayEntries();
+                }
+            }
+        }
+
+        function showMessage(text, type) {
+            const msgEl = document.getElementById('message');
+            msgEl.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => msgEl.innerHTML = '', 4000);
+        }
+
+        function formatDate(dateStr) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', options);
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+    </script>
+</body>
+</html>
