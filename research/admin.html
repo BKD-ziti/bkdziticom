@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lee County Research - Admin Panel</title>
+    <meta name="robots" content="noindex,nofollow">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +21,140 @@
             background: #0f1419;
             color: #e0e0e0;
             padding: 0;
+        }
+
+        /* ── LOGIN SCREEN ── */
+        .admin-login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f29 100%);
+        }
+
+        .admin-login-card {
+            background: #1a1f29;
+            border: 1px solid #333;
+            padding: 50px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .admin-login-card h1 {
+            color: #d4a574;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .admin-login-card > p {
+            color: #999;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .admin-login-card form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .admin-login-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .admin-login-field label {
+            color: #d4a574;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .admin-login-field input {
+            padding: 12px 14px;
+            background: #0f1419;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            text-align: center;
+            letter-spacing: 0.1em;
+            transition: all 0.2s;
+        }
+
+        .admin-login-field input:focus {
+            outline: none;
+            border-color: #d4a574;
+            background: #151a23;
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+        }
+
+        .admin-login-btn {
+            padding: 12px 24px;
+            background: #d4a574;
+            color: #0f1419;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .admin-login-btn:hover:not(:disabled) {
+            background: #e8c08a;
+            transform: translateY(-2px);
+        }
+
+        .admin-login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .admin-login-error {
+            color: #ff6b6b;
+            font-size: 12px;
+            min-height: 18px;
+            text-align: center;
+        }
+
+        .admin-login-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 165, 116, 0.1);
+            text-align: center;
+        }
+
+        .admin-login-footer a {
+            color: rgba(212, 165, 116, 0.5);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .admin-login-footer a:hover {
+            color: #d4a574;
+        }
+
+        #adminContent {
+            display: none;
         }
 
         .container {
@@ -350,6 +485,29 @@
     </style>
 </head>
 <body>
+    <!-- ── LOGIN SCREEN ── -->
+    <div id="loginScreen" class="admin-login-screen">
+        <div class="admin-login-card">
+            <h1>Lee County Research</h1>
+            <p>Admin access only. Enter your admin key to continue.</p>
+            <form id="loginForm" novalidate>
+                <div class="admin-login-field">
+                    <label for="adminKey">Admin Key</label>
+                    <input type="password" id="adminKey" placeholder="••••••••••••" autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="admin-login-btn">
+                    <i class="fas fa-unlock-alt"></i> Sign In
+                </button>
+                <div class="admin-login-error" id="loginError"></div>
+            </form>
+            <div class="admin-login-footer">
+                <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Timeline</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── ADMIN DASHBOARD ── -->
+    <div id="adminContent">
     <div class="container">
         <header>
             <h1>Lee County Research</h1>
@@ -357,6 +515,7 @@
             <div class="nav-links">
                 <a href="index.html" target="_blank"><i class="fas fa-external-link-alt"></i> View Public Timeline</a>
                 <a href="#" onclick="clearAllData(); return false;" style="color: #d32f2f; border-color: #d32f2f;"><i class="fas fa-trash"></i> Clear Data</a>
+                <a href="#" onclick="logout(); return false;" style="color: #d32f2f; border-color: #d32f2f;"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
             </div>
         </header>
 
@@ -431,11 +590,19 @@
             <h2><i class="fas fa-list"></i> Current Entries <span style="font-size: 0.8em; color: #d4a574;">(<span id="entryCount">0</span>)</span></h2>
             <div id="entriesContainer"></div>
         </div>
+
+        <div class="entries-list" style="margin-top: 60px; padding-top: 40px; border-top: 2px solid #333;">
+            <h2 style="color: #f08080;"><i class="fas fa-inbox"></i> Pending Submissions <span style="font-size: 0.8em; color: #f08080;">(<span id="pendingCount">0</span>)</span></h2>
+            <p style="color: #999; font-size: 12px; margin-bottom: 20px;">Public submissions awaiting review and approval</p>
+            <div id="pendingContainer"></div>
+        </div>
     </div>
 
     <script>
         // Storage key
         const STORAGE_KEY = 'leecountyresearch_entries';
+        const PENDING_KEY = 'leecountyresearch_pending';
+        let editingId = null; // Track if we're editing an entry
 
         // Sample data to populate on first load
         const SAMPLE_DATA = [
@@ -615,6 +782,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             initializeData();
             displayEntries();
+            displayPendingSubmissions();
             setTodayDate();
         });
 
@@ -637,6 +805,16 @@
             addEntry();
         });
 
+        // Form reset
+        const resetBtn = document.querySelector('.btn-secondary');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                editingId = null;
+                const submitBtn = document.querySelector('.btn-primary');
+                submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Entry';
+            });
+        }
+
         function setTodayDate() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('date').value = today;
@@ -644,7 +822,7 @@
 
         function addEntry() {
             const entry = {
-                id: Date.now(),
+                id: editingId || Date.now(),
                 title: document.getElementById('title').value,
                 date: document.getElementById('date').value,
                 category: document.getElementById('category').value,
@@ -658,7 +836,20 @@
 
             // Get existing entries
             let entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            entries.push(entry);
+
+            if (editingId) {
+                // Update existing entry
+                const index = entries.findIndex(e => e.id === editingId);
+                if (index !== -1) {
+                    entries[index] = entry;
+                    showMessage('Entry updated successfully!', 'success');
+                }
+                editingId = null;
+            } else {
+                // Add new entry
+                entries.push(entry);
+                showMessage('Entry added successfully!', 'success');
+            }
 
             // Save
             localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
@@ -666,9 +857,6 @@
             // Reset form
             document.getElementById('entryForm').reset();
             setTodayDate();
-
-            // Show message
-            showMessage('Entry added successfully!', 'success');
 
             // Refresh display
             displayEntries();
@@ -724,8 +912,9 @@
         function editEntry(id) {
             const entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
             const entry = entries.find(e => e.id === id);
-            
+
             if (entry) {
+                // Load entry values into form
                 document.getElementById('title').value = entry.title;
                 document.getElementById('date').value = entry.date;
                 document.getElementById('category').value = entry.category;
@@ -735,8 +924,12 @@
                 document.getElementById('videoUrl').value = entry.videoUrl;
                 document.getElementById('notes').value = entry.notes;
 
-                // Delete the old entry
-                deleteEntry(id);
+                // Set editing ID
+                editingId = id;
+
+                // Change button text to indicate editing
+                const submitBtn = document.querySelector('.btn-primary');
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Entry';
 
                 // Scroll to form
                 document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
@@ -773,6 +966,198 @@
                 "'": '&#039;'
             };
             return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function displayPendingSubmissions() {
+            const pending = JSON.parse(localStorage.getItem(PENDING_KEY)) || [];
+            const container = document.getElementById('pendingContainer');
+            document.getElementById('pendingCount').textContent = pending.length;
+
+            if (pending.length === 0) {
+                container.innerHTML = '<div class="empty-state">No pending submissions. Check back later!</div>';
+                return;
+            }
+
+            // Sort by submitted date descending
+            pending.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+
+            container.innerHTML = pending.map(sub => `
+                <div class="entry-card" style="border-left-color: #f08080; background: rgba(240, 128, 128, 0.05);">
+                    <div class="entry-header">
+                        <div style="flex: 1;">
+                            <div class="entry-title">${escapeHtml(sub.title)}</div>
+                            <div class="entry-date"><i class="fas fa-calendar-alt"></i> ${formatDate(sub.date)}</div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #333;">
+                        <div style="color: #999; font-size: 12px;"><strong>From:</strong> ${escapeHtml(sub.name || 'Anonymous')} (${escapeHtml(sub.email)})</div>
+                        <div style="color: #999; font-size: 11px; margin-top: 4px;">Submitted: ${new Date(sub.submittedAt).toLocaleString()}</div>
+                    </div>
+                    <div class="entry-category">${sub.category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</div>
+                    <div class="entry-meta"><strong>Source:</strong> ${escapeHtml(sub.source)}</div>
+                    <div class="entry-description">${escapeHtml(sub.description)}</div>
+                    <div style="display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+                        ${sub.articleUrl ? `<a href="${sub.articleUrl}" target="_blank" class="entry-meta" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-file-alt"></i> Article</a>` : ''}
+                        ${sub.videoUrl ? `<a href="${sub.videoUrl}" target="_blank" class="entry-meta" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-video"></i> Video</a>` : ''}
+                    </div>
+                    ${sub.notes ? `<div class="entry-meta" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #333;"><strong>Notes:</strong> ${escapeHtml(sub.notes)}</div>` : ''}
+                    <div class="entry-actions" style="margin-top: 16px;">
+                        <button class="btn-small btn-primary" onclick="approvePending(${sub.id})" style="background: #4caf50; color: white;">
+                            <i class="fas fa-check"></i> Approve & Publish
+                        </button>
+                        <button class="btn-small btn-danger" onclick="rejectPending(${sub.id})">
+                            <i class="fas fa-trash"></i> Reject
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approvePending(id) {
+            let pending = JSON.parse(localStorage.getItem(PENDING_KEY)) || [];
+            const submission = pending.find(s => s.id === id);
+
+            if (submission && confirm(`Approve and publish "${submission.title}"?`)) {
+                // Create entry from submission
+                const entry = {
+                    id: Date.now(),
+                    title: submission.title,
+                    date: submission.date,
+                    category: submission.category,
+                    source: submission.source,
+                    description: submission.description,
+                    articleUrl: submission.articleUrl,
+                    videoUrl: submission.videoUrl,
+                    notes: submission.notes ? `Submitted by: ${submission.name || 'Anonymous'}\n${submission.notes}` : `Submitted by: ${submission.name || 'Anonymous'}`,
+                    createdAt: new Date().toISOString()
+                };
+
+                // Add to published entries
+                let entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                entries.push(entry);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+
+                // Remove from pending
+                pending = pending.filter(s => s.id !== id);
+                localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+
+                showMessage(`✓ Entry published! "${submission.title}" is now live on the timeline.`, 'success');
+                displayEntries();
+                displayPendingSubmissions();
+            }
+        }
+
+        function rejectPending(id) {
+            let pending = JSON.parse(localStorage.getItem(PENDING_KEY)) || [];
+            const submission = pending.find(s => s.id === id);
+
+            if (submission && confirm(`Reject submission "${submission.title}"?`)) {
+                pending = pending.filter(s => s.id !== id);
+                localStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+
+                showMessage('Submission rejected and removed.', 'success');
+                displayPendingSubmissions();
+            }
+        }
+    </script>
+    </div>
+    <!-- ── END ADMIN CONTENT ── -->
+
+    <!-- ── AUTHENTICATION ── -->
+    <script>
+        const TOKEN_KEY = 'leecounty_admin_token';
+        let adminToken = sessionStorage.getItem(TOKEN_KEY) || '';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (adminToken) {
+                // Try to validate token
+                verifyToken();
+            } else {
+                // Show login
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('adminContent').style.display = 'none';
+            }
+
+            // Handle login form
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+        });
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const key = document.getElementById('adminKey').value;
+            const errorEl = document.getElementById('loginError');
+            const btn = document.querySelector('.admin-login-btn');
+
+            errorEl.textContent = '';
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Signing in…';
+
+            try {
+                const response = await fetch('/api/store/admin/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: key })
+                });
+
+                const data = await response.json();
+
+                if (!data.ok) {
+                    throw new Error(data.error || 'Invalid admin key');
+                }
+
+                // Successfully authenticated
+                adminToken = data.token;
+                sessionStorage.setItem(TOKEN_KEY, adminToken);
+
+                // Show dashboard
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+
+                // Reinitialize the admin page
+                displayEntries();
+                setTodayDate();
+            } catch (error) {
+                errorEl.textContent = error.message;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-unlock-alt"></i> Sign In';
+                document.getElementById('adminKey').select();
+            }
+        }
+
+        async function verifyToken() {
+            try {
+                const response = await fetch('/api/store/admin/products', {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+
+                if (response.status === 401) {
+                    throw new Error('Session expired');
+                }
+
+                // Token is valid
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+            } catch (error) {
+                // Token invalid, show login
+                sessionStorage.removeItem(TOKEN_KEY);
+                adminToken = '';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('adminContent').style.display = 'none';
+            }
+        }
+
+        function logout() {
+            adminToken = '';
+            sessionStorage.removeItem(TOKEN_KEY);
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('adminContent').style.display = 'none';
+            document.getElementById('adminKey').value = '';
+            document.getElementById('loginError').textContent = '';
+            document.querySelector('.admin-login-btn').disabled = false;
+            document.querySelector('.admin-login-btn').innerHTML = '<i class="fas fa-unlock-alt"></i> Sign In';
         }
     </script>
 </body>

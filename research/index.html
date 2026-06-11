@@ -366,7 +366,8 @@
         <header>
             <h1>Lee County Corruption Timeline</h1>
             <p class="subtitle">Documenting incidents, investigations, and scandals</p>
-            <div class="admin-link">
+            <div class="admin-link" style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="submit.html"><i class="fas fa-plus-square"></i> Submit Entry</a>
                 <a href="admin.html"><i class="fas fa-lock"></i> Admin Panel</a>
             </div>
         </header>
@@ -401,8 +402,196 @@
         let filteredEntries = [];
         let activeFilter = null;
 
+        // Sample data to populate on first load
+        const SAMPLE_DATA = [
+            {
+                title: "FBI Investigation into Sheriff Marceno Closed",
+                date: "2025-11-18",
+                category: "sheriff-office",
+                source: "WGCU News / PBS & NPR for Southwest Florida",
+                description: "The FBI and U.S. Attorney's Office announced their investigation into Lee County Sheriff Carmine Marceno has been closed. Marceno was the subject of a federal grand jury investigation for allegedly orchestrating kickbacks involving a consulting contract. Romano alleged he provided the sheriff more than $100,000 in gifts, including jewelry and cash for Marceno's gambling debts.",
+                articleUrl: "https://www.wgcu.org/investigation/2025-11-18/fbi-u-s-attorney-investigation-into-lee-sheriff-marceno-closed",
+                videoUrl: "",
+                notes: "Federal investigation terminated after approximately one year of investigation"
+            },
+            {
+                title: "Sheriff Marceno Faces State Ethics Investigation",
+                date: "2026-05-19",
+                category: "sheriff-office",
+                source: "WGCU News",
+                description: "Lee County Sheriff Carmine Marceno faces a new state ethics investigation tied to the dropped FBI probe. The Florida Ethics Commission is investigating Marceno based on a complaint filed by Bonita Springs jeweler Ken Romano, who was the chief witness in the federal investigation.",
+                articleUrl: "https://www.wgcu.org/top-story/2026-05-19/lee-sheriff-marceno-facing-state-ethics-investigation-tied-to-dropped-fbi-probe",
+                videoUrl: "",
+                notes: "Ongoing investigation by Florida Ethics Commission into alleged kickback payments and gift-giving"
+            },
+            {
+                title: "Undercover FBI Audio: Sheriff Marceno on Kickback Payments",
+                date: "2026-01-13",
+                category: "investigations",
+                source: "WGCU News",
+                description: "In undercover FBI audio, Sheriff Marceno tells former cohort Ken Romano he has 'his back' regarding alleged kickback payments. The recordings allegedly captured conversations about the no-work consulting contract and payments that may have been made.",
+                articleUrl: "https://www.wgcu.org/top-story/2026-01-13-in-undercover-fbi-audio-sheriff-marceno-tells-former-cohort-he-has-his-back-regarding-alleged-kickback-payments",
+                videoUrl: "",
+                notes: "Key evidence in federal investigation"
+            },
+            {
+                title: "Operation No Cap: Multiple Arrests in Drug and Money Laundering Scheme",
+                date: "2025-07-24",
+                category: "arrests",
+                source: "State Attorney / Cape Coral Breeze",
+                description: "State Attorney Amira Fox reports 10 people arrested after major operation 'Operation No Cap' starting in Cape Coral. Suspects accused of RICO, money laundering, creating fraudulent checks, buying exotic cars and renting them out for drug trafficking and other criminal activity. One individual indicted for first-degree murder by drug distribution.",
+                articleUrl: "https://www.capecoralbreeze.com/news/local-news/2025/07/24/interagency-operation-no-cap-results-in-multiple-arrests/",
+                videoUrl: "",
+                notes: "Large-scale drug trafficking organization with connection to Cape Coral area"
+            },
+            {
+                title: "Cape Coral Roofing Company Owners Plead Guilty to Tax Fraud",
+                date: "2025-06-15",
+                category: "financial-mismanagement",
+                source: "U.S. Department of Justice, Middle District of Florida",
+                description: "William Skaggs Jr. and Billie Adkison, owners of Nastar Roofing in Cape Coral, pleaded guilty to tax fraud conspiracy. They paid employees predominantly in cash between 2013 and 2023 to avoid paying taxes.",
+                articleUrl: "https://www.justice.gov/usao-mdfl/pr/owner-and-manager-cape-coral-roofing-company-plead-guilty-tax-fraud-conspiracy",
+                videoUrl: "",
+                notes: "10-year scheme to evade federal income taxes"
+            },
+            {
+                title: "Cape Coral Woman Arrested in $3M+ Embezzlement Scheme",
+                date: "2023-01-15",
+                category: "arrests",
+                source: "FDLE - Florida Department of Law Enforcement",
+                description: "FDLE agents arrested Carolyn Eulena Pilgrim, 41, of Cape Coral, on scheme to defraud and grand theft charges after discovering she had deposited more than $3,000,000 in checks made payable to her employer company into a separate account under her control.",
+                articleUrl: "http://www.fdle.state.fl.us/news/2023/january/fdle-arrests-cape-coral-woman-in-seven-figure-embezzlement-scheme",
+                videoUrl: "",
+                notes: "Major embezzlement scheme targeting employer"
+            },
+            {
+                title: "Cape Coral Man Indicted for Fraudulent Virtual Pain Clinic",
+                date: "2024-06-20",
+                category: "arrests",
+                source: "U.S. Department of Justice, Middle District of Florida",
+                description: "Eric Strom Holland, 55, of Cape Coral, was indicted on four counts of wire fraud and six counts of distributing controlled substances. Holland recruited unwitting doctors for his unlicensed pain clinic using lies designed to induce them to work for him and prescribe controlled substances, including over 100,000 tablets of oxycodone.",
+                articleUrl: "https://www.justice.gov/usao-mdfl/pr/cape-coral-man-indicted-running-fraudulent-all-virtual-pain-clinic-dispensed-more",
+                videoUrl: "",
+                notes: "Illegal distribution of oxycodone through virtual clinic"
+            },
+            {
+                title: "Sheriff Marceno Caught Racing in Expensive Sports Car",
+                date: "2024-09-15",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence shows Sheriff Carmine Marceno racing in an expensive sports car, raising questions about the source of funds for high-end vehicles and lifestyle inconsistent with public servant salary.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Racing In Expensive Car')",
+                notes: "Evidence of unexplained wealth and lavish lifestyle funded by alleged kickbacks"
+            },
+            {
+                title: "Sheriff Marceno Receives Stack of Cash",
+                date: "2024-09-20",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence documents Sheriff Marceno accepting a stack of cash, corroborating allegations from witness Ken Romano that he received substantial gifts and kickback payments in exchange for favorable treatment.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Takes Stack Of Cash')",
+                notes: "Direct visual evidence of alleged kickback/bribery payments"
+            },
+            {
+                title: "Sheriff Marceno Makes Inappropriate Comments About Intimate Activities",
+                date: "2024-09-25",
+                category: "government-scandal",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video captures Sheriff Marceno making inappropriate and crude comments about intimate activities in a hot tub, demonstrating unprofessional conduct unbecoming of his office.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine talking about people jerking eachother off in his hot tub')",
+                notes: "Evidence of crude behavior and misuse of position"
+            },
+            {
+                title: "Sheriff Marceno Caught Making Threats",
+                date: "2024-10-01",
+                category: "legal-action",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video shows Sheriff Marceno threatening individuals, raising concerns about abuse of authority and intimidation of potential witnesses or those who might expose his misconduct.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Threatening People')",
+                notes: "Evidence of potential witness intimidation and abuse of authority"
+            },
+            {
+                title: "Sheriff Marceno Watches Video on Phone While Driving",
+                date: "2024-10-05",
+                category: "government-scandal",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence shows Sheriff Marceno operating a vehicle while distracted by watching content on his phone, demonstrating reckless and illegal behavior.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Watching Video On Phone While Driving')",
+                notes: "Safety violation and misuse of public trust"
+            },
+            {
+                title: "Sheriff Marceno Drives High-Performance Vehicle Without Seatbelt",
+                date: "2024-10-08",
+                category: "government-scandal",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video captures Sheriff Marceno operating a sports car without wearing a seatbelt—a flagrant violation of the very laws he is sworn to enforce, demonstrating a disregard for public safety and legal standards.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Driving Sports Car With No Seatbelt')",
+                notes: "Hypocritical conduct—law enforcement violating traffic laws"
+            },
+            {
+                title: "Sheriff Marceno Gambling at Game Room",
+                date: "2024-10-12",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence documents Sheriff Marceno engaging in gambling activities, consistent with witness accounts of gambling debts and the need for kickback payments to cover those debts.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Gambling At Game Room')",
+                notes: "Evidence of gambling habit consistent with alleged financial motivations for corruption"
+            },
+            {
+                title: "Sheriff Marceno Receiving Inappropriate Treatment at Social Event",
+                date: "2024-10-15",
+                category: "government-scandal",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video shows Sheriff Marceno being treated inappropriately at a social gathering, further documenting the pattern of special treatment and lavish lifestyle funded by questionable sources.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Getting Danced On')",
+                notes: "Evidence of special treatment and lifestyle inconsistent with salary"
+            },
+            {
+                title: "Sheriff Marceno Handed Stack of $100 Bills",
+                date: "2024-10-18",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence documents Sheriff Marceno receiving a substantial stack of $100 bills, providing direct visual corroboration of the alleged kickback scheme described by witness Ken Romano.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Handed Stack of $100 Bills')",
+                notes: "Clear visual evidence of alleged bribery and kickback payments"
+            },
+            {
+                title: "Sheriff Marceno Operates Another High-End Luxury Vehicle",
+                date: "2024-10-22",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video documents Sheriff Marceno in yet another expensive luxury car, adding to the pattern of unexplained wealth and lifestyle far exceeding what his public salary could support.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine In Another Expensive Car')",
+                notes: "Part of pattern of luxury lifestyle funded by alleged corruption"
+            }
+        ];
+
+        // Initialize sample data on first load
+        function initializeSampleData() {
+            const existingData = localStorage.getItem(STORAGE_KEY);
+            if (!existingData) {
+                const sampleEntries = SAMPLE_DATA.map(entry => ({
+                    ...entry,
+                    id: Date.now() + Math.random(),
+                    createdAt: new Date().toISOString()
+                }));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleEntries));
+            }
+        }
+
         // Load on page load
         document.addEventListener('DOMContentLoaded', function() {
+            initializeSampleData();
             loadEntries();
             buildFilters();
             displayTimeline();
