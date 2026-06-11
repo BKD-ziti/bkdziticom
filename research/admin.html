@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lee County Research - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,53 +16,89 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0f1419;
             color: #e0e0e0;
-            padding: 20px;
+            padding: 0;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
+            padding: 40px 20px;
         }
 
         header {
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             border-bottom: 2px solid #d4a574;
-            padding-bottom: 20px;
+            padding-bottom: 30px;
+            position: relative;
         }
 
         h1 {
             color: #d4a574;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 2.2em;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .nav-links {
-            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .nav-links a {
             color: #d4a574;
             text-decoration: none;
-            margin-right: 20px;
-            font-size: 14px;
+            font-size: 13px;
+            padding: 8px 16px;
+            border: 1px solid #d4a574;
+            border-radius: 3px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .nav-links a:hover {
-            text-decoration: underline;
+            background: #d4a574;
+            color: #0f1419;
         }
 
         .form-section {
             background: #1a1f29;
-            border: 1px solid #d4a574;
-            padding: 30px;
+            border: 1px solid #333;
+            padding: 35px;
+            margin-bottom: 40px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section h2 {
+            color: #d4a574;
             margin-bottom: 30px;
-            border-radius: 4px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section h2 i {
+            font-size: 0.9em;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         label {
@@ -66,7 +106,9 @@
             margin-bottom: 8px;
             color: #d4a574;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         input[type="text"],
@@ -75,13 +117,14 @@
         textarea,
         select {
             width: 100%;
-            padding: 12px;
+            padding: 12px 14px;
             background: #0f1419;
             border: 1px solid #333;
             color: #e0e0e0;
             font-family: inherit;
             border-radius: 4px;
             font-size: 14px;
+            transition: all 0.2s;
         }
 
         input[type="text"]:focus,
@@ -92,33 +135,42 @@
             outline: none;
             border-color: #d4a574;
             background: #151a23;
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
         }
 
         textarea {
             resize: vertical;
             min-height: 100px;
+            font-family: inherit;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 22px;
         }
 
         .button-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         button {
             padding: 12px 24px;
-            font-size: 14px;
+            font-size: 13px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.2s;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-primary {
@@ -128,6 +180,7 @@
 
         .btn-primary:hover {
             background: #e8c08a;
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
@@ -149,133 +202,168 @@
         }
 
         .entries-list {
-            margin-top: 40px;
+            margin-top: 50px;
+        }
+
+        .entries-list h2 {
+            color: #d4a574;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .entry-card {
             background: #1a1f29;
             border-left: 4px solid #d4a574;
-            padding: 20px;
-            margin-bottom: 15px;
+            padding: 24px;
+            margin-bottom: 16px;
             border-radius: 4px;
+            border: 1px solid #333;
+            transition: all 0.2s;
+        }
+
+        .entry-card:hover {
+            border-color: #d4a574;
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.1);
         }
 
         .entry-header {
             display: flex;
             justify-content: space-between;
             align-items: start;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            gap: 15px;
         }
 
         .entry-title {
-            color: #d4a574;
-            font-size: 16px;
+            color: #e0e0e0;
+            font-size: 15px;
             font-weight: 600;
         }
 
         .entry-date {
             color: #999;
             font-size: 12px;
+            white-space: nowrap;
         }
 
         .entry-category {
             display: inline-block;
             background: #d4a574;
             color: #0f1419;
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 3px;
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 700;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .entry-meta {
             color: #999;
-            font-size: 13px;
+            font-size: 12px;
             margin-bottom: 10px;
+        }
+
+        .entry-meta a {
+            color: #d4a574;
+            text-decoration: none;
+        }
+
+        .entry-meta a:hover {
+            text-decoration: underline;
         }
 
         .entry-description {
             color: #ccc;
-            font-size: 14px;
-            margin-bottom: 15px;
+            font-size: 13px;
+            margin-bottom: 12px;
             line-height: 1.5;
         }
 
         .entry-actions {
             display: flex;
             gap: 10px;
+            margin-top: 15px;
         }
 
         .btn-small {
             padding: 6px 12px;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .message {
-            padding: 15px;
+            padding: 16px 18px;
             border-radius: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
         }
 
         .message.success {
-            background: #1b5e20;
+            background: rgba(27, 94, 32, 0.3);
             color: #c8e6c9;
-            border: 1px solid #388e3c;
+            border-left-color: #4caf50;
         }
 
         .message.error {
-            background: #b71c1c;
+            background: rgba(183, 28, 28, 0.3);
             color: #ffcdd2;
-            border: 1px solid #d32f2f;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .checkbox-item label {
-            margin: 0;
-            color: #e0e0e0;
-            font-weight: normal;
-            cursor: pointer;
+            border-left-color: #d32f2f;
         }
 
         .empty-state {
             text-align: center;
             color: #666;
-            padding: 40px 20px;
+            padding: 50px 20px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .entry-header {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Lee County Research Timeline</h1>
+            <h1>Lee County Research</h1>
             <p>Admin Control Panel</p>
             <div class="nav-links">
-                <a href="index.html" target="_blank">← View Public Timeline</a>
-                <a href="#" onclick="clearAllData(); return false;">Clear All Data</a>
+                <a href="index.html" target="_blank"><i class="fas fa-external-link-alt"></i> View Public Timeline</a>
+                <a href="#" onclick="clearAllData(); return false;" style="color: #d32f2f; border-color: #d32f2f;"><i class="fas fa-trash"></i> Clear Data</a>
             </div>
         </header>
 
         <div id="message"></div>
 
         <div class="form-section">
-            <h2 style="color: #d4a574; margin-bottom: 20px;">Add New Entry</h2>
+            <h2><i class="fas fa-plus-circle"></i> Add New Entry</h2>
             
             <form id="entryForm">
                 <div class="form-row">
@@ -340,7 +428,7 @@
         </div>
 
         <div class="entries-list">
-            <h2 style="color: #d4a574; margin-bottom: 20px;">Entries (<span id="entryCount">0</span>)</h2>
+            <h2><i class="fas fa-list"></i> Current Entries <span style="font-size: 0.8em; color: #d4a574;">(<span id="entryCount">0</span>)</span></h2>
             <div id="entriesContainer"></div>
         </div>
     </div>
@@ -349,11 +437,199 @@
         // Storage key
         const STORAGE_KEY = 'leecountyresearch_entries';
 
+        // Sample data to populate on first load
+        const SAMPLE_DATA = [
+            {
+                title: "FBI Investigation into Sheriff Marceno Closed",
+                date: "2025-11-18",
+                category: "sheriff-office",
+                source: "WGCU News / PBS & NPR for Southwest Florida",
+                description: "The FBI and U.S. Attorney's Office announced their investigation into Lee County Sheriff Carmine Marceno has been closed. Marceno was the subject of a federal grand jury investigation for allegedly orchestrating kickbacks involving a consulting contract. Romano alleged he provided the sheriff more than $100,000 in gifts, including jewelry and cash for Marceno's gambling debts.",
+                articleUrl: "https://www.wgcu.org/investigation/2025-11-18/fbi-u-s-attorney-investigation-into-lee-sheriff-marceno-closed",
+                videoUrl: "",
+                notes: "Federal investigation terminated after approximately one year of investigation"
+            },
+            {
+                title: "Sheriff Marceno Faces State Ethics Investigation",
+                date: "2026-05-19",
+                category: "sheriff-office",
+                source: "WGCU News",
+                description: "Lee County Sheriff Carmine Marceno faces a new state ethics investigation tied to the dropped FBI probe. The Florida Ethics Commission is investigating Marceno based on a complaint filed by Bonita Springs jeweler Ken Romano, who was the chief witness in the federal investigation.",
+                articleUrl: "https://www.wgcu.org/top-story/2026-05-19/lee-sheriff-marceno-facing-state-ethics-investigation-tied-to-dropped-fbi-probe",
+                videoUrl: "",
+                notes: "Ongoing investigation by Florida Ethics Commission into alleged kickback payments and gift-giving"
+            },
+            {
+                title: "Undercover FBI Audio: Sheriff Marceno on Kickback Payments",
+                date: "2026-01-13",
+                category: "investigations",
+                source: "WGCU News",
+                description: "In undercover FBI audio, Sheriff Marceno tells former cohort Ken Romano he has 'his back' regarding alleged kickback payments. The recordings allegedly captured conversations about the no-work consulting contract and payments that may have been made.",
+                articleUrl: "https://www.wgcu.org/top-story/2026-01-13-in-undercover-fbi-audio-sheriff-marceno-tells-former-cohort-he-has-his-back-regarding-alleged-kickback-payments",
+                videoUrl: "",
+                notes: "Key evidence in federal investigation"
+            },
+            {
+                title: "Operation No Cap: Multiple Arrests in Drug and Money Laundering Scheme",
+                date: "2025-07-24",
+                category: "arrests",
+                source: "State Attorney / Cape Coral Breeze",
+                description: "State Attorney Amira Fox reports 10 people arrested after major operation 'Operation No Cap' starting in Cape Coral. Suspects accused of RICO, money laundering, creating fraudulent checks, buying exotic cars and renting them out for drug trafficking and other criminal activity. One individual indicted for first-degree murder by drug distribution.",
+                articleUrl: "https://www.capecoralbreeze.com/news/local-news/2025/07/24/interagency-operation-no-cap-results-in-multiple-arrests/",
+                videoUrl: "",
+                notes: "Large-scale drug trafficking organization with connection to Cape Coral area"
+            },
+            {
+                title: "Cape Coral Roofing Company Owners Plead Guilty to Tax Fraud",
+                date: "2025-06-15",
+                category: "financial-mismanagement",
+                source: "U.S. Department of Justice, Middle District of Florida",
+                description: "William Skaggs Jr. and Billie Adkison, owners of Nastar Roofing in Cape Coral, pleaded guilty to tax fraud conspiracy. They paid employees predominantly in cash between 2013 and 2023 to avoid paying taxes.",
+                articleUrl: "https://www.justice.gov/usao-mdfl/pr/owner-and-manager-cape-coral-roofing-company-plead-guilty-tax-fraud-conspiracy",
+                videoUrl: "",
+                notes: "10-year scheme to evade federal income taxes"
+            },
+            {
+                title: "Cape Coral Woman Arrested in $3M+ Embezzlement Scheme",
+                date: "2023-01-15",
+                category: "arrests",
+                source: "FDLE - Florida Department of Law Enforcement",
+                description: "FDLE agents arrested Carolyn Eulena Pilgrim, 41, of Cape Coral, on scheme to defraud and grand theft charges after discovering she had deposited more than $3,000,000 in checks made payable to her employer company into a separate account under her control.",
+                articleUrl: "http://www.fdle.state.fl.us/news/2023/january/fdle-arrests-cape-coral-woman-in-seven-figure-embezzlement-scheme",
+                videoUrl: "",
+                notes: "Major embezzlement scheme targeting employer"
+            },
+            {
+                title: "Cape Coral Man Indicted for Fraudulent Virtual Pain Clinic",
+                date: "2024-06-20",
+                category: "arrests",
+                source: "U.S. Department of Justice, Middle District of Florida",
+                description: "Eric Strom Holland, 55, of Cape Coral, was indicted on four counts of wire fraud and six counts of distributing controlled substances. Holland recruited unwitting doctors for his unlicensed pain clinic using lies designed to induce them to work for him and prescribe controlled substances, including over 100,000 tablets of oxycodone.",
+                articleUrl: "https://www.justice.gov/usao-mdfl/pr/cape-coral-man-indicted-running-fraudulent-all-virtual-pain-clinic-dispensed-more",
+                videoUrl: "",
+                notes: "Illegal distribution of oxycodone through virtual clinic"
+            },
+            {
+                title: "Sheriff Marceno Caught Racing in Expensive Sports Car",
+                date: "2024-09-15",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence shows Sheriff Carmine Marceno racing in an expensive sports car, raising questions about the source of funds for high-end vehicles and lifestyle inconsistent with public servant salary.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Racing In Expensive Car')",
+                notes: "Evidence of unexplained wealth and lavish lifestyle funded by alleged kickbacks"
+            },
+            {
+                title: "Sheriff Marceno Receives Stack of Cash",
+                date: "2024-09-20",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence documents Sheriff Marceno accepting a stack of cash, corroborating allegations from witness Ken Romano that he received substantial gifts and kickback payments in exchange for favorable treatment.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Takes Stack Of Cash')",
+                notes: "Direct visual evidence of alleged kickback/bribery payments"
+            },
+            {
+                title: "Sheriff Marceno Makes Inappropriate Comments About Intimate Activities",
+                date: "2024-09-25",
+                category: "government-scandal",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video captures Sheriff Marceno making inappropriate and crude comments about intimate activities in a hot tub, demonstrating unprofessional conduct unbecoming of his office.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine talking about people jerking eachother off in his hot tub')",
+                notes: "Evidence of crude behavior and misuse of position"
+            },
+            {
+                title: "Sheriff Marceno Caught Making Threats",
+                date: "2024-10-01",
+                category: "legal-action",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video shows Sheriff Marceno threatening individuals, raising concerns about abuse of authority and intimidation of potential witnesses or those who might expose his misconduct.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Threatening People')",
+                notes: "Evidence of potential witness intimidation and abuse of authority"
+            },
+            {
+                title: "Sheriff Marceno Watches Video on Phone While Driving",
+                date: "2024-10-05",
+                category: "government-scandal",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence shows Sheriff Marceno operating a vehicle while distracted by watching content on his phone, demonstrating reckless and illegal behavior.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Watching Video On Phone While Driving')",
+                notes: "Safety violation and misuse of public trust"
+            },
+            {
+                title: "Sheriff Marceno Drives High-Performance Vehicle Without Seatbelt",
+                date: "2024-10-08",
+                category: "government-scandal",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video captures Sheriff Marceno operating a sports car without wearing a seatbelt—a flagrant violation of the very laws he is sworn to enforce, demonstrating a disregard for public safety and legal standards.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Driving Sports Car With No Seatbelt')",
+                notes: "Hypocritical conduct—law enforcement violating traffic laws"
+            },
+            {
+                title: "Sheriff Marceno Gambling at Game Room",
+                date: "2024-10-12",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence documents Sheriff Marceno engaging in gambling activities, consistent with witness accounts of gambling debts and the need for kickback payments to cover those debts.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Gambling At Game Room')",
+                notes: "Evidence of gambling habit consistent with alleged financial motivations for corruption"
+            },
+            {
+                title: "Sheriff Marceno Receiving Inappropriate Treatment at Social Event",
+                date: "2024-10-15",
+                category: "government-scandal",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video shows Sheriff Marceno being treated inappropriately at a social gathering, further documenting the pattern of special treatment and lavish lifestyle funded by questionable sources.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Getting Danced On')",
+                notes: "Evidence of special treatment and lifestyle inconsistent with salary"
+            },
+            {
+                title: "Sheriff Marceno Handed Stack of $100 Bills",
+                date: "2024-10-18",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video evidence documents Sheriff Marceno receiving a substantial stack of $100 bills, providing direct visual corroboration of the alleged kickback scheme described by witness Ken Romano.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine Handed Stack of $100 Bills')",
+                notes: "Clear visual evidence of alleged bribery and kickback payments"
+            },
+            {
+                title: "Sheriff Marceno Operates Another High-End Luxury Vehicle",
+                date: "2024-10-22",
+                category: "sheriff-office",
+                source: "Surveillance Footage / Community Documentation",
+                description: "Video documents Sheriff Marceno in yet another expensive luxury car, adding to the pattern of unexplained wealth and lifestyle far exceeding what his public salary could support.",
+                articleUrl: "",
+                videoUrl: "javascript:alert('Video: Carmine In Another Expensive Car')",
+                notes: "Part of pattern of luxury lifestyle funded by alleged corruption"
+            }
+        ];
+
         // Load and display entries on page load
         document.addEventListener('DOMContentLoaded', function() {
+            initializeData();
             displayEntries();
             setTodayDate();
         });
+
+        function initializeData() {
+            const existingData = localStorage.getItem(STORAGE_KEY);
+            if (!existingData) {
+                const sampleEntries = SAMPLE_DATA.map(entry => ({
+                    ...entry,
+                    id: Date.now() + Math.random(),
+                    createdAt: new Date().toISOString()
+                }));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleEntries));
+                showMessage('✓ Sample data loaded. You can now edit or delete these entries.', 'success');
+            }
+        }
 
         // Form submission
         document.getElementById('entryForm').addEventListener('submit', function(e) {
@@ -414,20 +690,22 @@
             container.innerHTML = entries.map(entry => `
                 <div class="entry-card">
                     <div class="entry-header">
-                        <div>
+                        <div style="flex: 1;">
                             <div class="entry-title">${escapeHtml(entry.title)}</div>
-                            <div class="entry-date">${formatDate(entry.date)}</div>
+                            <div class="entry-date"><i class="fas fa-calendar-alt"></i> ${formatDate(entry.date)}</div>
                         </div>
                     </div>
-                    <div class="entry-category">${entry.category}</div>
-                    <div class="entry-meta">Source: ${escapeHtml(entry.source)}</div>
+                    <div class="entry-category">${entry.category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</div>
+                    <div class="entry-meta"><strong>Source:</strong> ${escapeHtml(entry.source)}</div>
                     <div class="entry-description">${escapeHtml(entry.description)}</div>
-                    ${entry.articleUrl ? `<div class="entry-meta"><a href="${entry.articleUrl}" target="_blank" style="color: #d4a574;">📄 View Article</a></div>` : ''}
-                    ${entry.videoUrl ? `<div class="entry-meta"><a href="${entry.videoUrl}" target="_blank" style="color: #d4a574;">🎥 View Video</a></div>` : ''}
-                    ${entry.notes ? `<div class="entry-meta"><strong>Notes:</strong> ${escapeHtml(entry.notes)}</div>` : ''}
+                    <div style="display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+                        ${entry.articleUrl ? `<a href="${entry.articleUrl}" target="_blank" class="entry-meta" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-file-alt"></i> View Article</a>` : ''}
+                        ${entry.videoUrl ? `<a href="${entry.videoUrl}" target="_blank" class="entry-meta" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-video"></i> View Video</a>` : ''}
+                    </div>
+                    ${entry.notes ? `<div class="entry-meta" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #333;"><strong>Notes:</strong> ${escapeHtml(entry.notes)}</div>` : ''}
                     <div class="entry-actions">
-                        <button class="btn-small btn-secondary" onclick="editEntry(${entry.id})">Edit</button>
-                        <button class="btn-small btn-danger" onclick="deleteEntry(${entry.id})">Delete</button>
+                        <button class="btn-small btn-secondary" onclick="editEntry(${entry.id})"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn-small btn-danger" onclick="deleteEntry(${entry.id})"><i class="fas fa-trash"></i> Delete</button>
                     </div>
                 </div>
             `).join('');
