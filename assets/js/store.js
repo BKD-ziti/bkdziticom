@@ -579,6 +579,26 @@
         allProducts = data.products || [];
         buildCategoryFilters(allProducts);
         renderGrid();
+
+        // Handle service parameter from URL (e.g., ?service=web-dev)
+        const params = new URLSearchParams(window.location.search);
+        const serviceParam = params.get('service');
+        if (serviceParam) {
+          // Map service parameter to product ID
+          const serviceMap = {
+            'web-dev': 'web-dev-landing'
+          };
+          const productId = serviceMap[serviceParam];
+          if (productId) {
+            // Wait a moment for modal to be rendered, then open it
+            setTimeout(() => {
+              const product = allProducts.find(p => p.id === productId);
+              if (product) {
+                openProductModal(product);
+              }
+            }, 100);
+          }
+        }
       })
       .catch(err => {
         grid.innerHTML = `<div class="store-error"><i class="fas fa-exclamation-circle"></i><h3>Could not load products</h3><p>${escHtml(err.message)}</p></div>`;
