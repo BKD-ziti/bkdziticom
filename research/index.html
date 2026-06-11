@@ -410,7 +410,10 @@
         // Initialize sample data on first load
         function initializeSampleData() {
             const existingData = localStorage.getItem(STORAGE_KEY);
-            if (!existingData) {
+            const existingEntries = existingData ? JSON.parse(existingData) : [];
+
+            // Force reinitialize if data is incomplete (less than expected entries)
+            if (!existingData || existingEntries.length < SAMPLE_DATA.length) {
                 const sampleEntries = SAMPLE_DATA.map(entry => ({
                     ...entry,
                     id: Date.now() + Math.random(),
