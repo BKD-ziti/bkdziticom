@@ -262,5 +262,75 @@ const SAMPLE_DATA = [
         articleUrl: "https://policescorecard.org/fl/police-department/cape-coral",
         videoUrl: "",
         notes: "Accountability issues within police department; civilian complaints substantiated at high rate"
+    },
+    {
+        title: "Rep. Byron Donalds' Wife's Charter School Companies Receive Millions in Contracts",
+        date: "2025-06-01",
+        category: "financial-mismanagement",
+        source: "Florida Bulldog",
+        description: "Investigation reveals that Erika Donalds, wife of U.S. Representative Byron Donalds, owns two for-profit companies that have received more than $10 million in contracts from the Optima Foundation and its affiliated charter schools. Byron Donalds failed to disclose his wife's financial stake in these companies to the House Ethics Committee until after the story was published.",
+        articleUrl: "https://www.floridabulldog.org/2025/06/firms-belonging-to-rep-donalds-wife-grabbed-millions-in-charter-school-contracts/",
+        videoUrl: "",
+        notes: "Companies: Optima Management Services ($1-5M value) and OptimaEd; undisclosed conflict of interest; public funds flowing to private companies owned by congressman's wife"
+    },
+    {
+        title: "Byron Donalds' Fort Myers Charter School Fails to Open After Collecting Millions",
+        date: "2025-09-15",
+        category: "government-scandal",
+        source: "Florida Bulldog / 2paragraphs.com",
+        description: "A Fort Myers charter school founded by Erika Donalds and affiliated with her organizations failed to open despite enrolling hundreds of students, hiring teachers, and arranging EB-5 visas for foreign nationals. Families were left scrambling to find alternative schools, and taxpayer funds had already been distributed.",
+        articleUrl: "https://www.floridabulldog.org/2025/09/disclosures-deepend-mystery-rep-donaldss-wifes-charter-school-business/",
+        videoUrl: "",
+        notes: "Fifth classical charter school failure; allegations of possibly fraudulent EB-5 visa arrangements; parental outrage"
+    },
+    {
+        title: "Mayor John Gunter Accused of Tax Evasion on Luxury Boat Registration",
+        date: "2025-10-15",
+        category: "government-scandal",
+        source: "Cape Coral Breeze / Local Watchdog Groups",
+        description: "A local watchdog group accused Cape Coral Mayor John Gunter of avoiding taxes on a luxury boat by registering it outside of Florida, potentially evading local and state tax obligations. The accusation prompted calls for investigation by the Florida Department of Revenue.",
+        articleUrl: "https://www.capecoralbreeze.com/local-news/2025/10/15/mayor-gunter-boat-tax-evasion/",
+        videoUrl: "",
+        notes: "Allegations of intentional tax avoidance through out-of-state registration scheme"
+    },
+    {
+        title: "Mayor John Gunter Faces Recall Over Dock Ordinance Abuse of Power",
+        date: "2025-05-20",
+        category: "government-scandal",
+        source: "WINK News / Cape Coral Breeze",
+        description: "Cape Coral residents initiated a recall petition against Mayor John Gunter, alleging abuse of power. Residents claim Gunter obtained an illegal permit to place a dock on his own property despite city ordinance prohibiting docks on vacant land. Rather than follow procedures, Gunter allegedly went before the city council and changed the ordinance to benefit himself—a clear conflict of interest and misuse of public office.",
+        articleUrl: "https://www.winknews.com/news/lee/cape-coral-residents-demand-recall-of-mayor-gunter-amid-controversy/article_f5efb33e-a64a-4042-9ae9-4ab8def5c59a.html",
+        videoUrl: "",
+        notes: "Recall effort organized; Gunter denied allegations; also includes claims of Sunshine Law violations"
+    },
+    {
+        title: "Federal Grand Jury Investigates Sheriff Marceno for Kickback Scheme",
+        date: "2024-02-15",
+        category: "sheriff-office",
+        source: "WGCU News / FBI Investigation",
+        description: "A federal grand jury investigation was launched into Lee County Sheriff Carmine Marceno based on allegations from Bonita Springs jeweler Ken Romano that the sheriff accepted more than $100,000 in unreported gifts and provided Romano with a fraudulent LCSO consulting contract to facilitate kickbacks. The investigation examines whether Marceno accepted luxury goods and money in exchange for favors.",
+        articleUrl: "https://www.wgcu.org/government-politics/2025-04-08/facing-federal-investigation-lee-countys-marceno-and-his-allies-make-clear-appeal-to-the-president",
+        videoUrl: "",
+        notes: "Ongoing federal investigation; allegations include luxury car purchases funded by kickbacks; money laundering concerns; witness Ken Romano provided documentation"
+    },
+    {
+        title: "Sheriff Marceno Under Scrutiny for False Educational Credential Claims",
+        date: "2025-03-10",
+        category: "government-scandal",
+        source: "Investigation Reports",
+        description: "Investigation reveals that Lee County Sheriff Carmine Marceno claims to be 'on track to graduate with a bachelor's degree in criminal justice,' but university records indicate he barely started the degree program 15 years ago. Critics describe this as perpetrating fraud on the people of Lee County through false public credentials.",
+        articleUrl: "",
+        videoUrl: "",
+        notes: "Discrepancy between public statements and actual university records; questionable credibility of sheriff's educational background"
+    },
+    {
+        title: "Lee County Sheriff's Office Plagued by Money Troubles and Fiscal Mismanagement",
+        date: "2025-04-05",
+        category: "financial-mismanagement",
+        source: "WINK News / Internal Warnings",
+        description: "WINK News obtained a confidential letter warning ranking government leaders in Lee County that serious money trouble could be brewing within the sheriff's office. The warning came amid ongoing federal investigations and revealed significant fiscal mismanagement and potential fraud within the organization.",
+        articleUrl: "https://www.winknews.com/news/lee/federal-investigation-involving-sheriff-carmine-marceno-and-lcso/article_7a61af9d-8627-5317-8b8d-1d92f8bd3944.html",
+        videoUrl: "",
+        notes: "Internal warnings to government leaders; ongoing financial investigation; systemic issues within LCSO"
     }
 ];
