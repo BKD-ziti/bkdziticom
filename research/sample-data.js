@@ -75,103 +75,103 @@ const SAMPLE_DATA = [
     },
     {
         title: "Sheriff Marceno Caught Racing in Expensive Sports Car",
-        date: "2024-09-15",
+        date: "2025-06-20",
         category: "sheriff-office",
-        source: "Florida Trident / WMNF 88.5 FM / WGCU News",
-        description: "Video evidence shows Sheriff Carmine Marceno racing in an expensive sports car, raising questions about the source of funds for high-end vehicles and lifestyle inconsistent with public servant salary.",
-        articleUrl: "https://floridatrident.org/sheriff-marceno-says-he-has-zero-tolerance-for-street-racing-heres-a-video-of-sheriff-marceno-street-racing/",
-        videoUrl: "https://www.wgcu.org/top-story/2025-06-20/sheriff-marceno-says-he-has-zero-tolerance-for-street-racing-heres-a-video-of-sheriff-marceno-street-racing",
-        notes: "Evidence of unexplained wealth and lavish lifestyle funded by alleged kickbacks"
+        source: "WGCU News / Florida Trident",
+        description: "Video evidence shows Sheriff Carmine Marceno racing in a black Lamborghini Huracan convertible on South Tamiami Trail in Estero, doing 74+ mph in a 50 mph zone. This hypocrisy came just days after the sheriff issued a press release claiming 'zero tolerance' for street racing.",
+        articleUrl: "https://www.wgcu.org/top-story/2025-06-20/sheriff-marceno-says-he-has-zero-tolerance-for-street-racing-heres-a-video-of-sheriff-marceno-street-racing",
+        videoUrl: "https://floridatrident.org/sheriff-marceno-says-he-has-zero-tolerance-for-street-racing-heres-a-video-of-sheriff-marceno-street-racing/",
+        notes: "Video shot by former friend Ken Romano; clear hypocrisy between public stance and actual behavior"
     },
     {
         title: "Sheriff Marceno Receives Stack of Cash",
-        date: "2024-09-20",
+        date: "2024-09-25",
         category: "sheriff-office",
-        source: "WGCU News / PBS & NPR for Southwest Florida",
-        description: "Video evidence documents Sheriff Marceno accepting a stack of cash, corroborating allegations from witness Ken Romano that he received substantial gifts and kickback payments in exchange for favorable treatment.",
+        source: "WGCU News / Florida Trident",
+        description: "Video evidence documents Sheriff Marceno accepting a thick stack of $100 bills from jeweler Ken Romano. Romano claims the transaction occurred in June 2024 and was related to the consulting contract negotiations. Marceno's attorney claims the transaction was legitimate but refuses to explain why.",
         articleUrl: "https://news.wgcu.org/investigation/2024-09-25/video-shows-sheriff-marceno-accepting-stack-of-cash-from-ex-ghost-employee-marcenos-lawyer-says-transaction-was-legitimate",
-        videoUrl: "https://news.wgcu.org/investigation/2024-09-25/video-shows-sheriff-marceno-accepting-stack-of-cash-from-ex-ghost-employee-marcenos-lawyer-says-transaction-was-legitimate",
-        notes: "Direct visual evidence of alleged kickback/bribery payments"
+        videoUrl: "https://floridatrident.org/video-shows-sheriff-marceno-accepting-a-stack-of-cash-from-former-ghost-employee-marcenos-lawyer-says-the-transaction-was-legitimate/",
+        notes: "Two camera angles captured the transaction; posted on social media by former K9 officer Mike Hollow; Romano declined to comment"
     },
     {
         title: "Sheriff Marceno Makes Inappropriate Comments About Intimate Activities",
-        date: "2024-09-25",
+        date: "2025-12-16",
         category: "government-scandal",
-        source: "WGCU News / PBS & NPR for Southwest Florida",
-        description: "Recorded conversations capture Sheriff Marceno making inappropriate and crude comments about intimate activities in a hot tub, demonstrating unprofessional conduct unbecoming of his office.",
+        source: "WGCU News / Florida Trident",
+        description: "Recorded conversations capture Sheriff Marceno making crude and explicit comments about people engaging in intimate activities in a hot tub. The recordings are part of a larger investigation into unreported gifts, high-stakes gambling debts, and misconduct.",
         articleUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        videoUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        notes: "Evidence of crude behavior and misuse of position"
+        videoUrl: "https://www.wmnf.org/unreported-gifts-high-stakes-gambling-obscene-death-wish-marceno-recordings/",
+        notes: "Part of comprehensive WGCU investigation titled 'Unreported gifts, high-stakes gambling, and an obscene death wish: Marceno recordings paint a troubling picture'"
     },
     {
-        title: "Sheriff Marceno Caught Making Threats",
-        date: "2024-10-01",
-        category: "legal-action",
-        source: "Recorded Surveillance / WGCU News Investigation",
-        description: "Recordings show Sheriff Marceno threatening individuals, raising concerns about abuse of authority and intimidation of potential witnesses or those who might expose his misconduct.",
-        articleUrl: "https://news.wgcu.org/top-story/2024-09-12/allegations-of-money-laundering-misappropriation-of-funds-against-lee-county-sheriff-marceno-involve-former-gambling-buddy",
-        videoUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        notes: "Evidence of potential witness intimidation and abuse of authority; covered in larger WGCU investigation"
+        title: "Sheriff Marceno Makes Vulgar Audio Recordings Threatening Public Officials",
+        date: "2025-05-07",
+        category: "government-scandal",
+        source: "WGCU News / Florida Trident",
+        description: "Audio recordings capture Sheriff Marceno making profanity-riddled, insulting comments about Florida Governor Ron DeSantis, First Lady Casey DeSantis, and other public figures. The recordings were made without Marceno's knowledge and obtained by the Florida Trident.",
+        articleUrl: "https://www.wgcu.org/2025-05-07/lee-county-sheriff-marceno-trashes-ron-and-casey-desantis-in-vulgar-audio",
+        videoUrl: "https://www.wgcu.org/2025-05-07/lee-county-sheriff-marceno-trashes-ron-and-casey-desantis-in-vulgar-audio",
+        notes: "Multiple audio recordings released; Marceno uses ableist slurs, crude sexual commentary; his political consultant blamed 'political enemies'; recordings were legally recorded without consent"
     },
     {
         title: "Sheriff Marceno Watches Video on Phone While Driving",
-        date: "2024-10-05",
+        date: "2025-12-16",
         category: "government-scandal",
         source: "Recorded Surveillance / WGCU News",
-        description: "Video evidence shows Sheriff Marceno operating a vehicle while distracted by watching content on his phone, demonstrating reckless and illegal behavior.",
+        description: "Video evidence shows Sheriff Marceno operating a vehicle while distracted by watching content on his phone, demonstrating reckless and illegal driving behavior. This is covered in WGCU's comprehensive investigation.",
         articleUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        videoUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        notes: "Safety violation and misuse of public trust; part of WGCU's investigation into Marceno's conduct"
+        videoUrl: "https://www.wmnf.org/unreported-gifts-high-stakes-gambling-obscene-death-wish-marceno-recordings/",
+        notes: "Distracted driving; illegal behavior by law enforcement; part of WGCU's comprehensive investigation"
     },
     {
         title: "Sheriff Marceno Drives High-Performance Vehicle Without Seatbelt",
-        date: "2024-10-08",
+        date: "2025-06-20",
         category: "government-scandal",
-        source: "Florida Trident / Community Documentation",
-        description: "Video captures Sheriff Marceno operating a sports car without wearing a seatbelt—a flagrant violation of the very laws he is sworn to enforce, demonstrating a disregard for public safety and legal standards.",
+        source: "Florida Trident / WGCU News",
+        description: "Video captures Sheriff Marceno operating a sports car without wearing a seatbelt—a flagrant violation of the very laws he is sworn to enforce. The video is from the same incident involving street racing in a Lamborghini.",
         articleUrl: "https://floridatrident.org/sheriff-marceno-says-he-has-zero-tolerance-for-street-racing-heres-a-video-of-sheriff-marceno-street-racing/",
         videoUrl: "https://www.wgcu.org/top-story/2025-06-20/sheriff-marceno-says-he-has-zero-tolerance-for-street-racing-heres-a-video-of-sheriff-marceno-street-racing",
-        notes: "Hypocritical conduct—law enforcement violating traffic laws"
+        notes: "Same incident as street racing; demonstrates flagrant disregard for public safety laws he is sworn to enforce"
     },
     {
         title: "Sheriff Marceno Gambling at Game Room",
-        date: "2024-10-12",
+        date: "2025-12-16",
         category: "sheriff-office",
-        source: "WGCU News / FBI Investigation Records",
-        description: "Video evidence documents Sheriff Marceno engaging in gambling activities, consistent with witness accounts of gambling debts and the need for kickback payments to cover those debts.",
+        source: "WGCU News / Florida Trident",
+        description: "Video evidence documents Sheriff Marceno engaging in high-stakes gambling activities at a game room. Ken Romano alleges Marceno is a 'gambling addict' and claimed he bailed Marceno out of substantial gambling debts, which motivated the corrupt consulting contract arrangement.",
         articleUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        videoUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        notes: "Evidence of gambling habit consistent with alleged financial motivations for corruption"
+        videoUrl: "https://www.wmnf.org/unreported-gifts-high-stakes-gambling-obscene-death-wish-marceno-recordings/",
+        notes: "Video provided by Ken Romano; demonstrates pattern of gambling that allegedly motivated the kickback scheme"
     },
     {
-        title: "Sheriff Marceno Receiving Inappropriate Treatment at Social Event",
-        date: "2024-10-15",
+        title: "Sheriff Marceno Getting Danced On at Social Event",
+        date: "2025-12-16",
         category: "government-scandal",
         source: "Recorded Surveillance / WGCU News Investigation",
-        description: "Video shows Sheriff Marceno being treated inappropriately at a social gathering, further documenting the pattern of special treatment and lavish lifestyle funded by questionable sources.",
+        description: "Video shows Sheriff Marceno at a social gathering receiving special treatment, documented as part of the pattern of lavish lifestyle and special accommodation funded by questionable sources. The incident is emblematic of the entitled behavior Romano witnessed.",
         articleUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        videoUrl: "https://www.wgcu.org/top-story/2025-12-16/unreported-gifts-high-stakes-gambling-and-an-obscene-death-wish-marceno-recordings-paint-a-troubling-picture",
-        notes: "Evidence of special treatment and lifestyle inconsistent with salary; part of WGCU's comprehensive investigation"
+        videoUrl: "https://www.wmnf.org/unreported-gifts-high-stakes-gambling-obscene-death-wish-marceno-recordings/",
+        notes: "Part of pattern of special treatment and lifestyle inconsistent with public servant salary; covered in WGCU's comprehensive investigation"
     },
     {
         title: "Sheriff Marceno Handed Stack of $100 Bills",
-        date: "2024-10-18",
+        date: "2024-09-25",
         category: "sheriff-office",
-        source: "WGCU News / FBI Investigation Records",
-        description: "Video evidence documents Sheriff Marceno receiving a substantial stack of $100 bills, providing direct visual corroboration of the alleged kickback scheme described by witness Ken Romano.",
-        articleUrl: "https://www.wgcu.org/investigation/2024-09-25/video-shows-sheriff-marceno-accepting-stack-of-cash-from-ex-ghost-employee-marcenos-lawyer-says-transaction-was-legitimate",
-        videoUrl: "https://www.wgcu.org/investigation/2024-09-25/video-shows-sheriff-marceno-accepting-stack-of-cash-from-ex-ghost-employee-marcenos-lawyer-says-transaction-was-legitimate",
-        notes: "Clear visual evidence of alleged bribery and kickback payments"
+        source: "WGCU News / Florida Trident",
+        description: "Video evidence with multiple camera angles documents Sheriff Marceno receiving a substantial stack of $100 bills from jeweler Ken Romano, providing direct visual corroboration of the alleged kickback payments central to the federal investigation.",
+        articleUrl: "https://news.wgcu.org/investigation/2024-09-25/video-shows-sheriff-marceno-accepting-stack-of-cash-from-ex-ghost-employee-marcenos-lawyer-says-transaction-was-legitimate",
+        videoUrl: "https://floridatrident.org/video-shows-sheriff-marceno-accepting-a-stack-of-cash-from-former-ghost-employee-marcenos-lawyer-says-the-transaction-was-legitimate/",
+        notes: "Two camera angles—including overhead surveillance—clearly show cash being handed to Marceno; Sheriff's attorney claims transaction was legitimate but refuses explanation"
     },
     {
         title: "Sheriff Marceno Operates Another High-End Luxury Vehicle",
-        date: "2024-10-22",
+        date: "2025-06-20",
         category: "sheriff-office",
-        source: "Florida Trident / Community Documentation",
-        description: "Video documents Sheriff Marceno in yet another expensive luxury car, adding to the pattern of unexplained wealth and lifestyle far exceeding what his public salary could support.",
+        source: "Florida Trident / WGCU News",
+        description: "Video documents Sheriff Marceno in yet another expensive luxury car (a Lamborghini), adding to the pattern of unexplained wealth and lavish lifestyle far exceeding what his public salary could possibly support.",
         articleUrl: "https://floridatrident.org/sheriff-marceno-says-he-has-zero-tolerance-for-street-racing-heres-a-video-of-sheriff-marceno-street-racing/",
         videoUrl: "https://www.wgcu.org/top-story/2025-06-20/sheriff-marceno-says-he-has-zero-tolerance-for-street-racing-heres-a-video-of-sheriff-marceno-street-racing",
-        notes: "Part of pattern of luxury lifestyle funded by alleged corruption"
+        notes: "Multiple high-end vehicles documented; Lamborghini Huracan valued between $200,000-$344,000; pattern consistent with alleged corruption scheme"
     },
     {
         title: "Cape Coral Councilmember Patty Cummings Arrested for Voter Fraud",
