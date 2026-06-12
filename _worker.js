@@ -1024,8 +1024,16 @@ async function handleAdminUpdateOrder(request, env, id) {
 export default {
   async fetch(request, env, ctx) {
     const url      = new URL(request.url);
-    const path     = url.pathname;
+    let path       = url.pathname;
     const method   = request.method;
+
+    // ── Directory rewrite: /path/ → /path/index.html ────────────────────────
+    if (path !== '/' && path.endsWith('/') && method === 'GET') {
+      const indexPath = path + 'index.html';
+      const indexRequest = new Request(new URL(indexPath, url).toString(), request);
+      const indexResponse = await env.ASSETS.fetch(indexRequest);
+      if (indexResponse.status !== 404) return indexResponse;
+    }
 
     // ── Contact ──────────────────────────────────────────────────────────────
     if (method === 'POST' && path === '/api/contact') return handleContact(request, env);
