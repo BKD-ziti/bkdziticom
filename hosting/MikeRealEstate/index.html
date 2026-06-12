@@ -677,8 +677,10 @@
 
       // Hero drifts at a slower rate than the page and gently fades.
       if (heroInner) {
-        heroInner.style.transform = 'translateY(' + (y * 0.18).toFixed(1) + 'px)';
-        heroInner.style.opacity = Math.max(1 - y / 900, 0).toFixed(3);
+        var heroOffset = parseFloat((y * 0.18).toFixed(1));
+        heroInner.style.transform = 'translateY(' + heroOffset + 'px)';
+        var heroOpacity = parseFloat(Math.max(1 - y / 900, 0).toFixed(3));
+        heroInner.style.opacity = heroOpacity;
       }
 
       // About photo: subtle vertical parallax while it crosses the viewport.
@@ -687,8 +689,8 @@
         var vh = window.innerHeight;
         if (box.top < vh && box.bottom > 0) {
           var progress = (box.top + box.height / 2 - vh / 2) / vh; // ~ -0.5 … 0.5
-          aboutImg.style.transform =
-            'translateY(' + (progress * -34).toFixed(1) + 'px) scale(1.12)';
+          var offset = parseFloat((progress * -34).toFixed(1));
+          aboutImg.style.transform = 'translateY(' + offset + 'px) scale(1.12)';
         }
       }
 
