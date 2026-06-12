@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Hosting - BKDziti Hosting for Friends & Clients</title>
+    <meta name="description" content="Free website hosting on the BKDziti domain. Host your portfolio, landing page, or side project with no separate hosting or domain fees.">
+    <meta name="keywords" content="free website hosting, portfolio hosting, BKDziti hosting, free domain">
+    <link rel="canonical" href="https://www.bkdziti.com/hosting/">
+
+    <!-- ── Favicons / app icons ── -->
+    <link rel="icon"          type="image/svg+xml" href="../assets/images/favicon.svg">
+    <link rel="icon"          type="image/png"     href="../assets/images/favicon-32x32.png"  sizes="32x32">
+    <link rel="icon"          type="image/png"     href="../assets/images/favicon-16x16.png"  sizes="16x16">
+    <link rel="icon"          type="image/png"     href="../assets/images/favicon-96x96.png"  sizes="96x96">
+    <link rel="icon"          type="image/png"     href="../assets/images/favicon-196x196.png" sizes="196x196">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+    <link rel="manifest" href="../assets/images/site.webmanifest">
+    <meta name="apple-mobile-web-app-title" content="BKDziti Hosting">
+    <meta name="application-name"           content="BKDziti Hosting">
+    <meta name="msapplication-TileColor"    content="#371603">
+
+    <!-- ── Open Graph ── -->
+    <meta property="og:title" content="Free Hosting - BKDziti">
+    <meta property="og:type"  content="website">
+    <meta property="og:description" content="Free website hosting for friends and clients. Host your portfolio, landing page, or project with no hosting or domain fees.">
+    <meta property="og:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+    <meta property="og:url"   content="https://www.bkdziti.com/hosting/">
+    <meta property="og:site_name" content="BKDziti">
+
+    <!-- ── Twitter Card ── -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Hosting - BKDziti">
+    <meta name="twitter:description" content="Free website hosting on the BKDziti domain for your portfolio or projects.">
+    <meta name="twitter:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        .hosting-page {
+            padding: 40px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .hosting-header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid #d4a574;
+        }
+
+        .hosting-header h1 {
+            font-size: 2.5em;
+            color: #d4a574;
+            margin-bottom: 15px;
+        }
+
+        .hosting-header p {
+            font-size: 1.1em;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .hosting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .hosting-card {
+            background: #1a1f29;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .hosting-card:hover {
+            border-color: #d4a574;
+            box-shadow: 0 8px 24px rgba(212, 165, 116, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .hosting-card-icon {
+            font-size: 3em;
+            color: #d4a574;
+            margin-bottom: 15px;
+        }
+
+        .hosting-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+        }
+
+        .hosting-card p {
+            color: #999;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .hosted-sites {
+            background: #0f1419;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 40px;
+        }
+
+        .hosted-sites h2 {
+            color: #d4a574;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .hosted-sites-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .hosted-site-item {
+            background: #1a1f29;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .hosted-site-item:hover {
+            border-color: #d4a574;
+            background: rgba(212, 165, 116, 0.05);
+        }
+
+        .hosted-site-item a {
+            color: #d4a574;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .hosted-site-item a:hover {
+            text-decoration: underline;
+        }
+
+        .hosted-site-item .site-status {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bgPulse"></canvas>
+    <div id="notificationOverlay" class="notification-overlay"></div>
+    <div id="notificationBanner" class="notification-banner"></div>
+
+    <button id="menuTrigger" class="menu-trigger" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+    <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
+        <div class="side-panel-inner">
+            <img src="../assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
+            <h2 class="panel-name">BKDziti</h2>
+            <p class="panel-tagline">ベイクドジーティ</p>
+            <hr class="panel-divider">
+            <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
+            <div class="panel-socials" id="panelSocials"></div>
+            <div class="panel-footer">&copy; 2026 BKDziti LLC &middot; All Rights Reserved</div>
+        </div>
+    </aside>
+
+    <main class="hosting-page">
+        <header class="hosting-header">
+            <h1><i class="fas fa-globe"></i> BKDziti Hosting</h1>
+            <p>Free website hosting on the BKDziti domain — no separate hosting or domain fees</p>
+        </header>
+
+        <div class="hosting-grid">
+            <div class="hosting-card">
+                <div class="hosting-card-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h3>Free Hosting</h3>
+                <p>Once your website is built, host it here at no cost. No hosting fees, no hidden charges.</p>
+            </div>
+            <div class="hosting-card">
+                <div class="hosting-card-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3>BKDziti Domain</h3>
+                <p>Get a subdomain on bkdziti.com — no need to purchase your own domain.</p>
+            </div>
+            <div class="hosting-card">
+                <div class="hosting-card-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Secure & Reliable</h3>
+                <p>Professional hosting infrastructure with SSL support and 99.9% uptime.</p>
+            </div>
+            <div class="hosting-card">
+                <div class="hosting-card-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Full Control</h3>
+                <p>Whether its a one time build, or ongoing subscription, you have full control over your hosted website.</p>
+            </div>
+        </div>
+
+        <div class="hosted-sites">
+            <h2>Hosted Websites</h2>
+            <div class="hosted-sites-list" id="hostedSitesList">
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>No websites hosted yet. Submit your site to join!</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 60px;">
+            <h3 style="color: #d4a574; margin-bottom: 20px;">Interested in Hosting?</h3>
+            <p style="color: #999; margin-bottom: 30px;">Contact BKDziti to submit your website for free hosting</p>
+            <a href="../contact.html" class="pill-btn">
+                <i class="fas fa-envelope"></i> Get in Touch <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-logo">&bull; ベイクドジーティ &bull;</div>
+            <nav class="footer-nav">
+                <a href="../index.html">Home</a> &middot;
+                <a href="../services.html">Services</a> &middot;
+                <a href="index.html">Hosting</a> &middot;
+                <a href="../contact.html">Contact</a>
+            </nav>
+            <div class="footer-socials" id="footerSocials"></div>
+            <p class="footer-copy">&copy; 2026 BKDziti LLC &middot; All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        window.PAGE_CONFIG = {
+            sections: [],
+            nav: {
+                before: [{ label: 'Home', href: '../index.html#hero' }],
+                after: [
+                    { label: '─────────────', href: '#' },
+                    { label: 'Services',      href: '../services.html#hero' },
+                    { label: 'Portfolio',     href: '../portfolio.html#hero' },
+                    { label: 'Store',         href: '../store/index.html' },
+                    { label: 'Research',      href: '../research/index.html' },
+                    { label: 'Contact',       href: '../contact.html#hero' }
+                ]
+            }
+        };
+    </script>
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/site.js"></script>
+</body>
+</html>
