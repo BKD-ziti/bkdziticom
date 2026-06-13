@@ -8,7 +8,6 @@
     <meta name="keywords" content="restaurant branding, restaurant marketing, restaurant content creation, food social media, restaurant media strategy">
 
     <!-- ── Favicons / app icons ── -->
-    <link rel="icon"          type="image/svg+xml" href="../assets/images/favicon.svg">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-32x32.png"  sizes="32x32">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-16x16.png"  sizes="16x16">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-96x96.png"  sizes="96x96">
@@ -27,7 +26,9 @@
     <meta property="og:url" content="https://www.bkdziti.com/blog/restaurant-branding-media-strategy">
     <meta property="og:type" content="article">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -67,7 +68,7 @@
     <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
     <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
         <div class="side-panel-inner">
-            <img src="../assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img">
+            <img src="../assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
             <h2 class="panel-name">BKDziti</h2>
             <p class="panel-tagline">ベイクドジーティ</p>
             <hr class="panel-divider">
@@ -134,7 +135,7 @@
                     label: 'Brand Identity',
                     title: 'Define Your Brand Identity',
                     body:  'Core Values: What does your restaurant stand for? Sustainability? Local sourcing? Innovation? Community? Target Audience: Who are your ideal customers? What are their values, income level, dining habits? Unique Positioning: What makes your restaurant different? Story, chef, cuisine, experience, or values? Visual Identity: Logo, color palette, typography, photography style. Consistency across all touchpoints is critical.',
-                    media: '../assets/images/ziti.webm',
+                    media: '../assets/images/ziti.mp4',
                     mediaType: 'video',
                     align: 'left',
                     button: { text: 'Get Branding Help', url: '../services.html#hero' },
@@ -150,7 +151,7 @@
                     label: 'Media Strategy',
                     title: 'Build Your Media Strategy',
                     body:  'Content Pillars: Decide on 3-4 main content themes. Food Content: High-quality photos and videos of dishes, plating, and prep. Behind-the-Scenes: Staff, kitchen action, ingredient sourcing. Customer Stories: Guest experiences, testimonials, community moments. Educational: Cooking tips, ingredient spotlights, menu explanations. Distribution: Where is your audience? Instagram? TikTok? Facebook? Allocate time accordingly.',
-                    media: '../assets/images/EatMyBallsAdCompressed.webm',
+                    media: '../assets/images/EatMyBallsAdCompressed.mp4',
                     mediaType: 'video',
                     align: 'right',
                     button: { text: 'Next Article', url: 'food-photography-videography-guide.html#hero' },
@@ -167,7 +168,7 @@
                     label: 'Measure Results',
                     title: 'Measure What Matters',
                     body:  'Track engagement metrics: likes, comments, shares, saves. Monitor reach: how many people see your content? Analyze conversions: do posts drive restaurant visits, reservations, or sales? Use Instagram Insights, Facebook Analytics, TikTok Analytics. A/B test content types: what resonates with your audience? Adjust strategy based on data. Measure ROI on content investment.',
-                    media: '../assets/images/store1.webm',
+                    media: '../assets/images/store1.mp4',
                     mediaType: 'video',
                     align: 'left',
                     button: { text: 'Get Help', url: 'mailto:AlexZornes@BKDziti.com' },
@@ -199,7 +200,7 @@
                     label: 'Restaurant Media Production',
                     title: 'Restaurant Media Production',
                     body:  'Complete visual branding: photography, videography, and content creation for restaurant marketing and social media. Professional content that elevates your brand and drives customer engagement.',
-                    media: '../assets/images/ziti.webm',
+                    media: '../assets/images/ziti.mp4',
                     mediaType: 'video',
                     align: 'right',
                     button: { text: 'Pricing', url: '../media-production.html#hero' },
@@ -210,25 +211,7 @@
                         [255, 154, 11,  0.10]
                     ]
                 },
-            ],
-
-            nav: {
-                before: [{ label: 'Home', href: '../index.html#hero' }],
-                after:  [
-                    { label: '─────────────', href: '#' },
-                    { label: 'Services', href: '../services.html#hero' },
-                    { label: 'Food Consulting', href: '../food-consulting.html#hero' },
-                    { label: 'Media Production', href: '../media-production.html#hero' },
-                    { label: 'Portfolio', href: '../portfolio.html#hero' },
-                    { label: 'FAQ', href: '../faq.html#hero' },
-                    { label: 'Blog', href: 'index.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Contact', href: '../contact.html#hero' },
-                    { label: 'Resume & Cover Letter', href: '../secret.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Email', href: 'mailto:AlexZornes@BKDziti.com' }
-                ]
-            }
+            ]
         };
     </script>
 

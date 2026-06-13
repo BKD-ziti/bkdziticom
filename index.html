@@ -6,7 +6,6 @@
     <title>BKDziti | Pop-Up Coordination, Culinary Consulting &amp; Media Production | ベイクドジーティ</title>
 
     <!-- ── Favicons / app icons ── -->
-    <link rel="icon"          type="image/svg+xml" href="assets/images/favicon.svg">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-32x32.png"  sizes="32x32">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-16x16.png"  sizes="16x16">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-96x96.png"  sizes="96x96">
@@ -37,13 +36,19 @@
     <meta name="twitter:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
 
     <!-- ── External resources ── -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ── Site stylesheet (critical, same-origin — load first) ── -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+
+    <!-- ── Fonts ── -->
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
-    <!-- ── Site stylesheet ── -->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- ── Icons (Font Awesome) — loaded non-render-blocking ── -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
 
     <!-- ── Schema.org Structured Data ── -->
     <script type="application/ld+json">
@@ -140,9 +145,8 @@
                         <div style="position:relative;">
                             <div class="content-glow"></div>
                             <div class="content-media-wrap">
-                            <video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"
-                                poster="assets/images/IMG_2339(1).JPG"
-                                data-src-webm="assets/images/bkdziti_intro.webm"></video>
+                            <video autoplay muted loop playsinline preload="auto" data-bkd-video="1" data-autoplay="1"
+                                data-src-webm="assets/images/bkdziti_intro.mp4"></video>
                         </div>
                     </div>
                 </div>
@@ -164,9 +168,8 @@
                         <div style="position:relative;">
                             <div class="content-glow"></div>
                             <div class="content-media-wrap">
-                            <video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"
-                                poster="assets/images/IMG_2456.JPG"
-                                data-src-webm="assets/images/MP4-converted.webm"></video>
+                            <video autoplay muted loop playsinline preload="auto" data-bkd-video="1" data-autoplay="1"
+                                data-src-webm="assets/images/MP4-converted.mp4"></video>
                         </div>
                     </div>
                 </div>
@@ -177,7 +180,7 @@
         <section id="the-process" class="content-section">
             <canvas class="section-pulse-canvas" id="pulse-the-process"></canvas>
             <div class="section-container">
-                <div class="content-split reverse reveal">
+                <div class="content-split reveal">
                     <div>
                         <div class="section-label">The Process</div>
                         <h2 class="section-title">How We Work Together</h2>
@@ -210,9 +213,8 @@
                         <div style="position:relative;">
                             <div class="content-glow"></div>
                             <div class="content-media-wrap">
-                            <video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"
-                                poster="assets/images/IMG_2339(1).JPG"
-                                data-src-webm="assets/images/food1.webm"></video>
+                            <video autoplay muted loop playsinline preload="auto" data-bkd-video="1" data-autoplay="1"
+                                data-src-webm="assets/images/food1.mp4"></video>
                         </div>
                     </div>
                 </div>
@@ -234,9 +236,8 @@
                             <div style="position:relative;">
                             <div class="content-glow"></div>
                             <div class="content-media-wrap">
-                            <video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"
-                                poster="assets/images/EatMyBalls2.PNG"
-                                data-src-webm="assets/images/store0.webm"></video>
+                            <video autoplay muted loop playsinline preload="auto" data-bkd-video="1" data-autoplay="1"
+                                data-src-webm="assets/images/store0.mp4"></video>
                             </div>
                     </div>
                 </div>
@@ -247,7 +248,7 @@
         <section id="blog-posts" class="content-section">
             <canvas class="section-pulse-canvas" id="pulse-blog-posts"></canvas>
             <div class="section-container">
-                <div class="content-split reveal">
+                <div class="content-split reverse reveal">
                     <div>
                         <div class="section-label">Blog</div>
                         <h2 class="section-title">BKDziti&rsquo;s Blog</h2>
@@ -322,26 +323,7 @@
                 { id: 'shop',        label: 'Shop',          palette: [[233,50,0,0.22],[249,83,1,0.16],[231,54,2,0.18],[255,154,11,0.10]] },
                 { id: 'blog-posts',  label: 'Blog',          palette: [[255,154,11,0.18],[249,234,202,0.12],[255,242,194,0.10],[188,149,117,0.14]] },
                 { id: 'contact',     label: 'Contact',       palette: [[252,249,245,0.10],[254,241,194,0.12],[188,149,117,0.16],[249,234,202,0.11]] }
-            ],
-            nav: {
-                before: [{ label: 'Home', href: '#hero' }],
-                after: [
-                    { label: '─────────────', href: '#' },
-                    { label: 'Store',                 href: 'store/index.html' },
-                    { label: 'Services',              href: 'services.html#hero' },
-                    { label: 'Culinary Consulting',   href: 'food-consulting.html#hero' },
-                    { label: 'Media Production',      href: 'media-production.html#hero' },
-                    { label: 'Portfolio',             href: 'portfolio.html#hero' },
-                    { label: 'FAQ',                   href: 'faq.html#hero' },
-                    { label: 'Blog',                  href: 'blog/index.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Contact',              href: 'contact.html#hero' },
-                    { label: 'Resume & Cover Letter', href: 'secret.html#hero' },
-                    { label: 'Research Timeline',     href: 'research/index.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Email',                 href: 'mailto:AlexZornes@BKDziti.com' }
-                ]
-            }
+            ]
         };
     </script>
 

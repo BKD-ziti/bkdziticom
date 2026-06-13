@@ -47,7 +47,7 @@ exports.handler = async (event, context) => {
         price: 75000, // $750.00 in cents
         pricingModel: 'one-time',
         description: 'Professional photography or videography for 4 hours.',
-        imageUrl: '/assets/images/Datamosh-Dream.webm',
+        imageUrl: '/assets/images/Datamosh-Dream.mp4',
         features: [
           '4-hour on-site shoot',
           'Professional photographer/videographer',
@@ -63,7 +63,7 @@ exports.handler = async (event, context) => {
         price: 150000, // $1,500.00 in cents
         pricingModel: 'one-time',
         description: 'Full-day professional media production for your event or restaurant.',
-        imageUrl: '/assets/images/Datamosh-Dream.webm',
+        imageUrl: '/assets/images/Datamosh-Dream.mp4',
         features: [
           '8-hour shoot coverage',
           'Professional photographer & videographer',
@@ -80,7 +80,7 @@ exports.handler = async (event, context) => {
         price: 250000, // $2,500.00 in cents
         pricingModel: 'quote',
         description: 'End-to-end coordination for your pop-up event from concept to execution.',
-        imageUrl: '/assets/images/food2.webm',
+        imageUrl: '/assets/images/food2.mp4',
         features: [
           'Concept development',
           'Menu planning assistance',

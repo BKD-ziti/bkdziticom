@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lee County Research - Admin Panel</title>
     <meta name="robots" content="noindex,nofollow">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
         * {
             margin: 0;
@@ -18,10 +21,13 @@
 
         body {
             font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f1419;
-            color: #e0e0e0;
+            background: #1a0a00;
+            color: #FCF9F5;
             padding: 0;
         }
+
+        .container { position: relative; z-index: 1; }
+        .admin-login-card h1, header h1 { font-family: 'Dela Gothic One', sans-serif; }
 
         /* ── LOGIN SCREEN ── */
         .admin-login-screen {
@@ -29,12 +35,12 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f1419 0%, #1a1f29 100%);
+            background: linear-gradient(135deg, #1a0a00 0%, #371603 100%);
         }
 
         .admin-login-card {
-            background: #1a1f29;
-            border: 1px solid #333;
+            background: #371603;
+            border: 1px solid #5C2A10;
             padding: 50px;
             border-radius: 8px;
             max-width: 400px;
@@ -43,14 +49,14 @@
         }
 
         .admin-login-card h1 {
-            color: #d4a574;
+            color: #FF9A0B;
             font-size: 32px;
             margin-bottom: 10px;
             text-align: center;
         }
 
         .admin-login-card > p {
-            color: #999;
+            color: #B8A892;
             text-align: center;
             margin-bottom: 30px;
             font-size: 14px;
@@ -69,7 +75,7 @@
         }
 
         .admin-login-field label {
-            color: #d4a574;
+            color: #FF9A0B;
             font-weight: 600;
             font-size: 13px;
             text-transform: uppercase;
@@ -78,9 +84,9 @@
 
         .admin-login-field input {
             padding: 12px 14px;
-            background: #0f1419;
-            border: 1px solid #333;
-            color: #e0e0e0;
+            background: #1a0a00;
+            border: 1px solid #5C2A10;
+            color: #FCF9F5;
             border-radius: 4px;
             font-size: 14px;
             font-family: inherit;
@@ -91,15 +97,15 @@
 
         .admin-login-field input:focus {
             outline: none;
-            border-color: #d4a574;
-            background: #151a23;
-            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+            border-color: #FF9A0B;
+            background: #2a1004;
+            box-shadow: 0 0 0 3px rgba(255, 154, 11, 0.1);
         }
 
         .admin-login-btn {
             padding: 12px 24px;
-            background: #d4a574;
-            color: #0f1419;
+            background: #FF9A0B;
+            color: #1a0a00;
             border: none;
             border-radius: 4px;
             font-weight: 600;
@@ -116,7 +122,7 @@
         }
 
         .admin-login-btn:hover:not(:disabled) {
-            background: #e8c08a;
+            background: #FFB347;
             transform: translateY(-2px);
         }
 
@@ -135,12 +141,12 @@
         .admin-login-footer {
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 1px solid rgba(212, 165, 116, 0.1);
+            border-top: 1px solid rgba(255, 154, 11, 0.1);
             text-align: center;
         }
 
         .admin-login-footer a {
-            color: rgba(212, 165, 116, 0.5);
+            color: rgba(255, 154, 11, 0.5);
             text-decoration: none;
             font-size: 12px;
             transition: all 0.2s;
@@ -150,7 +156,7 @@
         }
 
         .admin-login-footer a:hover {
-            color: #d4a574;
+            color: #FF9A0B;
         }
 
         #adminContent {
@@ -165,20 +171,20 @@
 
         header {
             margin-bottom: 50px;
-            border-bottom: 2px solid #d4a574;
+            border-bottom: 2px solid #FF9A0B;
             padding-bottom: 30px;
             position: relative;
         }
 
         h1 {
-            color: #d4a574;
+            color: #FF9A0B;
             margin-bottom: 8px;
             font-size: 2.2em;
             letter-spacing: -0.5px;
         }
 
         header p {
-            color: #999;
+            color: #B8A892;
             font-size: 14px;
             margin-bottom: 20px;
             text-transform: uppercase;
@@ -193,11 +199,11 @@
         }
 
         .nav-links a {
-            color: #d4a574;
+            color: #FF9A0B;
             text-decoration: none;
             font-size: 13px;
             padding: 8px 16px;
-            border: 1px solid #d4a574;
+            border: 1px solid #FF9A0B;
             border-radius: 3px;
             transition: all 0.2s;
             display: flex;
@@ -206,13 +212,13 @@
         }
 
         .nav-links a:hover {
-            background: #d4a574;
-            color: #0f1419;
+            background: #FF9A0B;
+            color: #1a0a00;
         }
 
         .form-section {
-            background: #1a1f29;
-            border: 1px solid #333;
+            background: #371603;
+            border: 1px solid #5C2A10;
             padding: 35px;
             margin-bottom: 40px;
             border-radius: 6px;
@@ -220,7 +226,7 @@
         }
 
         .form-section h2 {
-            color: #d4a574;
+            color: #FF9A0B;
             margin-bottom: 30px;
             font-size: 1.4em;
             display: flex;
@@ -239,7 +245,7 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #d4a574;
+            color: #FF9A0B;
             font-weight: 500;
             font-size: 13px;
             text-transform: uppercase;
@@ -253,9 +259,9 @@
         select {
             width: 100%;
             padding: 12px 14px;
-            background: #0f1419;
-            border: 1px solid #333;
-            color: #e0e0e0;
+            background: #1a0a00;
+            border: 1px solid #5C2A10;
+            color: #FCF9F5;
             font-family: inherit;
             border-radius: 4px;
             font-size: 14px;
@@ -268,9 +274,9 @@
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: #d4a574;
-            background: #151a23;
-            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+            border-color: #FF9A0B;
+            background: #2a1004;
+            box-shadow: 0 0 0 3px rgba(255, 154, 11, 0.1);
         }
 
         textarea {
@@ -309,22 +315,22 @@
         }
 
         .btn-primary {
-            background: #d4a574;
-            color: #0f1419;
+            background: #FF9A0B;
+            color: #1a0a00;
         }
 
         .btn-primary:hover {
-            background: #e8c08a;
+            background: #FFB347;
             transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background: #333;
-            color: #e0e0e0;
+            background: #5C2A10;
+            color: #FCF9F5;
         }
 
         .btn-secondary:hover {
-            background: #444;
+            background: #6E3414;
         }
 
         .btn-danger {
@@ -341,7 +347,7 @@
         }
 
         .entries-list h2 {
-            color: #d4a574;
+            color: #FF9A0B;
             margin-bottom: 25px;
             font-size: 1.4em;
             display: flex;
@@ -350,18 +356,18 @@
         }
 
         .entry-card {
-            background: #1a1f29;
-            border-left: 4px solid #d4a574;
+            background: #371603;
+            border-left: 4px solid #FF9A0B;
             padding: 24px;
             margin-bottom: 16px;
             border-radius: 4px;
-            border: 1px solid #333;
+            border: 1px solid #5C2A10;
             transition: all 0.2s;
         }
 
         .entry-card:hover {
-            border-color: #d4a574;
-            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.1);
+            border-color: #FF9A0B;
+            box-shadow: 0 4px 12px rgba(255, 154, 11, 0.1);
         }
 
         .entry-header {
@@ -373,21 +379,21 @@
         }
 
         .entry-title {
-            color: #e0e0e0;
+            color: #FCF9F5;
             font-size: 15px;
             font-weight: 600;
         }
 
         .entry-date {
-            color: #999;
+            color: #B8A892;
             font-size: 12px;
             white-space: nowrap;
         }
 
         .entry-category {
             display: inline-block;
-            background: #d4a574;
-            color: #0f1419;
+            background: #FF9A0B;
+            color: #1a0a00;
             padding: 4px 10px;
             border-radius: 3px;
             font-size: 10px;
@@ -398,13 +404,13 @@
         }
 
         .entry-meta {
-            color: #999;
+            color: #B8A892;
             font-size: 12px;
             margin-bottom: 10px;
         }
 
         .entry-meta a {
-            color: #d4a574;
+            color: #FF9A0B;
             text-decoration: none;
         }
 
@@ -413,7 +419,7 @@
         }
 
         .entry-description {
-            color: #ccc;
+            color: #F9EACA;
             font-size: 13px;
             margin-bottom: 12px;
             line-height: 1.5;
@@ -455,7 +461,7 @@
 
         .empty-state {
             text-align: center;
-            color: #666;
+            color: #8A7866;
             padding: 50px 20px;
             font-size: 14px;
         }
@@ -485,6 +491,28 @@
     </style>
 </head>
 <body>
+
+    <canvas id="bgPulse"></canvas>
+    <div id="notificationOverlay" class="notification-overlay"></div>
+    <div id="notificationBanner"  class="notification-banner"></div>
+
+    <!-- ── Menu trigger + side panel ── -->
+    <button id="menuTrigger" class="menu-trigger" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+    <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
+        <div class="side-panel-inner">
+            <img src="../assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
+            <h2 class="panel-name">BKDziti</h2>
+            <p class="panel-tagline">ベイクドジーティ</p>
+            <hr class="panel-divider">
+            <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
+            <div class="panel-socials" id="panelSocials"></div>
+            <div class="panel-footer">&copy; 2026 BKDziti LLC &middot; All Rights Reserved</div>
+        </div>
+    </aside>
+
     <!-- ── LOGIN SCREEN ── -->
     <div id="loginScreen" class="admin-login-screen">
         <div class="admin-login-card">
@@ -587,13 +615,13 @@
         </div>
 
         <div class="entries-list">
-            <h2><i class="fas fa-list"></i> Current Entries <span style="font-size: 0.8em; color: #d4a574;">(<span id="entryCount">0</span>)</span></h2>
+            <h2><i class="fas fa-list"></i> Current Entries <span style="font-size: 0.8em; color: #FF9A0B;">(<span id="entryCount">0</span>)</span></h2>
             <div id="entriesContainer"></div>
         </div>
 
-        <div class="entries-list" style="margin-top: 60px; padding-top: 40px; border-top: 2px solid #333;">
+        <div class="entries-list" style="margin-top: 60px; padding-top: 40px; border-top: 2px solid #5C2A10;">
             <h2 style="color: #f08080;"><i class="fas fa-inbox"></i> Pending Submissions <span style="font-size: 0.8em; color: #f08080;">(<span id="pendingCount">0</span>)</span></h2>
-            <p style="color: #999; font-size: 12px; margin-bottom: 20px;">Public submissions awaiting review and approval</p>
+            <p style="color: #B8A892; font-size: 12px; margin-bottom: 20px;">Public submissions awaiting review and approval</p>
             <div id="pendingContainer"></div>
         </div>
     </div>
@@ -723,7 +751,7 @@
                         ${entry.articleUrl ? `<a href="${entry.articleUrl}" target="_blank" class="entry-meta" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-file-alt"></i> View Article</a>` : ''}
                         ${entry.videoUrl ? `<a href="${entry.videoUrl}" target="_blank" class="entry-meta" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-video"></i> View Video</a>` : ''}
                     </div>
-                    ${entry.notes ? `<div class="entry-meta" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #333;"><strong>Notes:</strong> ${escapeHtml(entry.notes)}</div>` : ''}
+                    ${entry.notes ? `<div class="entry-meta" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #5C2A10;"><strong>Notes:</strong> ${escapeHtml(entry.notes)}</div>` : ''}
                     <div class="entry-actions">
                         <button class="btn-small btn-secondary" onclick="editEntry(${entry.id})"><i class="fas fa-edit"></i> Edit</button>
                         <button class="btn-small btn-danger" onclick="deleteEntry(${entry.id})"><i class="fas fa-trash"></i> Delete</button>
@@ -822,9 +850,9 @@
                             <div class="entry-date"><i class="fas fa-calendar-alt"></i> ${formatDate(sub.date)}</div>
                         </div>
                     </div>
-                    <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #333;">
-                        <div style="color: #999; font-size: 12px;"><strong>From:</strong> ${escapeHtml(sub.name || 'Anonymous')} (${escapeHtml(sub.email)})</div>
-                        <div style="color: #999; font-size: 11px; margin-top: 4px;">Submitted: ${new Date(sub.submittedAt).toLocaleString()}</div>
+                    <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #5C2A10;">
+                        <div style="color: #B8A892; font-size: 12px;"><strong>From:</strong> ${escapeHtml(sub.name || 'Anonymous')} (${escapeHtml(sub.email)})</div>
+                        <div style="color: #B8A892; font-size: 11px; margin-top: 4px;">Submitted: ${new Date(sub.submittedAt).toLocaleString()}</div>
                     </div>
                     <div class="entry-category">${sub.category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</div>
                     <div class="entry-meta"><strong>Source:</strong> ${escapeHtml(sub.source)}</div>
@@ -833,7 +861,7 @@
                         ${sub.articleUrl ? `<a href="${sub.articleUrl}" target="_blank" class="entry-meta" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-file-alt"></i> Article</a>` : ''}
                         ${sub.videoUrl ? `<a href="${sub.videoUrl}" target="_blank" class="entry-meta" style="display: inline-flex; align-items: center; gap: 5px;"><i class="fas fa-video"></i> Video</a>` : ''}
                     </div>
-                    ${sub.notes ? `<div class="entry-meta" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #333;"><strong>Notes:</strong> ${escapeHtml(sub.notes)}</div>` : ''}
+                    ${sub.notes ? `<div class="entry-meta" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #5C2A10;"><strong>Notes:</strong> ${escapeHtml(sub.notes)}</div>` : ''}
                     <div class="entry-actions" style="margin-top: 16px;">
                         <button class="btn-small btn-primary" onclick="approvePending(${sub.id})" style="background: #4caf50; color: white;">
                             <i class="fas fa-check"></i> Approve & Publish
@@ -993,5 +1021,10 @@
             document.querySelector('.admin-login-btn').innerHTML = '<i class="fas fa-unlock-alt"></i> Sign In';
         }
     </script>
+
+    <!-- Shared site chrome: side-panel nav, socials, background pulse -->
+    <script>window.PAGE_CONFIG = { sections: [] };</script>
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/site.js"></script>
 </body>
 </html>

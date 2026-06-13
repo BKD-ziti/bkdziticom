@@ -366,8 +366,7 @@
         if (type === 'video' || type === 'webm') {
             const webm = src;
             const mp4  = section.mp4 || '';
-            const poster = section.poster ? ` poster="${section.poster}"` : '';
-            return `<video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"${poster}
+            return `<video autoplay muted loop playsinline preload="auto" data-bkd-video="1" data-autoplay="1"
                         data-src-webm="${webm}"${mp4 ? ` data-src-mp4="${mp4}"` : ''}></video>`;
         }
         if (type === 'pdf') {
@@ -387,8 +386,11 @@
         const container = $('#contentSections');
         if (!container) return;
 
-        container.innerHTML = SECTIONS.map(sec => {
-            const isReverse = sec.align === 'right';
+        container.innerHTML = SECTIONS.map((sec, i) => {
+            // Sections always alternate left / right / left … by position so
+            // every page stays visually consistent, regardless of the
+            // per-section `align` value (kept for backwards compatibility).
+            const isReverse = (i % 2 === 1);
             const type = sec.mediaType || (sec.media ? guessType(sec.media) : 'placeholder');
             const wrapMods = [
                 type === 'pdf' ? 'pdf no-overlay' : '',
@@ -510,7 +512,13 @@
         const container = $('#panelNav');
         if (!container) return;
 
-        const nav    = CONFIG.nav || {};
+        // Nav resolution order: explicit per-page nav → named variant from
+        // shared data (BKD.NAV_STORE etc.) → shared default (BKD.NAV).
+        const BKD    = window.BKD || {};
+        const nav    = CONFIG.nav
+            || (CONFIG.navVariant && BKD[CONFIG.navVariant])
+            || BKD.NAV
+            || {};
         const before = nav.before || [];
         const after  = nav.after  || [];
 
@@ -596,7 +604,9 @@
             if (webm) {
                 const el = document.createElement('source');
                 el.src  = webm;
-                el.type = 'video/webm';
+                // data-src-webm now points at mp4 files; set the type from the
+                // actual extension so the browser doesn't reject a mismatch.
+                el.type = /\.webm$/i.test(webm) ? 'video/webm' : 'video/mp4';
                 video.appendChild(el);
             }
             if (mp4) {

@@ -9,7 +9,6 @@
     <link rel="canonical" href="https://www.bkdziti.com/hosting/">
 
     <!-- ── Favicons / app icons ── -->
-    <link rel="icon"          type="image/svg+xml" href="../assets/images/favicon.svg">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-32x32.png"  sizes="32x32">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-16x16.png"  sizes="16x16">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-96x96.png"  sizes="96x96">
@@ -35,7 +34,9 @@
     <meta name="twitter:description" content="Free website hosting on the BKDziti domain for your portfolio or projects.">
     <meta name="twitter:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -45,24 +46,27 @@
             padding: 40px 20px;
             max-width: 1000px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .hosting-header {
             text-align: center;
             margin-bottom: 60px;
             padding-bottom: 40px;
-            border-bottom: 2px solid #d4a574;
+            border-bottom: 1px solid rgba(249,83,1,0.25);
         }
 
         .hosting-header h1 {
+            font-family: 'Dela Gothic One', sans-serif;
             font-size: 2.5em;
-            color: #d4a574;
+            color: #FF9A0B;
             margin-bottom: 15px;
         }
 
         .hosting-header p {
             font-size: 1.1em;
-            color: #ccc;
+            color: #F9EACA;
             margin-bottom: 20px;
         }
 
@@ -74,8 +78,8 @@
         }
 
         .hosting-card {
-            background: #1a1f29;
-            border: 1px solid #333;
+            background: #371603;
+            border: 1px solid #5C2A10;
             border-radius: 8px;
             padding: 30px;
             text-align: center;
@@ -83,38 +87,38 @@
         }
 
         .hosting-card:hover {
-            border-color: #d4a574;
-            box-shadow: 0 8px 24px rgba(212, 165, 116, 0.15);
+            border-color: #FF9A0B;
+            box-shadow: 0 8px 24px rgba(255, 154, 11, 0.15);
             transform: translateY(-4px);
         }
 
         .hosting-card-icon {
             font-size: 3em;
-            color: #d4a574;
+            color: #FF9A0B;
             margin-bottom: 15px;
         }
 
         .hosting-card h3 {
             font-size: 1.3em;
             margin-bottom: 10px;
-            color: #e0e0e0;
+            color: #FCF9F5;
         }
 
         .hosting-card p {
-            color: #999;
+            color: #B8A892;
             font-size: 0.95em;
             line-height: 1.6;
         }
 
         .hosted-sites {
-            background: #0f1419;
-            border: 1px solid #333;
+            background: #1a0a00;
+            border: 1px solid #5C2A10;
             border-radius: 8px;
             padding: 40px;
         }
 
         .hosted-sites h2 {
-            color: #d4a574;
+            color: #FF9A0B;
             margin-bottom: 30px;
             text-align: center;
             font-size: 1.8em;
@@ -127,8 +131,8 @@
         }
 
         .hosted-site-item {
-            background: #1a1f29;
-            border: 1px solid #333;
+            background: #371603;
+            border: 1px solid #5C2A10;
             border-radius: 6px;
             padding: 20px;
             text-align: center;
@@ -136,12 +140,12 @@
         }
 
         .hosted-site-item:hover {
-            border-color: #d4a574;
-            background: rgba(212, 165, 116, 0.05);
+            border-color: #FF9A0B;
+            background: rgba(255, 154, 11, 0.05);
         }
 
         .hosted-site-item a {
-            color: #d4a574;
+            color: #FF9A0B;
             text-decoration: none;
             font-weight: 600;
             display: flex;
@@ -156,20 +160,20 @@
 
         .hosted-site-item .site-status {
             font-size: 0.8em;
-            color: #666;
+            color: #8A7866;
             margin-top: 8px;
         }
 
         .empty-state {
             text-align: center;
             padding: 40px;
-            color: #666;
+            color: #8A7866;
         }
 
         .empty-state i {
             font-size: 3em;
             margin-bottom: 15px;
-            color: #444;
+            color: #6E3414;
         }
     </style>
 </head>
@@ -184,7 +188,7 @@
     <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
     <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
         <div class="side-panel-inner">
-            <img src="../assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
+            <img src="../assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
             <h2 class="panel-name">BKDziti</h2>
             <p class="panel-tagline">ベイクドジーティ</p>
             <hr class="panel-divider">
@@ -235,15 +239,15 @@
             <h2>Hosted Websites</h2>
             <div class="hosted-sites-list" id="hostedSitesList">
                 <div class="hosted-site-item">
-                    <a href="mikerealestate/"><i class="fas fa-home"></i> Mike Hughes Real Estate</a>
+                    <a href="mikerealestate/index.html"><i class="fas fa-home"></i> Mike Hughes Real Estate</a>
                     <div class="site-status">Coldwell Banker &middot; Cape Coral, FL</div>
                 </div>
             </div>
         </div>
 
         <div style="text-align: center; margin-top: 60px;">
-            <h3 style="color: #d4a574; margin-bottom: 20px;">Interested in Hosting?</h3>
-            <p style="color: #999; margin-bottom: 30px;">Contact BKDziti to submit your website for free hosting</p>
+            <h3 style="color: #FF9A0B; margin-bottom: 20px;">Interested in Hosting?</h3>
+            <p style="color: #B8A892; margin-bottom: 30px;">Contact BKDziti to submit your website for free hosting</p>
             <a href="../contact.html" class="pill-btn">
                 <i class="fas fa-envelope"></i> Get in Touch <i class="fas fa-arrow-right"></i>
             </a>
@@ -266,18 +270,7 @@
 
     <script>
         window.PAGE_CONFIG = {
-            sections: [],
-            nav: {
-                before: [{ label: 'Home', href: '../index.html#hero' }],
-                after: [
-                    { label: '─────────────', href: '#' },
-                    { label: 'Services',      href: '../services.html#hero' },
-                    { label: 'Portfolio',     href: '../portfolio.html#hero' },
-                    { label: 'Store',         href: '../store/index.html' },
-                    { label: 'Research',      href: '../research/index.html' },
-                    { label: 'Contact',       href: '../contact.html#hero' }
-                ]
-            }
+            sections: []
         };
     </script>
     <script src="../assets/js/data.js"></script>

@@ -8,7 +8,6 @@
     <meta name="robots" content="noindex, nofollow">
 
     <!-- ── Favicons / app icons ── -->
-    <link rel="icon"          type="image/svg+xml" href="../assets/images/favicon.svg">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-32x32.png"  sizes="32x32">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-16x16.png"  sizes="16x16">
     <link rel="icon"          type="image/png"     href="../assets/images/favicon-96x96.png"  sizes="96x96">
@@ -17,10 +16,13 @@
     <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
     <link rel="manifest" href="../assets/images/site.webmanifest">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <style>
         * {
             margin: 0;
@@ -30,8 +32,8 @@
 
         body {
             font-family: 'Golos Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0f1419;
-            color: #e0e0e0;
+            background: #1a0a00;
+            color: #FCF9F5;
             padding: 0;
         }
 
@@ -39,24 +41,27 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 40px 20px;
+            position: relative;
+            z-index: 1;
         }
 
         header {
             text-align: center;
             margin-bottom: 50px;
             padding-bottom: 30px;
-            border-bottom: 2px solid #d4a574;
+            border-bottom: 1px solid rgba(249,83,1,0.25);
         }
 
         h1 {
-            color: #d4a574;
+            font-family: 'Dela Gothic One', sans-serif;
+            color: #FF9A0B;
             font-size: 2.2em;
             margin-bottom: 10px;
             letter-spacing: -0.5px;
         }
 
         .subtitle {
-            color: #999;
+            color: #B8A892;
             font-size: 14px;
             margin-bottom: 25px;
             text-transform: uppercase;
@@ -64,7 +69,7 @@
         }
 
         .intro-text {
-            color: #ccc;
+            color: #F9EACA;
             text-align: center;
             margin-bottom: 30px;
             line-height: 1.6;
@@ -74,8 +79,8 @@
         }
 
         .form-section {
-            background: #1a1f29;
-            border: 1px solid #333;
+            background: #371603;
+            border: 1px solid #5C2A10;
             padding: 35px;
             margin-bottom: 40px;
             border-radius: 6px;
@@ -83,7 +88,7 @@
         }
 
         .form-section h2 {
-            color: #d4a574;
+            color: #FF9A0B;
             margin-bottom: 30px;
             font-size: 1.4em;
             display: flex;
@@ -98,7 +103,7 @@
         label {
             display: block;
             margin-bottom: 8px;
-            color: #d4a574;
+            color: #FF9A0B;
             font-weight: 500;
             font-size: 13px;
             text-transform: uppercase;
@@ -113,9 +118,9 @@
         select {
             width: 100%;
             padding: 12px 14px;
-            background: #0f1419;
-            border: 1px solid #333;
-            color: #e0e0e0;
+            background: #1a0a00;
+            border: 1px solid #5C2A10;
+            color: #FCF9F5;
             font-family: inherit;
             border-radius: 4px;
             font-size: 14px;
@@ -129,9 +134,9 @@
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: #d4a574;
-            background: #151a23;
-            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.1);
+            border-color: #FF9A0B;
+            background: #2a1004;
+            box-shadow: 0 0 0 3px rgba(255, 154, 11, 0.1);
         }
 
         textarea {
@@ -169,22 +174,22 @@
         }
 
         .btn-primary {
-            background: #d4a574;
-            color: #0f1419;
+            background: #FF9A0B;
+            color: #1a0a00;
         }
 
         .btn-primary:hover {
-            background: #e8c08a;
+            background: #FFB347;
             transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background: #333;
-            color: #e0e0e0;
+            background: #5C2A10;
+            color: #FCF9F5;
         }
 
         .btn-secondary:hover {
-            background: #444;
+            background: #6E3414;
         }
 
         .message {
@@ -216,11 +221,11 @@
         }
 
         .nav-links a {
-            color: #d4a574;
+            color: #FF9A0B;
             text-decoration: none;
             font-size: 13px;
             padding: 8px 16px;
-            border: 1px solid #d4a574;
+            border: 1px solid #FF9A0B;
             border-radius: 3px;
             transition: all 0.2s;
             display: inline-flex;
@@ -229,8 +234,8 @@
         }
 
         .nav-links a:hover {
-            background: #d4a574;
-            color: #0f1419;
+            background: #FF9A0B;
+            color: #1a0a00;
         }
 
         .required {
@@ -238,8 +243,8 @@
         }
 
         .info-box {
-            background: rgba(212, 165, 116, 0.1);
-            border: 1px solid rgba(212, 165, 116, 0.3);
+            background: rgba(255, 154, 11, 0.1);
+            border: 1px solid rgba(255, 154, 11, 0.3);
             padding: 16px;
             border-radius: 4px;
             margin-bottom: 25px;
@@ -248,7 +253,7 @@
         }
 
         .info-box i {
-            color: #d4a574;
+            color: #FF9A0B;
             margin-right: 8px;
         }
 
@@ -273,6 +278,28 @@
     </style>
 </head>
 <body>
+
+    <canvas id="bgPulse"></canvas>
+    <div id="notificationOverlay" class="notification-overlay"></div>
+    <div id="notificationBanner"  class="notification-banner"></div>
+
+    <!-- ── Menu trigger + side panel ── -->
+    <button id="menuTrigger" class="menu-trigger" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+    <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
+        <div class="side-panel-inner">
+            <img src="../assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
+            <h2 class="panel-name">BKDziti</h2>
+            <p class="panel-tagline">ベイクドジーティ</p>
+            <hr class="panel-divider">
+            <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
+            <div class="panel-socials" id="panelSocials"></div>
+            <div class="panel-footer">&copy; 2026 BKDziti LLC &middot; All Rights Reserved</div>
+        </div>
+    </aside>
+
     <div class="container">
         <header>
             <h1>Submit Entry</h1>
@@ -373,7 +400,7 @@
             </form>
         </div>
 
-        <div style="text-align: center; color: #999; font-size: 12px; margin-top: 40px;">
+        <div style="text-align: center; color: #B8A892; font-size: 12px; margin-top: 40px;">
             <p>Submissions are reviewed and verified before being added to the public timeline.</p>
         </div>
     </div>
@@ -426,5 +453,10 @@
             document.getElementById('date').value = today;
         });
     </script>
+
+    <!-- Shared site chrome: side-panel nav, socials, background pulse -->
+    <script>window.PAGE_CONFIG = { sections: [] };</script>
+    <script src="../assets/js/data.js"></script>
+    <script src="../assets/js/site.js"></script>
 </body>
 </html>
