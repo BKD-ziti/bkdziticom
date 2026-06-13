@@ -366,7 +366,7 @@
         if (type === 'video' || type === 'webm') {
             const webm = src;
             const mp4  = section.mp4 || '';
-            return `<video autoplay muted loop playsinline preload="auto" data-bkd-video="1" data-autoplay="1"
+            return `<video autoplay muted loop playsinline webkit-playsinline preload="auto" data-bkd-video="1" data-autoplay="1"
                         data-src-webm="${webm}"${mp4 ? ` data-src-mp4="${mp4}"` : ''}></video>`;
         }
         if (type === 'pdf') {
@@ -594,9 +594,30 @@
             return wrap ? wrap.querySelector('.media-loader') : null;
         }
 
+        // iOS Safari only autoplays videos that are *muted* and *inline*. Set
+        // both the property and the attributes (plus legacy webkit-playsinline)
+        // so mobile Safari treats them as eligible for muted autoplay.
+        function ensureInlineMuted(video) {
+            video.muted = true;
+            video.defaultMuted = true;
+            video.setAttribute('muted', '');
+            video.setAttribute('playsinline', '');
+            video.setAttribute('webkit-playsinline', '');
+            video.autoplay = true;
+        }
+
+        function tryPlay(video) {
+            if (!video || video.dataset.autoplay !== '1') return;
+            ensureInlineMuted(video);
+            const p = video.play();
+            if (p && typeof p.catch === 'function') p.catch(() => {});
+        }
+
         function hydrateVideo(video) {
             if (video.dataset.hydrated === '1') return;
             video.dataset.hydrated = '1';
+
+            ensureInlineMuted(video);
 
             const webm = video.dataset.srcWebm;
             const mp4  = video.dataset.srcMp4;
@@ -617,14 +638,15 @@
             }
 
             if (video.dataset.autoplay === '1') {
-                video.addEventListener('canplay', function onCanPlay() {
-                    video.removeEventListener('canplay', onCanPlay);
+                // loadeddata fires earlier/more reliably than canplay on iOS;
+                // listen for both so we attempt playback as soon as possible.
+                const onReady = function () {
                     const loader = getLoader(video);
                     if (loader) loader.classList.add('hidden');
-                    if (!video.muted) video.muted = true;
-                    const p = video.play();
-                    if (p && typeof p.catch === 'function') p.catch(() => {});
-                }, { once: true });
+                    tryPlay(video);
+                };
+                video.addEventListener('loadeddata', onReady);
+                video.addEventListener('canplay', onReady);
             }
 
             video.load();
@@ -662,11 +684,7 @@
                     if (isIn) {
                         hydrateVideo(el);
                         // Re-play already-hydrated autoplay videos that scrolled back into view
-                        if (el.dataset.hydrated === '1' && el.dataset.autoplay === '1' && el.paused) {
-                            if (!el.muted) el.muted = true;
-                            const p = el.play();
-                            if (p && typeof p.catch === 'function') p.catch(() => {});
-                        }
+                        if (el.dataset.hydrated === '1' && el.paused) tryPlay(el);
                     } else {
                         pauseVideo(el);
                     }
@@ -683,9 +701,24 @@
         videos.forEach(v => io.observe(v));
         iframes.forEach(f => io.observe(f));
 
+        // Fallback: if muted autoplay is ever blocked (older iOS, Low Power
+        // Mode lifted, etc.), the first user interaction — a tap or scroll,
+        // which happens almost immediately on mobile — starts every on-screen
+        // autoplay video. One-shot listeners, so there's no ongoing cost.
+        const inView = v => {
+            const r = v.getBoundingClientRect();
+            return r.bottom > 0 && r.top < (window.innerHeight || document.documentElement.clientHeight);
+        };
+        const kickAll = () => videos.forEach(v => {
+            if (v.dataset.hydrated === '1' && v.paused && inView(v)) tryPlay(v);
+        });
+        ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll', 'keydown'].forEach(evt =>
+            window.addEventListener(evt, kickAll, { once: true, passive: true, capture: true }));
+
         const onVis = () => {
-            if (!document.hidden) return;
-            videos.forEach(pauseVideo);
+            if (document.hidden) { videos.forEach(pauseVideo); return; }
+            // Returning to the tab: resume on-screen autoplay videos.
+            videos.forEach(v => { if (v.dataset.hydrated === '1' && v.paused && inView(v)) tryPlay(v); });
         };
         document.addEventListener('visibilitychange', onVis);
 
