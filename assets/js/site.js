@@ -521,33 +521,62 @@
             || {};
         const before = nav.before || [];
         const after  = nav.after  || [];
+        const isDivider = l => !!(l && l.label && l.label.startsWith('─'));
 
-        const sectionLinks = SECTIONS.map(sec => ({
-            label: sec.navLabel || sec.label,
-            href:  '#' + sec.id
-        }));
+        // Normalize an internal absolute path for "is this the current page?"
+        // checks: strip hash/query, drop index.html, drop trailing slash.
+        const normPath = href => {
+            if (!href || href[0] !== '/') return null;
+            return (href.split('#')[0].split('?')[0]
+                .replace(/index\.html$/, '').replace(/\/$/, '')) || '/';
+        };
+        const current = normPath(location.pathname);
 
-        const combined = [...before, ...sectionLinks, ...after];
+        // Page links (the site-wide list). Drop the link to the page we're
+        // already on so there's never a dead self-link in the menu.
+        const pageLinks = after.filter(l => isDivider(l) || normPath(l.href) !== current);
 
+        // The set of page-link labels — section anchors that duplicate one of
+        // these are redundant (the teaser section links to that page anyway),
+        // so we let the page link win and drop the colliding anchor.
+        const pageLabels = new Set(
+            [...before, ...pageLinks]
+                .filter(l => l && l.label && !isDivider(l))
+                .map(l => l.label.trim().toLowerCase())
+        );
+
+        // This page's in-page section anchors (top group), minus collisions.
+        const sectionLinks = SECTIONS
+            .map(sec => ({ label: sec.navLabel || sec.label, href: '#' + sec.id }))
+            .filter(s => s.label && !pageLabels.has(String(s.label).trim().toLowerCase()));
+
+        const combined = [...before, ...sectionLinks, ...pageLinks];
+
+        // Dedup by label (keep first), keeping dividers as candidates.
         const seenLabels = new Set();
         const deduped = combined.filter(link => {
             if (!link || !link.label) return false;
-            if (link.label.startsWith('─')) return true;
+            if (isDivider(link)) return true;
             const key = String(link.label).trim().toLowerCase();
-            if (!key) return false;
-            if (seenLabels.has(key)) return false;
+            if (!key || seenLabels.has(key)) return false;
             seenLabels.add(key);
             return true;
         });
 
-        container.innerHTML = deduped
-            .map(link => {
-                // Render separator entries as visual dividers, not links
-                if (link.label && link.label.startsWith('─')) {
-                    return '<hr class="panel-nav-divider">';
-                }
-                return `<a href="${link.href}">${link.label}</a>`;
-            })
+        // Tidy dividers: no leading, trailing, or consecutive separators.
+        const cleaned = [];
+        deduped.forEach(link => {
+            if (isDivider(link)) {
+                if (!cleaned.length || isDivider(cleaned[cleaned.length - 1])) return;
+            }
+            cleaned.push(link);
+        });
+        while (cleaned.length && isDivider(cleaned[cleaned.length - 1])) cleaned.pop();
+
+        container.innerHTML = cleaned
+            .map(link => isDivider(link)
+                ? '<hr class="panel-nav-divider">'
+                : `<a href="${link.href}">${link.label}</a>`)
             .join('');
     }
 
