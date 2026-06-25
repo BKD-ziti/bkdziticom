@@ -1088,7 +1088,7 @@ export default {
     // Intercept /assets/images/* and serve from R2 bucket (key = bare filename).
     // Falls through to static assets if the key isn't in R2 yet.
     if (path.startsWith('/assets/images/') && env.MEDIA) {
-      const key = path.slice('/assets/images/'.length);
+      const key = decodeURIComponent(path.slice('/assets/images/'.length));
       if (key) {
         const object = await env.MEDIA.get(key);
         if (object) {
