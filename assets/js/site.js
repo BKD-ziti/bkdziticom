@@ -256,9 +256,9 @@
                 if (orb.baseY < -0.15) orb.baseY = 1.15;
                 if (orb.baseY >  1.15) orb.baseY = -0.15;
 
-                const cx = (orb.baseX + Math.sin(t * orb.wanderFX + orb.wanderOX) * orb.wanderAmpX) * canvas.width;
-                const cy = (orb.baseY + Math.sin(t * orb.wanderFY + orb.wanderOY) * orb.wanderAmpY) * canvas.height;
-                const alpha = Math.max(0, orb.maxA + Math.sin(t * orb.pulseSpeed + orb.pulseOff) * orb.pulseAmp);
+                const cx = (orb.baseX + Math.sin(state.t * orb.wanderFX + orb.wanderOX) * orb.wanderAmpX) * canvas.width;
+                const cy = (orb.baseY + Math.sin(state.t * orb.wanderFY + orb.wanderOY) * orb.wanderAmpY) * canvas.height;
+                const alpha = Math.max(0, orb.maxA + Math.sin(state.t * orb.pulseSpeed + orb.pulseOff) * orb.pulseAmp);
                 const r = orb.size * diag;
 
                 ctx.save();
