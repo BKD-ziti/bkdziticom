@@ -342,7 +342,7 @@ const SEED_PRODUCTS = [
     description: 'Professional video production for your brand. Short-form social videos for Instagram Reels and TikTok, dish prep videos, full menu showcases, and brand promos. Color-graded and music-licensed for immediate publication.',
     features: ['Short-form social videos', 'Color grading & music', 'Scripting support', 'Reels / TikTok / YouTube ready', 'Platform-optimized cuts', '2-week turnaround'],
     price: 60000,
-    imageUrl: '/assets/images/Datamosh-Dream.webm',
+    imageUrl: '/assets/images/Datamosh-Dream.mp4',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -354,7 +354,7 @@ const SEED_PRODUCTS = [
     description: "Send us your raw footage and we'll edit it into polished, platform-ready content. Includes color grading, music, captions, and graphics. Perfect if you shoot your own content but need professional post-production.",
     features: ['Bring your own footage', 'Color grading', 'Captions & on-screen graphics', 'Platform-optimized cuts', 'Up to 10 min raw footage', '1-week turnaround'],
     price: 20000,
-    imageUrl: '/assets/images/Datamosh-Dream.webm',
+    imageUrl: '/assets/images/Datamosh-Dream.mp4',
     type: 'service',
     pricingModel: 'one-time',
     billingInterval: '',
@@ -366,7 +366,7 @@ const SEED_PRODUCTS = [
     description: 'Consistent, professional content every month. Includes a monthly photo + video shoot, 10+ edited images, 2 short-form social videos, and a content calendar to keep your brand looking fresh across all platforms.',
     features: ['Monthly photo + video shoot', '10+ edited images', '2 short-form social videos', 'Content calendar included', 'All platforms covered', 'Cancel anytime'],
     price: 100000,
-    imageUrl: '/assets/images/Datamosh-Dream.webm',
+    imageUrl: '/assets/images/Datamosh-Dream.mp4',
     type: 'service',
     pricingModel: 'monthly',
     billingInterval: '',
@@ -1024,8 +1024,16 @@ async function handleAdminUpdateOrder(request, env, id) {
 export default {
   async fetch(request, env, ctx) {
     const url      = new URL(request.url);
-    const path     = url.pathname;
+    let path       = url.pathname;
     const method   = request.method;
+
+    // ── Directory rewrite: /path/ → /path/index.html ────────────────────────
+    if (path !== '/' && path.endsWith('/') && method === 'GET') {
+      const indexPath = path + 'index.html';
+      const indexRequest = new Request(new URL(indexPath, url).toString(), request);
+      const indexResponse = await env.ASSETS.fetch(indexRequest);
+      if (indexResponse.status !== 404) return indexResponse;
+    }
 
     // ── Contact ──────────────────────────────────────────────────────────────
     if (method === 'POST' && path === '/api/contact') return handleContact(request, env);

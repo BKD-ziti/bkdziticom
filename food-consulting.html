@@ -6,7 +6,6 @@
     <title>Culinary Consultation Services | Restaurant & Food Business Consulting | BKDziti</title>
 
     <!-- ── Favicons / app icons ── -->
-    <link rel="icon"          type="image/svg+xml" href="assets/images/favicon.svg">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-32x32.png"  sizes="32x32">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-16x16.png"  sizes="16x16">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-96x96.png"  sizes="96x96">
@@ -47,13 +46,19 @@
     </script>
 
     <!-- ── External resources ── -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ── Site stylesheet (critical, same-origin — load first) ── -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+
+    <!-- ── Fonts ── -->
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
-    <!-- ── Site stylesheet ── -->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- ── Icons (Font Awesome) — loaded non-render-blocking ── -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"></noscript>
 </head>
 <body>
 
@@ -70,7 +75,7 @@
     <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
     <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
         <div class="side-panel-inner">
-            <img src="assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img">
+            <img src="assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
             <h2 class="panel-name">BKDziti</h2>
             <p class="panel-tagline">ベイクドジーティ</p>
             <hr class="panel-divider">
@@ -153,7 +158,7 @@
                     label: 'The Process',
                     title: 'How We Work Together',
                     body:  'Initial consultation to understand your vision, discovery and analysis of your market, strategy development with tailored consulting plan, implementation and guidance to execute, and ongoing support as your business evolves. We partner with you every step of the way.',
-                    media: 'assets/images/food2.webm',
+                    media: 'assets/images/bkdziti_intro.mp4',
                     mediaType: 'video',
                     align: 'right',
                     button: { text: 'See Services', url: 'services.html#hero' },
@@ -169,7 +174,7 @@
                     label: 'Portfolio',
                     title: 'Past Work & Collaborations',
                     body:  'From concept-to-execution pop-up events to menu overhauls and digital strategy for existing restaurants — see the kind of work that comes out of a BKDziti engagement.',
-                    media: 'assets/images/MP4-converted.webm',
+                    media: 'assets/images/EatMyBallsAdCompressed.mp4',
                     mediaType: 'video',
                     align: 'right',
                     button: { text: 'View Portfolio', url: 'portfolio.html#hero' },
@@ -188,7 +193,7 @@
                     media: 'assets/images/Card.png',
                     mediaType: 'image',
                     align: 'left',
-                    button: { text: 'Contact BKDziti', url: 'sms:+12394205010' },
+                    button: { text: 'Book a Free Call', url: 'https://calendly.com/bkdziti' },
                     palette: [
                         [252, 249, 245, 0.10],
                         [254, 241, 194, 0.12],
@@ -200,7 +205,7 @@
                     label: 'FAQ',
                     title: 'FAQ',
                     body:  'Quick answers to dumbass questions about our services and how we work.',
-                    media: 'assets/images/Datamosh-Dream.webm',
+                    media: 'assets/images/Twisps1.mp4',
                     mediaType: 'video',
                     align: 'right',
                     button: { text: 'FAQ', url: 'faq.html#hero' },
@@ -211,24 +216,7 @@
                         [255, 154, 11,  0.10]
                     ]
                 },
-            ],
-
-            nav: {
-                before: [{ label: 'Home', href: 'index.html#hero' }],
-                after:  [
-                    { label: '─────────────', href: '#' },
-                    { label: 'Services', href: 'services.html#hero' },
-                    { label: 'Media Production', href: 'media-production.html#hero' },
-                    { label: 'Portfolio', href: 'portfolio.html#hero' },
-                    { label: 'FAQ', href: 'faq.html#hero' },
-                    { label: 'Blog', href: 'blog/index.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Contact', href: 'contact.html#hero' },
-                    { label: 'Resume & Cover Letter', href: 'secret.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Email', href: 'mailto:AlexZornes@BKDziti.com' }
-                ]
-            }
+            ]
         };
     </script>
 

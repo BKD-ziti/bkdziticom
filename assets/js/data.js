@@ -45,3 +45,52 @@ window.BKD.SOCIALS = [
         url:      'https://patreon.bkdziti.com/'
     }
 ];
+
+/* =========================================================================
+   SITE NAVIGATION — single source of truth for the side panel.
+   Uses root-absolute paths (/...) so the exact same definition works from
+   every directory depth (root pages, /blog, /store, /research, /hosting).
+   Pages inherit this automatically; a page can override with its own
+   PAGE_CONFIG.nav, or pick a named variant via PAGE_CONFIG.navVariant.
+   ========================================================================= */
+window.BKD.NAV = {
+    before: [{ label: 'Home', href: '/index.html#hero' }],
+    after: [
+        { label: '─────────────', href: '#' },
+        { label: 'Store',                 href: '/store/index.html' },
+        { label: 'Services',              href: '/services.html#hero' },
+        { label: 'Culinary Consulting',   href: '/food-consulting.html#hero' },
+        { label: 'Media Production',      href: '/media-production.html#hero' },
+        { label: 'Portfolio',             href: '/portfolio.html#hero' },
+        { label: 'FAQ',                   href: '/faq.html#hero' },
+        { label: 'Blog',                  href: '/blog/index.html#hero' },
+        { label: '─────────────', href: '#' },
+        { label: 'Hosting',               href: 'https://hosting.bkdziti.com' },
+        { label: 'Resume & Cover Letter', href: '/secret.html#hero' },
+        { label: 'Contact',               href: '/contact.html#hero' },
+        { label: '─────────────', href: '#' },
+        { label: 'Email',                 href: 'mailto:AlexZornes@BKDziti.com' }
+    ]
+};
+
+/* Store variant — leads with store-specific links, then the full site nav. */
+window.BKD.NAV_STORE = {
+    before: [{ label: 'Home', href: '/index.html#hero' }],
+    after: [
+        { label: '─────────────', href: '#' },
+        { label: 'Store Home', href: '/store/index.html' },
+        { label: 'My Cart',    href: '/store/cart.html' },
+        { label: 'My Orders',  href: '/store/orders.html' },
+        { label: '─────────────', href: '#' },
+        { label: 'Services',              href: '/services.html#hero' },
+        { label: 'Culinary Consulting',   href: '/food-consulting.html#hero' },
+        { label: 'Media Production',      href: '/media-production.html#hero' },
+        { label: 'Portfolio',             href: '/portfolio.html#hero' },
+        { label: 'FAQ',                   href: '/faq.html#hero' },
+        { label: 'Blog',                  href: '/blog/index.html#hero' },
+        { label: 'Hosting',               href: 'https://hosting.bkdziti.com' },
+        { label: '─────────────', href: '#' },
+        { label: 'Contact',               href: '/contact.html#hero' },
+        { label: 'Email',                 href: 'mailto:AlexZornes@BKDziti.com' }
+    ]
+};

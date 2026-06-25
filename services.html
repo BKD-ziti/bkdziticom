@@ -6,7 +6,6 @@
     <title>Services | PopUp Coordination, Culinary Consulting, & Media Production for Restaurants and Businesses | BKDziti</title>
 
     <!-- ── Favicons / app icons ── -->
-    <link rel="icon"          type="image/svg+xml" href="assets/images/favicon.svg">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-32x32.png"  sizes="32x32">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-16x16.png"  sizes="16x16">
     <link rel="icon"          type="image/png"     href="assets/images/favicon-96x96.png"  sizes="96x96">
@@ -35,13 +34,20 @@
     <meta name="twitter:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
 
     <!-- ── External resources ── -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ── Site stylesheet (critical, same-origin — load first) ── -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+
+    <!-- ── Fonts ── -->
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
-    <!-- ── Site stylesheet ── -->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- ── Icons (Font Awesome) — loaded non-render-blocking ── -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"></noscript>
+    <link rel="stylesheet" href="assets/css/pricing.css">
 
     <!-- ── Schema.org Structured Data ── -->
     <script type="application/ld+json">
@@ -69,7 +75,7 @@
     <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
     <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
         <div class="side-panel-inner">
-            <img src="assets/images/BKDziti_pfp_2.PNG" alt="BKDziti logo" class="panel-logo-img">
+            <img src="assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
             <h2 class="panel-name">BKDziti</h2>
             <p class="panel-tagline">ベイクドジーティ</p>
             <hr class="panel-divider">
@@ -107,6 +113,73 @@
         <!-- ── Content sections (rendered from PAGE_CONFIG.sections) ── -->
         <div id="contentSections"></div>
 
+        <!-- ── PRICING ── -->
+        <section id="pricing" class="pricing-section">
+            <div class="pricing-container">
+                <div class="pricing-header">
+                    <div class="section-label">Pricing</div>
+                    <h2 class="section-title">What to Expect</h2>
+                    <p class="pricing-intro">All projects start with a free discovery call. Listed prices are starting points &mdash; final quotes depend on scope, timeline, and deliverables.</p>
+                </div>
+                <div class="pricing-grid">
+
+                    <div class="pricing-card">
+                        <div class="pricing-card-header">
+                            <i class="fas fa-utensils"></i>
+                            <h3>Culinary Consulting</h3>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><span class="pricing-tier">Hourly</span><span class="pricing-amount">$125<span class="pricing-unit">/hr</span></span></li>
+                            <li><span class="pricing-tier">Project</span><span class="pricing-amount">from $750</span></li>
+                            <li><span class="pricing-tier">Retainer</span><span class="pricing-amount">from $1,500<span class="pricing-unit">/mo</span></span></li>
+                        </ul>
+                        <a href="https://calendly.com/bkdziti" class="pill-btn" target="_blank" rel="noopener">Book a Free Call <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-card-header">
+                            <i class="fas fa-camera"></i>
+                            <h3>Media Production</h3>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><span class="pricing-tier">Content Pack</span><span class="pricing-amount">from $350</span></li>
+                            <li><span class="pricing-tier">Half-Day Shoot</span><span class="pricing-amount">from $600</span></li>
+                            <li><span class="pricing-tier">Full Brand Package</span><span class="pricing-amount">from $1,400</span></li>
+                        </ul>
+                        <a href="https://calendly.com/bkdziti" class="pill-btn" target="_blank" rel="noopener">Book a Free Call <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-card-header">
+                            <i class="fas fa-store"></i>
+                            <h3>Pop-Up Coordination</h3>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><span class="pricing-tier">Planning Only</span><span class="pricing-amount">from $500</span></li>
+                            <li><span class="pricing-tier">Coordination</span><span class="pricing-amount">from $1,500</span></li>
+                            <li><span class="pricing-tier">Full Service</span><span class="pricing-amount">from $2,800</span></li>
+                        </ul>
+                        <a href="https://calendly.com/bkdziti" class="pill-btn" target="_blank" rel="noopener">Book a Free Call <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-card-header">
+                            <i class="fas fa-code"></i>
+                            <h3>Web Development</h3>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><span class="pricing-tier">Landing Page</span><span class="pricing-amount">from $500</span></li>
+                            <li><span class="pricing-tier">Multi-Page Site</span><span class="pricing-amount">from $1,200</span></li>
+                            <li><span class="pricing-tier">Full Store + Site</span><span class="pricing-amount">from $2,200</span></li>
+                        </ul>
+                        <a href="https://calendly.com/bkdziti" class="pill-btn" target="_blank" rel="noopener">Book a Free Call <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                </div>
+                <p class="pricing-note">Free initial consultation included with every project. Custom scopes quoted individually. <a href="contact.html#hero">Reach out</a> to discuss your specific needs.</p>
+            </div>
+        </section>
+
     </main>
 
     <!-- ── FOOTER ── -->
@@ -140,7 +213,7 @@
                     media: 'assets/images/Card.png',
                     mediaType: 'image',
                     align: 'left',
-                    button: { text: 'Text Me', url: 'sms:+12394205010' },
+                    button: { text: 'Book a Free Call', url: 'https://calendly.com/bkdziti' },
                     palette: [
                         [252, 249, 245, 0.10],
                         [254, 241, 194, 0.12],
@@ -153,7 +226,7 @@
                     label: 'PopUp Coordination',
                     title: 'PopUp Coordination',
                     body:  'End-to-end pop-up event coordination, Marketing Campaigns, and Media Production. Concept development, menu design, vendor sourcing, logistics, marketing, and on-site execution. We help you bring unique dining experiences to life with less stress and more impact.',
-                    media: 'assets/images/food2.webm',
+                    media: 'assets/images/Elotevideo2.mp4',
                     mediaType: 'video',
                     align: 'right',
                     button: { text: "What's a Pop-Up?", url: 'blog/how-to-start-popup-restaurant.html' },
@@ -169,8 +242,8 @@
                     label: 'Culinary Consulting',
                     title: 'Culinary Consulting',
                     body:  'Strategic guidance for business concepts, pop-ups, menu development, and restaurant operations. We help you navigate the complexities of starting and scaling food businesses.',
-                    media: 'assets/images/IMG_1123.PNG',
-                    mediaType: 'image',
+                    media: 'assets/images/ziti.mp4',
+                    mediaType: 'video',
                     align: 'left',
                     button: { text: 'Learn More', url: 'food-consulting.html' },
                     palette: [
@@ -185,10 +258,26 @@
                     label: 'Media Production',
                     title: 'Media Production',
                     body:  'Professional videography, photography, and content creation. We capture the essence of your food and brand, creating compelling visual content for social media, marketing, and digital presence.',
-                    media: 'assets/images/Datamosh-Dream.webm',
+                    media: 'assets/images/Datamosh-Dream.mp4',
                     mediaType: 'video',
                     align: 'right',
                     button: { text: 'Learn More', url: 'media-production.html' },
+                    palette: [
+                        [233, 50,  0,   0.22],
+                        [249, 83,  1,   0.16],
+                        [231, 54,  2,   0.18],
+                        [255, 154, 11,  0.10]
+                    ]
+                },
+                {
+                    id: 'web-development',
+                    label: 'Web Development',
+                    title: 'Web Development',
+                    body:  'Custom websites, e-commerce platforms, and digital solutions tailored for restaurants and food businesses. From landing pages to full-featured online stores, we build digital experiences that convert visitors into customers.',
+                    media: 'assets/images/BKDzitiBanner3.png',
+                    mediaType: 'image',
+                    align: 'left',
+                    button: { text: 'Get Started', url: 'store/index.html?service=web-dev' },
                     palette: [
                         [233, 50,  0,   0.22],
                         [249, 83,  1,   0.16],
@@ -201,8 +290,8 @@
                     label: 'Shop',
                     title: 'Book & Buy Online',
                     body:  'Consulting packages, media production sessions, and more — available to purchase directly. Browse current offerings, add to cart, and pay securely via Stripe.',
-                    media: 'assets/images/IMG_0326.JPG',
-                    mediaType: 'image',
+                    media: 'assets/images/store1.mp4',
+                    mediaType: 'video',
                     align: 'left',
                     button: { text: 'Visit the Store', url: 'store/index.html' },
                     palette: [
@@ -217,10 +306,10 @@
                     label: 'Blog',
                     title: "Resources & Guides",
                     body:  'Deep dives on pop-up strategy, restaurant branding, media production, and how to build a food business that lasts. Free articles to get you started.',
-                    media: 'assets/images/EatMyBalls.png',
-                    mediaType: 'image',
+                    media: 'assets/images/bkdziti_intro.mp4',
+                    mediaType: 'video',
                     align: 'right',
-                    button: { text: 'Read Blog', url: 'blog/index.html#hero' },
+                    button: { text: 'Read Blog', url: 'blog/index.html' },
                     palette: [
                         [233, 50,  0,   0.22],
                         [249, 83,  1,   0.16],
@@ -228,25 +317,7 @@
                         [255, 154, 11,  0.10]
                     ]
                 },
-            ],
-
-            // Side panel nav: section links are auto-generated from `sections`.
-            // `before` and `after` add static items around them.
-            nav: {
-                before: [{ label: 'Home', href: 'index.html#hero' }],
-                after:  [
-                    { label: '─────────────', href: '#' },
-                    { label: 'Store',     href: 'store/index.html' },
-                    { label: 'Portfolio', href: 'portfolio.html#hero' },
-                    { label: 'FAQ', href: 'faq.html#hero' },
-                    { label: 'Blog', href: 'blog/index.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Contact', href: 'contact.html#hero' },
-                    { label: 'Resume & Cover Letter', href: 'secret.html#hero' },
-                    { label: '─────────────', href: '#' },
-                    { label: 'Email', href: 'mailto:AlexZornes@BKDziti.com' }
-                ]
-            }
+            ]
         };
     </script>
 

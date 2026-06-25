@@ -366,8 +366,7 @@
         if (type === 'video' || type === 'webm') {
             const webm = src;
             const mp4  = section.mp4 || '';
-            const poster = section.poster ? ` poster="${section.poster}"` : '';
-            return `<video muted loop playsinline preload="metadata" data-bkd-video="1" data-autoplay="1"${poster}
+            return `<video autoplay muted loop playsinline webkit-playsinline preload="auto" data-bkd-video="1" data-autoplay="1"
                         data-src-webm="${webm}"${mp4 ? ` data-src-mp4="${mp4}"` : ''}></video>`;
         }
         if (type === 'pdf') {
@@ -387,8 +386,11 @@
         const container = $('#contentSections');
         if (!container) return;
 
-        container.innerHTML = SECTIONS.map(sec => {
-            const isReverse = sec.align === 'right';
+        container.innerHTML = SECTIONS.map((sec, i) => {
+            // Sections always alternate left / right / left … by position so
+            // every page stays visually consistent, regardless of the
+            // per-section `align` value (kept for backwards compatibility).
+            const isReverse = (i % 2 === 1);
             const type = sec.mediaType || (sec.media ? guessType(sec.media) : 'placeholder');
             const wrapMods = [
                 type === 'pdf' ? 'pdf no-overlay' : '',
@@ -510,36 +512,71 @@
         const container = $('#panelNav');
         if (!container) return;
 
-        const nav    = CONFIG.nav || {};
+        // Nav resolution order: explicit per-page nav → named variant from
+        // shared data (BKD.NAV_STORE etc.) → shared default (BKD.NAV).
+        const BKD    = window.BKD || {};
+        const nav    = CONFIG.nav
+            || (CONFIG.navVariant && BKD[CONFIG.navVariant])
+            || BKD.NAV
+            || {};
         const before = nav.before || [];
         const after  = nav.after  || [];
+        const isDivider = l => !!(l && l.label && l.label.startsWith('─'));
 
-        const sectionLinks = SECTIONS.map(sec => ({
-            label: sec.navLabel || sec.label,
-            href:  '#' + sec.id
-        }));
+        // Normalize an internal absolute path for "is this the current page?"
+        // checks: strip hash/query, drop index.html, drop trailing slash.
+        const normPath = href => {
+            if (!href || href[0] !== '/') return null;
+            return (href.split('#')[0].split('?')[0]
+                .replace(/index\.html$/, '').replace(/\/$/, '')) || '/';
+        };
+        const current = normPath(location.pathname);
 
-        const combined = [...before, ...sectionLinks, ...after];
+        // Page links (the site-wide list). Drop the link to the page we're
+        // already on so there's never a dead self-link in the menu.
+        const pageLinks = after.filter(l => isDivider(l) || normPath(l.href) !== current);
 
+        // The set of page-link labels — section anchors that duplicate one of
+        // these are redundant (the teaser section links to that page anyway),
+        // so we let the page link win and drop the colliding anchor.
+        const pageLabels = new Set(
+            [...before, ...pageLinks]
+                .filter(l => l && l.label && !isDivider(l))
+                .map(l => l.label.trim().toLowerCase())
+        );
+
+        // This page's in-page section anchors (top group), minus collisions.
+        const sectionLinks = SECTIONS
+            .map(sec => ({ label: sec.navLabel || sec.label, href: '#' + sec.id }))
+            .filter(s => s.label && !pageLabels.has(String(s.label).trim().toLowerCase()));
+
+        const combined = [...before, ...sectionLinks, ...pageLinks];
+
+        // Dedup by label (keep first), keeping dividers as candidates.
         const seenLabels = new Set();
         const deduped = combined.filter(link => {
             if (!link || !link.label) return false;
-            if (link.label.startsWith('─')) return true;
+            if (isDivider(link)) return true;
             const key = String(link.label).trim().toLowerCase();
-            if (!key) return false;
-            if (seenLabels.has(key)) return false;
+            if (!key || seenLabels.has(key)) return false;
             seenLabels.add(key);
             return true;
         });
 
-        container.innerHTML = deduped
-            .map(link => {
-                // Render separator entries as visual dividers, not links
-                if (link.label && link.label.startsWith('─')) {
-                    return '<hr class="panel-nav-divider">';
-                }
-                return `<a href="${link.href}">${link.label}</a>`;
-            })
+        // Tidy dividers: no leading, trailing, or consecutive separators.
+        const cleaned = [];
+        deduped.forEach(link => {
+            if (isDivider(link)) {
+                if (!cleaned.length || isDivider(cleaned[cleaned.length - 1])) return;
+            }
+            cleaned.push(link);
+        });
+        while (cleaned.length && isDivider(cleaned[cleaned.length - 1])) cleaned.pop();
+
+        container.innerHTML = cleaned
+            .map(link => isDivider(link)
+                ? '<hr class="panel-nav-divider">'
+                : `<a href="${link.href}">${link.label}</a>`)
             .join('');
     }
 
@@ -586,9 +623,30 @@
             return wrap ? wrap.querySelector('.media-loader') : null;
         }
 
+        // iOS Safari only autoplays videos that are *muted* and *inline*. Set
+        // both the property and the attributes (plus legacy webkit-playsinline)
+        // so mobile Safari treats them as eligible for muted autoplay.
+        function ensureInlineMuted(video) {
+            video.muted = true;
+            video.defaultMuted = true;
+            video.setAttribute('muted', '');
+            video.setAttribute('playsinline', '');
+            video.setAttribute('webkit-playsinline', '');
+            video.autoplay = true;
+        }
+
+        function tryPlay(video) {
+            if (!video || video.dataset.autoplay !== '1') return;
+            ensureInlineMuted(video);
+            const p = video.play();
+            if (p && typeof p.catch === 'function') p.catch(() => {});
+        }
+
         function hydrateVideo(video) {
             if (video.dataset.hydrated === '1') return;
             video.dataset.hydrated = '1';
+
+            ensureInlineMuted(video);
 
             const webm = video.dataset.srcWebm;
             const mp4  = video.dataset.srcMp4;
@@ -596,7 +654,9 @@
             if (webm) {
                 const el = document.createElement('source');
                 el.src  = webm;
-                el.type = 'video/webm';
+                // data-src-webm now points at mp4 files; set the type from the
+                // actual extension so the browser doesn't reject a mismatch.
+                el.type = /\.webm$/i.test(webm) ? 'video/webm' : 'video/mp4';
                 video.appendChild(el);
             }
             if (mp4) {
@@ -607,14 +667,15 @@
             }
 
             if (video.dataset.autoplay === '1') {
-                video.addEventListener('canplay', function onCanPlay() {
-                    video.removeEventListener('canplay', onCanPlay);
+                // loadeddata fires earlier/more reliably than canplay on iOS;
+                // listen for both so we attempt playback as soon as possible.
+                const onReady = function () {
                     const loader = getLoader(video);
                     if (loader) loader.classList.add('hidden');
-                    if (!video.muted) video.muted = true;
-                    const p = video.play();
-                    if (p && typeof p.catch === 'function') p.catch(() => {});
-                }, { once: true });
+                    tryPlay(video);
+                };
+                video.addEventListener('loadeddata', onReady);
+                video.addEventListener('canplay', onReady);
             }
 
             video.load();
@@ -652,11 +713,7 @@
                     if (isIn) {
                         hydrateVideo(el);
                         // Re-play already-hydrated autoplay videos that scrolled back into view
-                        if (el.dataset.hydrated === '1' && el.dataset.autoplay === '1' && el.paused) {
-                            if (!el.muted) el.muted = true;
-                            const p = el.play();
-                            if (p && typeof p.catch === 'function') p.catch(() => {});
-                        }
+                        if (el.dataset.hydrated === '1' && el.paused) tryPlay(el);
                     } else {
                         pauseVideo(el);
                     }
@@ -673,9 +730,24 @@
         videos.forEach(v => io.observe(v));
         iframes.forEach(f => io.observe(f));
 
+        // Fallback: if muted autoplay is ever blocked (older iOS, Low Power
+        // Mode lifted, etc.), the first user interaction — a tap or scroll,
+        // which happens almost immediately on mobile — starts every on-screen
+        // autoplay video. One-shot listeners, so there's no ongoing cost.
+        const inView = v => {
+            const r = v.getBoundingClientRect();
+            return r.bottom > 0 && r.top < (window.innerHeight || document.documentElement.clientHeight);
+        };
+        const kickAll = () => videos.forEach(v => {
+            if (v.dataset.hydrated === '1' && v.paused && inView(v)) tryPlay(v);
+        });
+        ['touchstart', 'touchend', 'pointerdown', 'click', 'scroll', 'keydown'].forEach(evt =>
+            window.addEventListener(evt, kickAll, { once: true, passive: true, capture: true }));
+
         const onVis = () => {
-            if (!document.hidden) return;
-            videos.forEach(pauseVideo);
+            if (document.hidden) { videos.forEach(pauseVideo); return; }
+            // Returning to the tab: resume on-screen autoplay videos.
+            videos.forEach(v => { if (v.dataset.hydrated === '1' && v.paused && inView(v)) tryPlay(v); });
         };
         document.addEventListener('visibilitychange', onVis);
 

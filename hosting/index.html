@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Hosting - BKDziti Hosting for Friends & Clients</title>
+    <meta name="description" content="Free website hosting on the BKDziti domain. Host your portfolio, landing page, or side project with no separate hosting or domain fees.">
+    <meta name="keywords" content="free website hosting, portfolio hosting, BKDziti hosting, free domain">
+    <link rel="canonical" href="https://hosting.bkdziti.com/">
+
+    <link rel="icon"          type="image/png"     href="https://bkdziti.com/assets/images/favicon-32x32.png"  sizes="32x32">
+    <link rel="icon"          type="image/png"     href="https://bkdziti.com/assets/images/favicon-16x16.png"  sizes="16x16">
+    <link rel="icon"          type="image/png"     href="https://bkdziti.com/assets/images/favicon-96x96.png"  sizes="96x96">
+    <link rel="shortcut icon" href="https://bkdziti.com/assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180"   href="https://bkdziti.com/assets/images/apple-touch-icon.png">
+
+    <meta property="og:title"       content="Free Hosting - BKDziti">
+    <meta property="og:type"        content="website">
+    <meta property="og:description" content="Free website hosting for friends and clients. No hosting fees, no hidden charges.">
+    <meta property="og:image"       content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+    <meta property="og:url"         content="https://hosting.bkdziti.com/">
+    <meta property="og:site_name"   content="BKDziti Hosting">
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"></noscript>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --bg:        #1a0a00;
+            --bg-alt:    #371603;
+            --orange:    #FF9A0B;
+            --red:       #F95301;
+            --cream:     #FCF9F5;
+            --muted:     #B8A892;
+            --border:    rgba(249,83,1,0.25);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Golos Text', sans-serif;
+            background: var(--bg);
+            color: var(--cream);
+            line-height: 1.7;
+            overflow-x: clip;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(26,10,0,0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topbar-inner {
+            width: min(1100px, calc(100% - 2rem));
+            margin: 0 auto;
+            min-height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .brand {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .brand-name {
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: 1.15rem;
+            color: var(--orange);
+            line-height: 1.1;
+        }
+
+        .brand-sub {
+            font-size: 0.68rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem 1.4rem;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.82rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: color 160ms;
+        }
+
+        .nav-links a:hover { color: var(--cream); }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.1rem;
+            border-radius: 999px;
+            background: var(--red);
+            color: var(--cream);
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: background 160ms, transform 160ms;
+        }
+
+        .nav-cta:hover { background: var(--orange); transform: translateY(-1px); }
+
+        /* ── HERO ── */
+        .hero {
+            text-align: center;
+            padding: clamp(4rem, 10vw, 8rem) 1.5rem clamp(3rem, 8vw, 6rem);
+            background:
+                radial-gradient(circle at 30% 50%, rgba(249,83,1,0.14), transparent 42%),
+                radial-gradient(circle at 75% 20%, rgba(255,154,11,0.10), transparent 38%);
+        }
+
+        .hero-eyebrow {
+            font-size: 0.78rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: clamp(2.4rem, 7vw, 5rem);
+            color: var(--orange);
+            margin: 0 0 1rem;
+            line-height: 1;
+        }
+
+        .hero h1 span { color: var(--cream); }
+
+        .hero p {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 56ch;
+            margin: 0 auto 2rem;
+        }
+
+        /* ── PAGE BODY ── */
+        .page-inner {
+            width: min(1000px, calc(100% - 2rem));
+            margin: 0 auto;
+            padding: clamp(2rem, 6vw, 4rem) 0 clamp(3rem, 8vw, 6rem);
+        }
+
+        /* ── FEATURE GRID ── */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: border-color 200ms, transform 200ms, box-shadow 200ms;
+        }
+
+        .feature-card:hover {
+            border-color: var(--orange);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(255,154,11,0.12);
+        }
+
+        .feature-icon {
+            font-size: 2.4rem;
+            color: var(--orange);
+            margin-bottom: 0.85rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: 1.05rem;
+            color: var(--cream);
+            margin: 0 0 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 0.92rem;
+            margin: 0;
+        }
+
+        /* ── HOSTED SITES ── */
+        .sites-section {
+            background: rgba(55,22,3,0.55);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .sites-section h2 {
+            font-family: 'Dela Gothic One', sans-serif;
+            color: var(--orange);
+            font-size: 1.6rem;
+            margin: 0 0 1.5rem;
+            text-align: center;
+        }
+
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .site-item {
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            text-align: center;
+            transition: border-color 200ms, background 200ms;
+        }
+
+        .site-item:hover {
+            border-color: var(--orange);
+            background: rgba(255,154,11,0.05);
+        }
+
+        .site-item a {
+            color: var(--orange);
+            text-decoration: none;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .site-item a:hover { text-decoration: underline; }
+
+        .site-meta {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-top: 0.5rem;
+        }
+
+        /* ── CTA ── */
+        .cta-block {
+            text-align: center;
+        }
+
+        .cta-block h3 {
+            font-family: 'Dela Gothic One', sans-serif;
+            color: var(--orange);
+            font-size: 1.5rem;
+            margin: 0 0 0.75rem;
+        }
+
+        .cta-block p {
+            color: var(--muted);
+            margin: 0 0 1.5rem;
+        }
+
+        .pill-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.6rem;
+            border-radius: 999px;
+            background: var(--red);
+            color: var(--cream);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: background 160ms, transform 160ms;
+        }
+
+        .pill-btn:hover { background: var(--orange); transform: translateY(-2px); }
+
+        /* ── FOOTER ── */
+        .site-footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Dela Gothic One', sans-serif;
+            color: var(--orange);
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.4rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 160ms;
+        }
+
+        .footer-nav a:hover { color: var(--cream); }
+
+        .footer-copy {
+            color: var(--muted);
+            font-size: 0.78rem;
+            margin: 0;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 640px) {
+            .nav-links { display: none; }
+
+            .topbar-inner { min-height: 56px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── TOPBAR ── -->
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" href="https://hosting.bkdziti.com">
+                <span class="brand-name">BKDziti Hosting</span>
+                <span class="brand-sub">ベイクドジーティ</span>
+            </a>
+
+            <ul class="nav-links" aria-label="Primary">
+                <li><a href="https://www.bkdziti.com">BKDziti Home</a></li>
+                <li><a href="https://www.bkdziti.com/services.html">Services</a></li>
+                <li><a href="https://www.bkdziti.com/contact.html">Contact</a></li>
+            </ul>
+
+            <a class="nav-cta" href="https://www.bkdziti.com/contact.html">
+                Get Hosted
+            </a>
+        </div>
+    </header>
+
+    <!-- ── HERO ── -->
+    <section class="hero">
+        <p class="hero-eyebrow">ベイクドジーティ · Hosted Sites</p>
+        <h1>BKDziti <span>Hosting</span></h1>
+        <p>Free website hosting on the BKDziti domain — no separate hosting or domain fees for friends and clients.</p>
+    </section>
+
+    <!-- ── MAIN ── -->
+    <div class="page-inner">
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-server"></i></div>
+                <h3>Free Hosting</h3>
+                <p>Once your website is built, host it here at no cost. No hosting fees, no hidden charges.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-globe"></i></div>
+                <h3>BKDziti Domain</h3>
+                <p>Get your own path on hosting.bkdziti.com — no need to purchase your own domain.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-lock"></i></div>
+                <h3>Secure & Reliable</h3>
+                <p>Professional hosting infrastructure with SSL and 99.9% uptime via Cloudflare.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-code"></i></div>
+                <h3>Full Control</h3>
+                <p>One-time build or ongoing subscription — you have full control over your hosted website.</p>
+            </div>
+        </div>
+
+        <div class="sites-section">
+            <h2>Hosted Websites</h2>
+            <div class="sites-grid">
+                <div class="site-item">
+                    <a href="mikerealestate/"><i class="fas fa-home"></i> Mike Hughes Real Estate</a>
+                    <p class="site-meta">Coldwell Banker · Cape Coral, FL</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-block">
+            <h3>Interested in Hosting?</h3>
+            <p>Contact BKDziti to get your website hosted here for free.</p>
+            <a class="pill-btn" href="https://www.bkdziti.com/contact.html">
+                <i class="fas fa-envelope"></i> Get in Touch
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer class="site-footer">
+        <div class="footer-logo">· ベイクドジーティ ·</div>
+        <nav class="footer-nav">
+            <a href="https://www.bkdziti.com">BKDziti Home</a>
+            <a href="https://www.bkdziti.com/services.html">Services</a>
+            <a href="https://www.bkdziti.com/portfolio.html">Portfolio</a>
+            <a href="https://www.bkdziti.com/contact.html">Contact</a>
+        </nav>
+        <p class="footer-copy">© 2026 BKDziti LLC · All Rights Reserved</p>
+    </footer>
+
+
+</body>
+</html>

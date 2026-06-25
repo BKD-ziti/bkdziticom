@@ -500,18 +500,16 @@ body::before {
     position: relative;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    border: 1px solid rgba(249,83,1,0.15);
-    background: var(--dark-brown);
     line-height: 0;
     width: 100%;
 }
+/* The frame hugs the media exactly — natural aspect ratio, no border,
+   no background, no letterboxing/empty space. */
 .content-media-wrap img,
 .content-media-wrap video {
     display: block;
     width: 100%;
     height: auto;
-    max-height: 80vh;
-    object-fit: contain;
     transition: transform 0.6s ease;
 }
 .content-media-wrap:hover img,

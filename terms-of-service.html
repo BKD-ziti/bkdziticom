@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | BKDziti LLC</title>
+    <meta name="description" content="Terms of Service for BKDziti LLC — consulting, media production, and web development services.">
+    <link rel="canonical" href="https://www.bkdziti.com/terms-of-service.html">
+
+    <!-- ── Favicons / app icons ── -->
+    <link rel="icon"          type="image/png"     href="assets/images/favicon-32x32.png"  sizes="32x32">
+    <link rel="icon"          type="image/png"     href="assets/images/favicon-16x16.png"  sizes="16x16">
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="manifest" href="assets/images/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#371603">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Terms of Service | BKDziti LLC">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.bkdziti.com/terms-of-service.html">
+    <meta property="og:site_name" content="BKDziti">
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"></noscript>
+
+    <style>
+        .legal-body {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+            color: rgba(252,249,245,0.75);
+            font-family: 'Golos Text', sans-serif;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        .legal-body h2 {
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: 1.15rem;
+            color: var(--offwhite, #fcf9f5);
+            margin: 2.5rem 0 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(249,83,1,0.15);
+        }
+        .legal-body h2:first-of-type { border-top: none; }
+        .legal-body p { margin: 0 0 1rem; }
+        .legal-body ul { padding-left: 1.4rem; margin: 0 0 1rem; }
+        .legal-body ul li { margin-bottom: 0.4rem; }
+        .legal-body a { color: var(--amber, #ff9a0b); text-decoration: none; }
+        .legal-body a:hover { text-decoration: underline; }
+        .legal-updated {
+            font-size: 0.85rem;
+            color: rgba(252,249,245,0.4);
+            margin-bottom: 2.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bgPulse"></canvas>
+    <div id="notificationOverlay" class="notification-overlay"></div>
+    <div id="notificationBanner"  class="notification-banner"></div>
+
+    <button id="menuTrigger" class="menu-trigger" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+    <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
+        <div class="side-panel-inner">
+            <img src="assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
+            <h2 class="panel-name">BKDziti</h2>
+            <p class="panel-tagline">ベイクドジーティ</p>
+            <hr class="panel-divider">
+            <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
+            <div class="panel-socials" id="panelSocials"></div>
+            <div class="panel-footer">&copy; 2026 BKDziti LLC &middot; All Rights Reserved</div>
+        </div>
+    </aside>
+
+    <main>
+        <section class="hero" id="hero">
+            <div class="hero-bg-ring"></div>
+            <div class="hero-bg-ring"></div>
+            <div class="hero-bg-ring"></div>
+            <div class="hero-inner">
+                <div class="hero-eyebrow reveal">ベイクドジーティ</div>
+                <h1 class="hero-title reveal">
+                    <span class="word-bkd">Terms</span><span class="word-ziti">of Service</span>
+                </h1>
+                <p class="hero-sub reveal">The agreement between you and BKDziti LLC when using this site or engaging our services.</p>
+                <button id="scrollToAbout" class="hero-scroll-hint reveal" aria-label="Scroll to terms">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </section>
+
+        <div class="legal-body" id="about">
+            <p class="legal-updated">Last updated: June 24, 2026</p>
+
+            <h2>Agreement to Terms</h2>
+            <p>By accessing <a href="https://www.bkdziti.com">bkdziti.com</a> or engaging BKDziti LLC (&ldquo;BKDziti,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) for services, you agree to these Terms of Service. If you do not agree, do not use this site or engage our services. These Terms apply to all website visitors, consulting clients, and customers who purchase through our online store.</p>
+
+            <h2>Services Offered</h2>
+            <p>BKDziti LLC provides culinary consulting, pop-up coordination, media production (photography and videography), web development, and related services to restaurants, food businesses, and adjacent clients. The specific scope, deliverables, timeline, and fees for each engagement are agreed upon in writing (email or a separate agreement) before work begins.</p>
+
+            <h2>Payments & Fees</h2>
+            <ul>
+                <li>Payments are processed securely through Stripe. By purchasing, you agree to <a href="https://stripe.com/legal" target="_blank" rel="noopener">Stripe&rsquo;s Terms of Service</a>.</li>
+                <li>For store purchases, payment is due at time of checkout.</li>
+                <li>For custom project engagements, a deposit (typically 50%) is required before work begins. The remaining balance is due upon delivery unless otherwise agreed in writing.</li>
+                <li>All quoted prices are in USD.</li>
+                <li>Invoices not paid within 14 days of the due date may be subject to a 1.5% monthly late fee.</li>
+            </ul>
+
+            <h2>Refunds & Cancellations</h2>
+            <ul>
+                <li><strong>Store purchases (digital services/bookings):</strong> Refunds are available if cancellation is requested at least 48 hours before a scheduled session. Sessions cancelled with less than 48 hours notice are non-refundable.</li>
+                <li><strong>Custom consulting engagements:</strong> Deposits are non-refundable once work has commenced. If a project is cancelled by the client after work begins, fees for completed work are due.</li>
+                <li><strong>Media production:</strong> Deposits are non-refundable. Rescheduling is available with at least 72 hours notice.</li>
+                <li>To request a refund or cancellation, email <a href="mailto:AlexZornes@BKDziti.com">AlexZornes@BKDziti.com</a>.</li>
+            </ul>
+
+            <h2>Intellectual Property</h2>
+            <p><strong>Media deliverables (photography, video):</strong> Upon receipt of full payment, the client receives a non-exclusive, royalty-free license to use the deliverables for their business purposes. BKDziti retains the right to display work in its portfolio unless the client requests otherwise in writing.</p>
+            <p><strong>Consulting methodology:</strong> All frameworks, processes, and methodologies used or developed by BKDziti during consulting engagements remain the intellectual property of BKDziti. Deliverables specific to your project (strategies, plans, documents) are yours upon full payment.</p>
+            <p><strong>Website content:</strong> All content on bkdziti.com — text, images, video, graphics, and code — is the property of BKDziti LLC. Reproduction without written permission is prohibited.</p>
+
+            <h2>Client Responsibilities</h2>
+            <p>Clients are responsible for providing accurate information, timely feedback, and necessary access (locations, brand materials, logins) required to complete the project. Delays caused by client inaction may result in timeline adjustments or additional fees.</p>
+
+            <h2>Confidentiality</h2>
+            <p>BKDziti agrees to keep client business information confidential and will not share it with third parties without consent, except as required by law. Clients agree to keep BKDziti&rsquo;s proprietary methodologies and unpublished materials confidential.</p>
+
+            <h2>Limitation of Liability</h2>
+            <p>BKDziti&rsquo;s total liability for any claim arising from services rendered shall not exceed the total fees paid by the client for the specific service at issue. BKDziti is not liable for indirect, incidental, or consequential damages, including lost profits or business opportunities, even if advised of their possibility.</p>
+            <p>BKDziti makes no guarantees regarding specific business outcomes (revenue, customer growth, social media metrics) resulting from consulting or media services. Results depend on many factors outside our control.</p>
+
+            <h2>Disclaimer of Warranties</h2>
+            <p>This website and its content are provided &ldquo;as is&rdquo; without warranties of any kind, express or implied. We do not warrant that the site will be error-free or uninterrupted.</p>
+
+            <h2>Third-Party Links</h2>
+            <p>This site may link to third-party websites. We are not responsible for the content or privacy practices of those sites. Links do not constitute endorsement.</p>
+
+            <h2>Governing Law</h2>
+            <p>These Terms are governed by the laws of the State of Florida. Any disputes shall be resolved in the courts of Lee County, Florida, or through binding arbitration in Lee County, Florida, at BKDziti&rsquo;s election.</p>
+
+            <h2>Changes to These Terms</h2>
+            <p>We may update these Terms from time to time. The &ldquo;Last updated&rdquo; date above reflects the most recent revision. Continued use of the site or services after changes constitutes acceptance.</p>
+
+            <h2>Contact</h2>
+            <p>Questions about these Terms?</p>
+            <ul>
+                <li>Email: <a href="mailto:AlexZornes@BKDziti.com">AlexZornes@BKDziti.com</a></li>
+                <li>Website: <a href="https://www.bkdziti.com/contact.html">bkdziti.com/contact.html</a></li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-logo">&bull; ベイクドジーティ &bull;</div>
+            <nav class="footer-nav">
+                <a href="index.html">Home</a> &middot;
+                <a href="services.html#hero">Services</a> &middot;
+                <a href="contact.html#hero">Contact</a> &middot;
+                <a href="privacy-policy.html">Privacy Policy</a> &middot;
+                <a href="terms-of-service.html">Terms</a>
+            </nav>
+            <div class="footer-socials" id="footerSocials"></div>
+            <p class="footer-copy">&copy; Copyright 2026 BKDziti LLC &middot; All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        window.PAGE_CONFIG = { sections: [] };
+    </script>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/site.js"></script>
+
+</body>
+</html>
