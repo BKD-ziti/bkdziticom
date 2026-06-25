@@ -59,7 +59,7 @@ foreach ($file in $files) {
         continue
     }
     Write-Host "[$i/$total] Uploading: $file" -ForegroundColor Cyan
-    wrangler r2 object put "$bucket/$file" --file $path
+    npx wrangler r2 object put "$bucket/$file" --file $path --remote
     if ($LASTEXITCODE -ne 0) {
         Write-Host "  ERROR uploading $file" -ForegroundColor Red
     } else {
