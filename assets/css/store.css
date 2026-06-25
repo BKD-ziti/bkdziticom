@@ -86,6 +86,29 @@
 }
 .store-search::placeholder { color: rgba(252,249,245,0.3); }
 
+/* ── TRUST BAR ────────────────────────────────────────────────────────── */
+.store-trust-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 2.5rem;
+    padding: 1.25rem 2rem;
+    border-top: 1px solid rgba(249,83,1,0.15);
+    margin-top: 1rem;
+    color: rgba(252,249,245,0.45);
+    font-size: 0.85rem;
+    font-family: 'Golos Text', sans-serif;
+}
+.store-trust-bar span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.store-trust-bar i {
+    color: var(--amber, #ff9a0b);
+    font-size: 0.9rem;
+}
+
 .store-filter-wrap { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .store-filter-btn {
     padding: 0.55rem 1.1rem;

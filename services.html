@@ -45,8 +45,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <!-- ── Icons (Font Awesome) — loaded non-render-blocking ── -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"></noscript>
+    <link rel="stylesheet" href="assets/css/pricing.css">
 
     <!-- ── Schema.org Structured Data ── -->
     <script type="application/ld+json">
@@ -112,6 +113,73 @@
         <!-- ── Content sections (rendered from PAGE_CONFIG.sections) ── -->
         <div id="contentSections"></div>
 
+        <!-- ── PRICING ── -->
+        <section id="pricing" class="pricing-section">
+            <div class="pricing-container">
+                <div class="pricing-header">
+                    <div class="section-label">Pricing</div>
+                    <h2 class="section-title">What to Expect</h2>
+                    <p class="pricing-intro">All projects start with a free discovery call. Listed prices are starting points &mdash; final quotes depend on scope, timeline, and deliverables.</p>
+                </div>
+                <div class="pricing-grid">
+
+                    <div class="pricing-card">
+                        <div class="pricing-card-header">
+                            <i class="fas fa-utensils"></i>
+                            <h3>Culinary Consulting</h3>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><span class="pricing-tier">Hourly</span><span class="pricing-amount">$125<span class="pricing-unit">/hr</span></span></li>
+                            <li><span class="pricing-tier">Project</span><span class="pricing-amount">from $750</span></li>
+                            <li><span class="pricing-tier">Retainer</span><span class="pricing-amount">from $1,500<span class="pricing-unit">/mo</span></span></li>
+                        </ul>
+                        <a href="https://calendly.com/bkdziti" class="pill-btn" target="_blank" rel="noopener">Book a Free Call <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-card-header">
+                            <i class="fas fa-camera"></i>
+                            <h3>Media Production</h3>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><span class="pricing-tier">Content Pack</span><span class="pricing-amount">from $350</span></li>
+                            <li><span class="pricing-tier">Half-Day Shoot</span><span class="pricing-amount">from $600</span></li>
+                            <li><span class="pricing-tier">Full Brand Package</span><span class="pricing-amount">from $1,400</span></li>
+                        </ul>
+                        <a href="https://calendly.com/bkdziti" class="pill-btn" target="_blank" rel="noopener">Book a Free Call <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-card-header">
+                            <i class="fas fa-store"></i>
+                            <h3>Pop-Up Coordination</h3>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><span class="pricing-tier">Planning Only</span><span class="pricing-amount">from $500</span></li>
+                            <li><span class="pricing-tier">Coordination</span><span class="pricing-amount">from $1,500</span></li>
+                            <li><span class="pricing-tier">Full Service</span><span class="pricing-amount">from $2,800</span></li>
+                        </ul>
+                        <a href="https://calendly.com/bkdziti" class="pill-btn" target="_blank" rel="noopener">Book a Free Call <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-card-header">
+                            <i class="fas fa-code"></i>
+                            <h3>Web Development</h3>
+                        </div>
+                        <ul class="pricing-list">
+                            <li><span class="pricing-tier">Landing Page</span><span class="pricing-amount">from $500</span></li>
+                            <li><span class="pricing-tier">Multi-Page Site</span><span class="pricing-amount">from $1,200</span></li>
+                            <li><span class="pricing-tier">Full Store + Site</span><span class="pricing-amount">from $2,200</span></li>
+                        </ul>
+                        <a href="https://calendly.com/bkdziti" class="pill-btn" target="_blank" rel="noopener">Book a Free Call <i class="fas fa-arrow-right"></i></a>
+                    </div>
+
+                </div>
+                <p class="pricing-note">Free initial consultation included with every project. Custom scopes quoted individually. <a href="contact.html#hero">Reach out</a> to discuss your specific needs.</p>
+            </div>
+        </section>
+
     </main>
 
     <!-- ── FOOTER ── -->
@@ -145,7 +213,7 @@
                     media: 'assets/images/Card.png',
                     mediaType: 'image',
                     align: 'left',
-                    button: { text: 'Text Me', url: 'sms:+12394205010' },
+                    button: { text: 'Book a Free Call', url: 'https://calendly.com/bkdziti' },
                     palette: [
                         [252, 249, 245, 0.10],
                         [254, 241, 194, 0.12],

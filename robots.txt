@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /research/
 Disallow: /.git/
 Disallow: /node_modules/
 
