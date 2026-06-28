@@ -245,6 +245,30 @@
     // Progressive KV override: if articles have been saved via /admin/, load them
     // before site.js renders. Falls back to static PAGE_CONFIG.sections on any error.
     (function () {
+        // Remap stale filenames from the old /blog/ naming convention to current /articles/ names.
+        var LEGACY_URL_MAP = {
+            'how-to-start-popup-restaurant.html':   'popup-launch.html',
+            'restaurant-branding-media-strategy.html': 'brand-strategy.html',
+            'food-photography-videography-guide.html': 'videography-photography-editing.html',
+            'menu-engineering-profitability.html':   'menu-engineering.html',
+            'social-media-strategy-restaurants.html': 'social-strategy.html',
+            'how-to-find-commercial-kitchen.html':   'workspace.html'
+        };
+        function fixSectionUrls(sections) {
+            return sections.map(function (s) {
+                if (s && s.button && s.button.url) {
+                    var filename = s.button.url.replace(/#.*$/, '');
+                    var hash     = s.button.url.match(/#.*$/);
+                    if (LEGACY_URL_MAP[filename]) {
+                        s = Object.assign({}, s, { button: Object.assign({}, s.button, {
+                            url: LEGACY_URL_MAP[filename] + (hash ? hash[0] : '')
+                        })});
+                    }
+                }
+                return s;
+            });
+        }
+
         var done = false;
         function loadSite() {
             if (done) return;
@@ -258,7 +282,7 @@
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (data) {
                 clearTimeout(timer);
-                if (Array.isArray(data) && data.length) window.PAGE_CONFIG.sections = data;
+                if (Array.isArray(data) && data.length) window.PAGE_CONFIG.sections = fixSectionUrls(data);
                 loadSite();
             })
             .catch(function () { clearTimeout(timer); loadSite(); });

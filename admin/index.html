@@ -941,6 +941,27 @@
         return 0;
     }
 
+    const LEGACY_URL_MAP = {
+        'how-to-start-popup-restaurant.html':    'popup-launch.html',
+        'restaurant-branding-media-strategy.html': 'brand-strategy.html',
+        'food-photography-videography-guide.html': 'videography-photography-editing.html',
+        'menu-engineering-profitability.html':   'menu-engineering.html',
+        'social-media-strategy-restaurants.html': 'social-strategy.html',
+        'how-to-find-commercial-kitchen.html':   'workspace.html'
+    };
+    function fixArticleUrls(cards) {
+        return cards.map(c => {
+            if (c?.button?.url) {
+                const filename = c.button.url.replace(/#.*$/, '');
+                const hash     = c.button.url.match(/#.*$/);
+                if (LEGACY_URL_MAP[filename]) {
+                    c = { ...c, button: { ...c.button, url: LEGACY_URL_MAP[filename] + (hash ? hash[0] : '') } };
+                }
+            }
+            return c;
+        });
+    }
+
     async function loadArticles() {
         const wrap = document.getElementById('articlesListWrap');
         wrap.innerHTML = `<div style="text-align:center;padding:2rem;color:rgba(252,249,245,0.4)"><i class="fas fa-circle-notch fa-spin"></i> Loading…</div>`;
@@ -948,7 +969,7 @@
             const resp = await fetch('/api/content/articles');
             const data = resp.ok ? await resp.json() : null;
             if (Array.isArray(data) && data.length) {
-                articleCards = data.map(c => ({ ...c, paletteIndex: c.paletteIndex ?? detectPaletteIndex(c.palette) }));
+                articleCards = fixArticleUrls(data).map(c => ({ ...c, paletteIndex: c.paletteIndex ?? detectPaletteIndex(c.palette) }));
                 articlesFromKv = true;
                 setArticlesStatus(true);
             } else {
