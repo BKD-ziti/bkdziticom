@@ -11,7 +11,6 @@
 
   // Section navigation
   const STORE_SECTION = document.getElementById('storeSection');
-  const PROSPECTS_SECTION = document.getElementById('prospectsSection');
   const SIDEBAR_BUTTONS = document.querySelectorAll('.admin-nav-btn[data-section]');
 
   // Store tabs
@@ -44,7 +43,6 @@
     LOGIN_SCREEN.style.display = 'none';
     ADMIN_DASHBOARD.style.display = 'block';
     loadStoreAdmin();
-    loadProspectsInterface();
   }
 
   function setupEventListeners() {
@@ -58,7 +56,9 @@
     SIDEBAR_BUTTONS.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const section = btn.dataset.section;
-        switchSection(section);
+        if (section === 'store') {
+          switchSection(section);
+        }
       });
     });
 
@@ -117,10 +117,6 @@
     // Show/hide sections
     if (section === 'store') {
       STORE_SECTION.style.display = 'block';
-      PROSPECTS_SECTION.style.display = 'none';
-    } else if (section === 'prospects') {
-      STORE_SECTION.style.display = 'none';
-      PROSPECTS_SECTION.style.display = 'block';
     }
   }
 
@@ -149,27 +145,6 @@
     if (window.initStoreAdmin && typeof window.initStoreAdmin === 'function') {
       window.initStoreAdmin();
     }
-  }
-
-  function loadProspectsInterface() {
-    const container = document.getElementById('prospectsContent');
-    if (!container) return;
-
-    // Load prospects in an iframe
-    const iframe = document.createElement('iframe');
-    iframe.src = '/admin/prospects.html';
-    iframe.title = 'Prospects Tracker';
-    iframe.style.cssText = `
-      width: 100%;
-      height: calc(100vh - 300px);
-      min-height: 600px;
-      border: none;
-      border-radius: 0.5rem;
-      background: rgba(0, 0, 0, 0.2);
-    `;
-
-    container.innerHTML = '';
-    container.appendChild(iframe);
   }
 
   // Initialize on DOM ready
