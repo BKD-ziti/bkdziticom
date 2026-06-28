@@ -1,2 +1,17 @@
 /hosting/*  https://hosting.bkdziti.com/:splat  301
 /hosting    https://hosting.bkdziti.com          301
+
+/blog/                                        /articles/                                    301
+/blog/index.html                              /articles/                                    301
+/blog/food-photography-videography-guide      /articles/videography-photography-editing     301
+/blog/food-photography-videography-guide.html /articles/videography-photography-editing.html 301
+/blog/how-to-find-commercial-kitchen          /articles/workspace                           301
+/blog/how-to-find-commercial-kitchen.html     /articles/workspace.html                      301
+/blog/how-to-start-popup-restaurant           /articles/popup-launch                        301
+/blog/how-to-start-popup-restaurant.html      /articles/popup-launch.html                   301
+/blog/menu-engineering-profitability          /articles/menu-engineering                    301
+/blog/menu-engineering-profitability.html     /articles/menu-engineering.html               301
+/blog/restaurant-branding-media-strategy      /articles/brand-strategy                      301
+/blog/restaurant-branding-media-strategy.html /articles/brand-strategy.html                 301
+/blog/social-media-strategy-restaurants       /articles/social-strategy                     301
+/blog/social-media-strategy-restaurants.html  /articles/social-strategy.html                301

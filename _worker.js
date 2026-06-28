@@ -1018,6 +1018,31 @@ async function handleAdminUpdateOrder(request, env, id) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// CONTENT API (articles, featured, socials — editable via /admin/)
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function handleGetContent(env, key) {
+  if (!env.STORE_KV) return jsonResponse(null);
+  const raw = await env.STORE_KV.get(`content:${key}`);
+  if (!raw) return jsonResponse(null);
+  try { return jsonResponse(JSON.parse(raw)); } catch { return jsonResponse(null); }
+}
+
+async function handlePutContent(request, env, key) {
+  const data = await request.json().catch(() => null);
+  if (data === null) return jsonResponse({ ok: false, error: 'Invalid JSON' }, 400);
+  if (!env.STORE_KV) return jsonResponse({ ok: false, error: 'KV not configured' }, 500);
+  await env.STORE_KV.put(`content:${key}`, JSON.stringify(data));
+  return jsonResponse({ ok: true });
+}
+
+async function handleDeleteContent(env, key) {
+  if (!env.STORE_KV) return jsonResponse({ ok: false, error: 'KV not configured' }, 500);
+  await env.STORE_KV.delete(`content:${key}`);
+  return jsonResponse({ ok: true });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN ROUTER
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1082,6 +1107,17 @@ export default {
       }
 
       return jsonResponse({ ok: false, error: 'Not found' }, 404);
+    }
+
+    // ── Content API (articles / featured / socials) ──────────────────────────
+    if (path.startsWith('/api/content/')) {
+      const key = path.slice('/api/content/'.length);
+      if (['articles', 'featured', 'socials'].includes(key)) {
+        if (method === 'GET') return handleGetContent(env, key);
+        if (!isAdmin(request, env)) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
+        if (method === 'PUT')    return handlePutContent(request, env, key);
+        if (method === 'DELETE') return handleDeleteContent(env, key);
+      }
     }
 
     // ── R2 media assets ───────────────────────────────────────────────────────

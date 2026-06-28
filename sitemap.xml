@@ -53,48 +53,48 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Blog index -->
+  <!-- Articles index -->
   <url>
-    <loc>https://www.bkdziti.com/blog/</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://www.bkdziti.com/articles/</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Blog posts -->
+  <!-- Articles -->
   <url>
-    <loc>https://www.bkdziti.com/blog/how-to-start-popup-restaurant.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://www.bkdziti.com/articles/popup-launch.html</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.bkdziti.com/blog/restaurant-branding-media-strategy.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://www.bkdziti.com/articles/brand-strategy.html</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.bkdziti.com/blog/food-photography-videography-guide.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://www.bkdziti.com/articles/videography-photography-editing.html</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.bkdziti.com/blog/menu-engineering-profitability.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://www.bkdziti.com/articles/menu-engineering.html</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.bkdziti.com/blog/social-media-strategy-restaurants.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://www.bkdziti.com/articles/social-strategy.html</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.bkdziti.com/blog/how-to-find-commercial-kitchen.html</loc>
-    <lastmod>2026-06-25</lastmod>
+    <loc>https://www.bkdziti.com/articles/workspace.html</loc>
+    <lastmod>2026-06-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

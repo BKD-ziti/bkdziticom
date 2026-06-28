@@ -49,7 +49,7 @@ window.BKD.SOCIALS = [
 /* =========================================================================
    SITE NAVIGATION — single source of truth for the side panel.
    Uses root-absolute paths (/...) so the exact same definition works from
-   every directory depth (root pages, /blog, /store, /research, /hosting).
+   every directory depth (root pages, /articles, /store, /research, /hosting).
    Pages inherit this automatically; a page can override with its own
    PAGE_CONFIG.nav, or pick a named variant via PAGE_CONFIG.navVariant.
    ========================================================================= */
@@ -63,7 +63,7 @@ window.BKD.NAV = {
         { label: 'Media Production',      href: '/media-production.html#hero' },
         { label: 'Portfolio',             href: '/portfolio.html#hero' },
         { label: 'FAQ',                   href: '/faq.html#hero' },
-        { label: 'Blog',                  href: '/blog/index.html#hero' },
+        { label: 'Articles',               href: '/articles/index.html#hero' },
         { label: '─────────────', href: '#' },
         { label: 'Hosting',               href: 'https://hosting.bkdziti.com' },
         { label: 'Resume & Cover Letter', href: '/secret.html#hero' },
@@ -87,7 +87,7 @@ window.BKD.NAV_STORE = {
         { label: 'Media Production',      href: '/media-production.html#hero' },
         { label: 'Portfolio',             href: '/portfolio.html#hero' },
         { label: 'FAQ',                   href: '/faq.html#hero' },
-        { label: 'Blog',                  href: '/blog/index.html#hero' },
+        { label: 'Articles',               href: '/articles/index.html#hero' },
         { label: 'Hosting',               href: 'https://hosting.bkdziti.com' },
         { label: '─────────────', href: '#' },
         { label: 'Contact',               href: '/contact.html#hero' },
