@@ -404,7 +404,8 @@
 
         <div class="sites-section">
             <h2>Hosted Websites</h2>
-            <div class="sites-grid">
+            <div class="sites-grid" id="hostedSitesGrid">
+                <!-- Populated by JS below; static fallback shown if KV unavailable -->
                 <div class="site-item">
                     <a href="mikerealestate/"><i class="fas fa-home"></i> Mike Hughes Real Estate</a>
                     <p class="site-meta">Coldwell Banker · Cape Coral, FL</p>
@@ -421,6 +422,30 @@
         </div>
 
     </div>
+
+    <script>
+    (function () {
+        var STATIC = [
+            { name: 'Mike Hughes Real Estate', subtitle: 'Coldwell Banker · Cape Coral, FL', url: 'mikerealestate/', icon: 'fa-home' }
+        ];
+        function render(sites) {
+            var grid = document.getElementById('hostedSitesGrid');
+            if (!grid) return;
+            grid.innerHTML = sites.map(function (s) {
+                return '<div class="site-item">' +
+                    '<a href="' + s.url + '"><i class="fas ' + (s.icon || 'fa-globe') + '"></i> ' + s.name + '</a>' +
+                    (s.subtitle ? '<p class="site-meta">' + s.subtitle + '</p>' : '') +
+                    '</div>';
+            }).join('');
+        }
+        fetch('/api/content/hosted-sites')
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+                if (Array.isArray(data) && data.length) render(data.filter(function (s) { return s.active !== false; }));
+            })
+            .catch(function () {});
+    })();
+    </script>
 
     <!-- ── FOOTER ── -->
     <footer class="site-footer">

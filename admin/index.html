@@ -307,6 +307,9 @@
                 <button class="admin-nav-btn" data-panel="calllog">
                     <i class="fas fa-phone-alt"></i> Call Log
                 </button>
+                <button class="admin-nav-btn" data-panel="hosting">
+                    <i class="fas fa-server"></i> Hosted Sites
+                </button>
 
                 <h3>Navigate</h3>
                 <a href="/store/index.html" class="admin-nav-btn" style="text-decoration:none">
@@ -410,6 +413,32 @@
                         Changes are saved to Cloudflare KV and appear on <a href="/articles/" style="color:var(--orange)">the Articles page</a> within seconds. Drag order with the <i class="fas fa-arrows-alt-v"></i> arrows.
                     </p>
                     <div id="articlesListWrap">
+                        <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size:1.5rem"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── HOSTING PANEL ── -->
+                <div class="admin-panel" id="panel-hosting">
+                    <div class="admin-panel-header">
+                        <h2>Hosted Sites</h2>
+                        <div class="panel-actions">
+                            <span id="hostingKvStatus" class="kv-status static">
+                                <i class="fas fa-circle" style="font-size:0.5rem"></i> Static defaults
+                            </span>
+                            <button class="admin-btn" id="addHostedSiteBtn">
+                                <i class="fas fa-plus"></i> Add Site
+                            </button>
+                            <button class="admin-btn primary" id="saveHostedSitesBtn">
+                                <i class="fas fa-cloud-upload-alt"></i> Save to Site
+                            </button>
+                        </div>
+                    </div>
+                    <p style="font-size:0.82rem;color:rgba(252,249,245,0.4);margin:0 0 1.25rem">
+                        Manage sites listed on <a href="https://hosting.bkdziti.com" target="_blank" style="color:var(--orange)">hosting.bkdziti.com</a>. Each entry needs a name and a URL — the URL can be a relative path (e.g. <code style="font-size:0.78rem;opacity:0.6">mikerealestate/</code>) or a full external URL.
+                    </p>
+                    <div id="hostedSitesListWrap">
                         <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
                             <i class="fas fa-circle-notch fa-spin" style="font-size:1.5rem"></i>
                         </div>
@@ -638,6 +667,52 @@
                     <button type="button" class="admin-btn" id="articleModalCancel">Cancel</button>
                     <button type="submit" class="admin-btn primary" id="articleSaveBtn">
                         <i class="fas fa-check"></i> Apply Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── HOSTED SITE MODAL ── -->
+    <div class="modal-overlay" id="hostedSiteModal" role="dialog" aria-modal="true" aria-labelledby="hostedSiteModalTitle">
+        <div class="modal" style="max-width:580px">
+            <div class="modal-header">
+                <h3 id="hostedSiteModalTitle">Add Hosted Site</h3>
+                <button class="modal-close" id="hostedSiteModalClose" aria-label="Close">&times;</button>
+            </div>
+            <form id="hostedSiteForm" novalidate>
+                <input type="hidden" id="hsIdx">
+                <div class="form-field-store">
+                    <label for="hsName">Site Name <span style="color:var(--deep-red)">*</span></label>
+                    <input type="text" id="hsName" placeholder="e.g. Mike Hughes Real Estate" maxlength="120" required>
+                </div>
+                <div class="form-field-store">
+                    <label for="hsSubtitle">Subtitle / Description</label>
+                    <input type="text" id="hsSubtitle" placeholder="e.g. Coldwell Banker · Cape Coral, FL" maxlength="200">
+                    <span style="font-size:0.72rem;color:rgba(252,249,245,0.3);margin-top:0.2rem;display:block">Shown under the site name on the hosting page.</span>
+                </div>
+                <div class="field-row">
+                    <div class="form-field-store">
+                        <label for="hsUrl">URL <span style="color:var(--deep-red)">*</span></label>
+                        <input type="text" id="hsUrl" placeholder="mikerealestate/ or https://…" maxlength="500" required>
+                        <span style="font-size:0.72rem;color:rgba(252,249,245,0.3);margin-top:0.2rem;display:block">Relative path or full URL.</span>
+                    </div>
+                    <div class="form-field-store">
+                        <label for="hsIcon">Font Awesome Icon</label>
+                        <input type="text" id="hsIcon" placeholder="fa-home" maxlength="60">
+                        <span style="font-size:0.72rem;color:rgba(252,249,245,0.3);margin-top:0.2rem;display:block">E.g. fa-home, fa-globe, fa-store</span>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem">
+                    <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:rgba(252,249,245,0.7)">
+                        <input type="checkbox" id="hsActive" checked style="accent-color:var(--orange);width:1.1rem;height:1.1rem">
+                        Active (visible on hosting page)
+                    </label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="admin-btn" id="hostedSiteModalCancel">Cancel</button>
+                    <button type="submit" class="admin-btn primary" id="hostedSiteSaveBtn">
+                        <i class="fas fa-save"></i> Save Site
                     </button>
                 </div>
             </form>
@@ -929,6 +1004,7 @@
         loadProducts();
         loadOrders();
         loadArticles();
+        loadHostedSites();
         loadResources();
         loadCalls();
     }
@@ -1488,6 +1564,174 @@
         });
     }
 
+    // ── Hosted Sites ─────────────────────────────────────────────────────────
+
+    let hostedSites = [];
+    let hostedSitesFromKv = false;
+
+    const STATIC_HOSTED_SITES = [
+        { id: 'mikerealestate', name: 'Mike Hughes Real Estate', subtitle: 'Coldwell Banker · Cape Coral, FL', url: 'mikerealestate/', icon: 'fa-home', active: true }
+    ];
+
+    const ICON_OPTIONS = ['fa-home','fa-globe','fa-store','fa-utensils','fa-camera','fa-paint-brush','fa-briefcase','fa-car','fa-heart','fa-star','fa-building','fa-code'];
+
+    async function loadHostedSites() {
+        const wrap = document.getElementById('hostedSitesListWrap');
+        wrap.innerHTML = `<div style="text-align:center;padding:2rem;color:rgba(252,249,245,0.4)"><i class="fas fa-circle-notch fa-spin"></i> Loading…</div>`;
+        try {
+            const resp = await fetch('/api/content/hosted-sites');
+            const data = resp.ok ? await resp.json() : null;
+            if (Array.isArray(data) && data.length) {
+                hostedSites = data;
+                hostedSitesFromKv = true;
+                setHostingStatus(true);
+            } else {
+                hostedSites = STATIC_HOSTED_SITES.map(s => ({ ...s }));
+                hostedSitesFromKv = false;
+                setHostingStatus(false);
+            }
+        } catch {
+            hostedSites = STATIC_HOSTED_SITES.map(s => ({ ...s }));
+            hostedSitesFromKv = false;
+            setHostingStatus(false);
+        }
+        renderHostedSites();
+    }
+
+    function setHostingStatus(live) {
+        const el = document.getElementById('hostingKvStatus');
+        if (live) {
+            el.className = 'kv-status live';
+            el.innerHTML = '<i class="fas fa-circle" style="font-size:0.5rem"></i> Live from KV';
+        } else {
+            el.className = 'kv-status static';
+            el.innerHTML = '<i class="fas fa-circle" style="font-size:0.5rem"></i> Static defaults';
+        }
+    }
+
+    function renderHostedSites() {
+        const wrap = document.getElementById('hostedSitesListWrap');
+        if (!hostedSites.length) {
+            wrap.innerHTML = `<p style="text-align:center;color:rgba(252,249,245,0.3);padding:2rem">No sites yet. Click "Add Site" to add your first hosted client.</p>`;
+            return;
+        }
+        wrap.innerHTML = hostedSites.map((s, i) => `
+            <div class="article-row" style="border-color:${s.active === false ? 'rgba(252,249,245,0.08)' : 'rgba(100,149,237,0.2)'}">
+                <div class="article-thumb" style="background:rgba(100,149,237,0.1);color:#8bb4f5;font-size:1.2rem">
+                    <i class="fas ${escHtml(s.icon || 'fa-globe')}"></i>
+                </div>
+                <div class="article-row-info">
+                    <div class="article-row-title" style="${s.active === false ? 'opacity:0.4' : ''}">${escHtml(s.name)}</div>
+                    <div class="article-row-meta">
+                        ${s.subtitle ? `<span style="margin-right:0.5rem">${escHtml(s.subtitle)}</span> · ` : ''}
+                        <a href="${s.url.startsWith('http') ? escHtml(s.url) : 'https://hosting.bkdziti.com/' + escHtml(s.url)}"
+                           target="_blank" style="color:rgba(100,149,237,0.7)">${escHtml(s.url)}</a>
+                        ${s.active === false ? ' · <span style="color:#f08080;font-size:0.68rem">HIDDEN</span>' : ''}
+                    </div>
+                </div>
+                <div class="article-row-actions">
+                    <button class="icon-btn" data-move-hs-up="${i}" title="Move up" ${i === 0 ? 'disabled' : ''}><i class="fas fa-chevron-up"></i></button>
+                    <button class="icon-btn" data-move-hs-down="${i}" title="Move down" ${i === hostedSites.length - 1 ? 'disabled' : ''}><i class="fas fa-chevron-down"></i></button>
+                    <button class="icon-btn" data-edit-hs="${i}" title="Edit"><i class="fas fa-pen"></i> Edit</button>
+                    <button class="icon-btn danger" data-delete-hs="${i}" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`).join('');
+
+        wrap.querySelectorAll('[data-move-hs-up]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.dataset.moveHsUp);
+                if (i > 0) { [hostedSites[i-1], hostedSites[i]] = [hostedSites[i], hostedSites[i-1]]; renderHostedSites(); }
+            });
+        });
+        wrap.querySelectorAll('[data-move-hs-down]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.dataset.moveHsDown);
+                if (i < hostedSites.length - 1) { [hostedSites[i], hostedSites[i+1]] = [hostedSites[i+1], hostedSites[i]]; renderHostedSites(); }
+            });
+        });
+        wrap.querySelectorAll('[data-edit-hs]').forEach(btn => {
+            btn.addEventListener('click', () => openEditHostedSite(parseInt(btn.dataset.editHs)));
+        });
+        wrap.querySelectorAll('[data-delete-hs]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.dataset.deleteHs);
+                if (confirm(`Remove "${hostedSites[i].name}" from the hosted sites list?`)) {
+                    hostedSites.splice(i, 1);
+                    renderHostedSites();
+                    showToast('Site removed. Click "Save to Site" to push the change live.');
+                }
+            });
+        });
+    }
+
+    function openEditHostedSite(idx) {
+        const isNew = idx === -1;
+        const s = isNew
+            ? { id: '', name: '', subtitle: '', url: '', icon: 'fa-globe', active: true }
+            : { ...hostedSites[idx] };
+        document.getElementById('hostedSiteModalTitle').textContent = isNew ? 'Add Hosted Site' : 'Edit Hosted Site';
+        document.getElementById('hsIdx').value      = idx;
+        document.getElementById('hsName').value     = s.name || '';
+        document.getElementById('hsSubtitle').value = s.subtitle || '';
+        document.getElementById('hsUrl').value      = s.url || '';
+        document.getElementById('hsIcon').value     = s.icon || 'fa-globe';
+        document.getElementById('hsActive').checked = s.active !== false;
+        openModal('hostedSiteModal');
+        document.getElementById('hsName').focus();
+    }
+
+    function initHostedSitesPanel() {
+        document.getElementById('addHostedSiteBtn').addEventListener('click', () => openEditHostedSite(-1));
+        document.getElementById('hostedSiteModalClose').addEventListener('click',  () => closeModal('hostedSiteModal'));
+        document.getElementById('hostedSiteModalCancel').addEventListener('click', () => closeModal('hostedSiteModal'));
+        document.getElementById('hostedSiteModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('hostedSiteModal'); });
+
+        document.getElementById('hostedSiteForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('hsName').value.trim();
+            const url  = document.getElementById('hsUrl').value.trim();
+            if (!name) return showToast('Site name is required.', true);
+            if (!url)  return showToast('URL is required.', true);
+            const idx = parseInt(document.getElementById('hsIdx').value);
+            const entry = {
+                id:       idx === -1 ? slugify(name) : (hostedSites[idx].id || slugify(name)),
+                name,
+                subtitle: document.getElementById('hsSubtitle').value.trim(),
+                url,
+                icon:     document.getElementById('hsIcon').value.trim() || 'fa-globe',
+                active:   document.getElementById('hsActive').checked
+            };
+            if (idx === -1) hostedSites.push(entry);
+            else hostedSites[idx] = entry;
+            closeModal('hostedSiteModal');
+            renderHostedSites();
+            showToast(idx === -1 ? 'Site added. Click "Save to Site" to push live.' : 'Site updated. Click "Save to Site" to push live.');
+        });
+
+        document.getElementById('saveHostedSitesBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('saveHostedSitesBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
+            try {
+                const resp = await fetch('/api/content/hosted-sites', {
+                    method: 'PUT',
+                    headers: apiHeaders(),
+                    body: JSON.stringify(hostedSites)
+                });
+                const data = await resp.json().catch(() => ({}));
+                if (!resp.ok) throw new Error(data.error || 'Save failed');
+                hostedSitesFromKv = true;
+                setHostingStatus(true);
+                showToast('Hosted sites saved! Changes are live on hosting.bkdziti.com');
+            } catch (err) {
+                showToast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Save to Site';
+            }
+        });
+    }
+
     // ── Resources ────────────────────────────────────────────────────────────
 
     let resources = [];
@@ -1880,6 +2124,7 @@
         initOrderModal();
         initArticleModal();
         initArticlesPanel();
+        initHostedSitesPanel();
         initResourceModal();
         initCallModal();
     });
