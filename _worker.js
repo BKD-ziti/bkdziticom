@@ -919,6 +919,16 @@ async function handleAdminAuth(request, env) {
   return jsonResponse({ ok: true, token: adminKey });
 }
 
+async function handleProspectsAuth(request, env) {
+  const data = await request.json().catch(() => ({}));
+  const key  = clean(data.key);
+  const prospectKey = env.PROSPECT_KEY;
+  if (!prospectKey || key !== prospectKey) {
+    return jsonResponse({ ok: false, error: 'Invalid credentials' }, 401);
+  }
+  return jsonResponse({ ok: true, token: prospectKey });
+}
+
 async function handleAdminGetProducts(env) {
   const products = await getProductList(env);
   return jsonResponse({ ok: true, products });
@@ -1057,6 +1067,9 @@ export default {
     if (path.startsWith('/api/store/orders/') && method === 'GET') {
       return handleGetOrder(env, path.slice('/api/store/orders/'.length), request);
     }
+
+    // ── Prospects: Admin ──────────────────────────────────────────────────────
+    if (path === '/api/prospects/auth' && method === 'POST') return handleProspectsAuth(request, env);
 
     // ── Store: Admin ──────────────────────────────────────────────────────────
     if (path.startsWith('/api/store/admin/')) {
