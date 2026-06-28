@@ -155,16 +155,18 @@
     const container = document.getElementById('prospectsContent');
     if (!container) return;
 
-    // Create an iframe to embed the prospects app
+    // Load prospects in an iframe
     const iframe = document.createElement('iframe');
-    iframe.src = 'prospects.html';
+    iframe.src = '/admin/prospects.html';
+    iframe.title = 'Prospects Tracker';
     iframe.style.cssText = `
       width: 100%;
-      height: 100vh;
+      height: calc(100vh - 300px);
+      min-height: 600px;
       border: none;
       border-radius: 0.5rem;
+      background: rgba(0, 0, 0, 0.2);
     `;
-    iframe.title = 'Prospects Tracker';
 
     container.innerHTML = '';
     container.appendChild(iframe);
