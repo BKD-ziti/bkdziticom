@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BKDziti — Prospect Tracker</title>
+  <meta name="robots" content="noindex,nofollow">
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --ink: #0f0e0c;
+      --paper: #f5f2ec;
+      --rust: #c94f2a;
+      --gold: #d4a84b;
+      --muted: #7a7068;
+      --rule: #ddd8cf;
+      --card: #ffffff;
+      --success: #2d7a4a;
+      --warning: #b8860b;
+      --danger: #b8482a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--paper) 0%, #f0ede7 100%);
+      padding: 20px;
+    }
+
+    .login-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 40px;
+      border: 1px solid var(--rule);
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+
+    .login-card h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .login-card p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--rule);
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      background: white;
+      transition: border-color 0.2s;
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--rust);
+      box-shadow: 0 0 0 3px rgba(201, 79, 42, 0.1);
+    }
+
+    .login-btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: var(--rust);
+      color: white;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .login-btn:hover {
+      background: #b64420;
+      transform: translateY(-2px);
+    }
+
+    .login-error {
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--danger);
+      min-height: 1.2em;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .back-link {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--rule);
+      text-align: center;
+    }
+
+    .back-link a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link a:hover {
+      color: var(--rust);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const EMAIL_TEMPLATES = {
+      'first-contact': {
+        subject: '[prospect.name] — Quick idea about your online presence',
+        body: `Hi [prospect.name],\n\nI'm [your-name] with BKDziti, a creative studio here in Cape Coral.\n\nI was looking at [prospect.category] businesses in our area and noticed something about yours: [key-gap]. It's the kind of thing that costs you customers without you realizing it.\n\nI think I can fix it. Would you be open to a quick 10-minute call this week to see what I'm talking about?\n\nLet me know what works.\n\nBest,\n[your-name]`
+      },
+      'after-objection': {
+        subject: 'Re: Your question about [topic]',
+        body: `Hi [prospect.name],\n\nThanks for the good questions on our call. You mentioned [objection], which I hear a lot.\n\nHere's the thing: [objection-response]\n\nI think it's worth a second conversation when you have time. No pressure.\n\nTalk soon,\n[your-name]`
+      },
+      'follow-up': {
+        subject: 'Just following up — [prospect.name]',
+        body: `Hi [prospect.name],\n\nI sent over some notes from our conversation about [topic].\n\nHave you had a chance to look at them? I'd love to answer any questions.\n\nBest,\n[your-name]`
+      },
+      'reengagement': {
+        subject: '[prospect.name] — What changed since we last talked',
+        body: `Hi [prospect.name],\n\nIt's been a few weeks since we connected. I wanted to reach back out because I've been thinking about what you said about [key-pain-point].\n\nI've developed a specific approach that I think solves that exact problem, and I'd love your thoughts.\n\nAre you free for a quick call next week?\n\nBest,\n[your-name]`
+      }
+    };
+
+    const SAMPLE_PROSPECTS = [
+      {
+        id: 1,
+        name: "Wicked Dolphin Distillery",
+        category: "Craft Distillery",
+        phone: "(239) 242-5244",
+        address: "131 SW 3rd Pl, Cape Coral, FL 33991",
+        hours: "Mon–Sat 9AM–5PM",
+        why: "Florida's most awarded craft rum distillery with tours running multiple days per week. Social media presence is weak.",
+        heatLevel: 5,
+        openingLine: "Hey, I run BKDziti here in Cape Coral. I noticed you only have about 7,000 Instagram followers for a distillery with tours every week.",
+        deeperPitch: "You're getting hundreds of people through here on tours every week. Every one of them wants to share the experience.",
+        status: 'active',
+        calls: [],
+        lastContact: null,
+        outcome: null,
+        revenue: 0
+      }
+    ];
+
+    function ProspectApp() {
+      const [isLoggedIn, setIsLoggedIn] = useState(false);
+      const [loginError, setLoginError] = useState('');
+      const [loginLoading, setLoginLoading] = useState(false);
+      const [tab, setTab] = useState('prospects');
+      const [prospects, setProspects] = useState([]);
+      const [expandedId, setExpandedId] = useState(null);
+      const [status, setStatus] = useState('');
+      const [nextId, setNextId] = useState(2);
+      const [statusFilter, setStatusFilter] = useState('all');
+      const [searchTerm, setSearchTerm] = useState('');
+
+      const [formData, setFormData] = useState({
+        name: '',
+        category: '',
+        phone: '',
+        address: '',
+        hours: '',
+        why: '',
+        heatLevel: 3,
+        openingLine: '',
+        deeperPitch: '',
+        status: 'active'
+      });
+
+      const [callData, setCallData] = useState({
+        prospectId: null,
+        duration: 15,
+        answered: true,
+        person: '',
+        objections: [],
+        nextSteps: '',
+        notes: ''
+      });
+
+      const [emailTemplate, setEmailTemplate] = useState('first-contact');
+      const [emailVariables, setEmailVariables] = useState({
+        'your-name': '',
+        'key-gap': '',
+        'topic': '',
+        'objection': '',
+        'objection-response': ''
+      });
+
+      // Auth
+      useEffect(() => {
+        const token = sessionStorage.getItem('admin_token');
+        if (token) {
+          setIsLoggedIn(true);
+          loadProspects();
+        }
+      }, []);
+
+      const handleLogin = async (e) => {
+        e.preventDefault();
+        setLoginError('');
+        setLoginLoading(true);
+        const password = e.target.password.value;
+
+        try {
+          const response = await fetch('/api/prospects/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: password })
+          });
+
+          const data = await response.json();
+          if (!data.ok) throw new Error(data.error || 'Invalid password');
+
+          sessionStorage.setItem('admin_token', data.token);
+          setIsLoggedIn(true);
+          loadProspects();
+        } catch (err) {
+          setLoginError(err.message);
+        } finally {
+          setLoginLoading(false);
+          e.target.password.value = '';
+        }
+      };
+
+      const handleLogout = () => {
+        if (confirm('Sign out of prospect tracker?')) {
+          sessionStorage.removeItem('admin_token');
+          setIsLoggedIn(false);
+          setProspects([]);
+          setLoginError('');
+        }
+      };
+
+      const loadProspects = async () => {
+        try {
+          const stored = localStorage.getItem('bkdziti_prospects_v2');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            setProspects(parsed);
+            setNextId(Math.max(...parsed.map(p => p.id || 0), 1) + 1);
+          } else {
+            setProspects(SAMPLE_PROSPECTS);
+            setNextId(2);
+          }
+        } catch (e) {
+          setProspects(SAMPLE_PROSPECTS);
+        }
+      };
+
+      const saveProspects = (data) => {
+        try {
+          localStorage.setItem('bkdziti_prospects_v2', JSON.stringify(data));
+        } catch (e) {
+          console.error('Storage failed:', e);
+        }
+      };
+
+      const handleAddProspect = () => {
+        if (!formData.name.trim()) {
+          setStatus({ type: 'error', text: 'Business name is required' });
+          return;
+        }
+
+        const newProspect = {
+          id: nextId,
+          ...formData,
+          calls: [],
+          lastContact: null,
+          outcome: null,
+          revenue: 0
+        };
+
+        const updated = [...prospects, newProspect];
+        setProspects(updated);
+        saveProspects(updated);
+        setNextId(nextId + 1);
+        resetForm();
+        setStatus({ type: 'success', text: '✓ Prospect added successfully' });
+        setTimeout(() => setStatus(''), 3000);
+      };
+
+      const handleLogCall = (prospectId) => {
+        const prospect = prospects.find(p => p.id === prospectId);
+        if (!prospect) return;
+
+        const newCall = {
+          id: (prospect.calls?.length || 0) + 1,
+          date: new Date().toISOString(),
+          duration: callData.duration,
+          answered: callData.answered,
+          person: callData.person,
+          objections: callData.objections,
+          nextSteps: callData.nextSteps,
+          notes: callData.notes
+        };
+
+        const updated = prospects.map(p =>
+          p.id === prospectId
+            ? { ...p, calls: [...(p.calls || []), newCall], lastContact: new Date().toISOString() }
+            : p
+        );
+
+        setProspects(updated);
+        saveProspects(updated);
+        setCallData({
+          prospectId: null,
+          duration: 15,
+          answered: true,
+          person: '',
+          objections: [],
+          nextSteps: '',
+          notes: ''
+        });
+        setStatus({ type: 'success', text: '✓ Call logged successfully' });
+        setTimeout(() => setStatus(''), 3000);
+      };
+
+      const handleDeleteProspect = (id) => {
+        if (confirm('Are you sure?')) {
+          const updated = prospects.filter(p => p.id !== id);
+          setProspects(updated);
+          saveProspects(updated);
+          setExpandedId(null);
+          setStatus({ type: 'success', text: '✓ Prospect deleted' });
+          setTimeout(() => setStatus(''), 3000);
+        }
+      };
+
+      const handleUpdateProspectStatus = (id, newStatus) => {
+        const updated = prospects.map(p =>
+          p.id === id ? { ...p, status: newStatus } : p
+        );
+        setProspects(updated);
+        saveProspects(updated);
+        setStatus({ type: 'success', text: '✓ Status updated' });
+        setTimeout(() => setStatus(''), 2000);
+      };
+
+      const resetForm = () => {
+        setFormData({
+          name: '',
+          category: '',
+          phone: '',
+          address: '',
+          hours: '',
+          why: '',
+          heatLevel: 3,
+          openingLine: '',
+          deeperPitch: '',
+          status: 'active'
+        });
+      };
+
+      const calculateStats = () => {
+        const totalCalls = prospects.reduce((sum, p) => sum + (p.calls?.length || 0), 0);
+        const totalProspects = prospects.length;
+        const active = prospects.filter(p => p.status === 'active').length;
+        const closed = prospects.filter(p => p.outcome === 'closed').length;
+        const conversion = totalProspects > 0 ? ((closed / totalProspects) * 100).toFixed(1) : 0;
+
+        const objections = {};
+        prospects.forEach(p => {
+          (p.calls || []).forEach(call => {
+            (call.objections || []).forEach(obj => {
+              objections[obj] = (objections[obj] || 0) + 1;
+            });
+          });
+        });
+
+        return { totalProspects, active, closed, conversion, totalCalls, objections };
+      };
+
+      const filteredProspects = prospects.filter(p => {
+        const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
+        const matchesSearch = !searchTerm ||
+          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesStatus && matchesSearch;
+      });
+
+      const stats = calculateStats();
+
+      if (!isLoggedIn) {
+        return (
+          <div className="login-screen">
+            <div className="login-card">
+              <h1>BKDziti</h1>
+              <p>Prospect Tracker — Admin access only.</p>
+              <form onSubmit={handleLogin} className="login-form">
+                <div className="form-group">
+                  <label htmlFor="password">Password</label>
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="••••••••••••"
+                    autoComplete="current-password"
+                    autoFocus
+                    required
+                  />
+                </div>
+                <button type="submit" className="login-btn" disabled={loginLoading}>
+                  {loginLoading ? '⏳ Unlocking...' : '🔓 Sign In'}
+                </button>
+                {loginError && <div className="login-error">{loginError}</div>}
+              </form>
+              <div className="back-link">
+                <a href="/admin/">← Back to Admin Center</a>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div style={{ minHeight: '100vh', background: 'var(--paper)' }}>
+          <header style={{ background: 'var(--ink)', color: 'var(--paper)', padding: '32px 40px' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '12px' }}>
+                  BKDziti — Prospect Tracker
+                </div>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '42px', fontWeight: '700', marginBottom: '8px' }}>
+                  Your Sales <em style={{ fontStyle: 'italic', color: 'var(--gold)' }}>Pipeline</em>
+                </h1>
+                <p style={{ color: '#a8a098', fontSize: '13px' }}>Track prospects. Log calls. Measure what's working.</p>
+              </div>
+              <div style={{ display: 'flex', gap: '0', borderBottom: '1px solid rgba(255,255,255,0.1)', overflowX: 'auto' }}>
+                {['prospects', 'calls', 'campaign', 'email', 'export'].map(t => (
+                  <button
+                    key={t}
+                    onClick={() => setTab(t)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: tab === t ? 'var(--gold)' : '#8a7f74',
+                      padding: '14px 20px',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '11px',
+                      letterSpacing: '0.1em',
+                      textTransform: 'uppercase',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      borderBottom: tab === t ? '2px solid var(--gold)' : '2px solid transparent',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {t === 'prospects' && '📋 Prospects'}
+                    {t === 'calls' && '📞 Calls'}
+                    {t === 'campaign' && '📊 Analytics'}
+                    {t === 'email' && '✉️ Email'}
+                    {t === 'export' && '📥 Export'}
+                  </button>
+                ))}
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    marginLeft: 'auto',
+                    background: 'none',
+                    border: 'none',
+                    color: 'rgba(240,128,128,0.7)',
+                    padding: '14px 20px',
+                    cursor: 'pointer',
+                    transition: 'color 0.2s'
+                  }}
+                  onMouseEnter={e => e.target.style.color = '#f08080'}
+                  onMouseLeave={e => e.target.style.color = 'rgba(240,128,128,0.7)'}
+                >
+                  🚪 Sign Out
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 28px' }}>
+            {status && (
+              <div style={{
+                padding: '12px 16px',
+                borderRadius: '8px',
+                marginBottom: '16px',
+                fontSize: '13px',
+                background: status.type === 'success' ? '#e8f0e8' : '#fbeae4',
+                color: status.type === 'success' ? 'var(--success)' : 'var(--danger)',
+                border: `1px solid ${status.type === 'success' ? '#b8d8b8' : '#f0c4b8'}`
+              }}>
+                {status.text}
+              </div>
+            )}
+
+            {tab === 'prospects' && (
+              <div>
+                <div style={{ background: 'var(--card)', borderRadius: '12px', padding: '28px', marginBottom: '24px', border: '1px solid var(--rule)' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px' }}>Add New Prospect</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+                    {['name', 'category', 'phone', 'address', 'hours', 'why', 'openingLine', 'deeperPitch'].map(field => (
+                      <div key={field}>
+                        <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                          {field.charAt(0).toUpperCase() + field.slice(1)}
+                        </label>
+                        <input
+                          type="text"
+                          value={formData[field]}
+                          onChange={e => setFormData({ ...formData, [field]: e.target.value })}
+                          placeholder={field}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            border: '1px solid var(--rule)',
+                            borderRadius: '8px',
+                            fontFamily: "'Space Grotesk', sans-serif",
+                            fontSize: '14px',
+                            color: 'var(--ink)',
+                            background: 'white'
+                          }}
+                        />
+                      </div>
+                    ))}
+                    <div>
+                      <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                        Heat Level
+                      </label>
+                      <select
+                        value={formData.heatLevel}
+                        onChange={e => setFormData({ ...formData, heatLevel: parseInt(e.target.value) })}
+                        style={{
+                          width: '100%',
+                          padding: '10px 12px',
+                          border: '1px solid var(--rule)',
+                          borderRadius: '8px',
+                          fontFamily: "'Space Grotesk', sans-serif",
+                          fontSize: '14px',
+                          color: 'var(--ink)',
+                          background: 'white'
+                        }}
+                      >
+                        {[1, 2, 3, 4, 5].map(n => <option key={n} value={n}>{n} {'🔥'.repeat(n)}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                      onClick={resetForm}
+                      style={{
+                        padding: '10px 20px',
+                        borderRadius: '8px',
+                        border: '1px solid var(--rule)',
+                        background: 'var(--paper)',
+                        color: 'var(--ink)',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      Clear
+                    </button>
+                    <button
+                      onClick={handleAddProspect}
+                      style={{
+                        padding: '10px 20px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: 'var(--rust)',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      + Add Prospect
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '16px' }}>Prospects ({filteredProspects.length})</h3>
+                  <div style={{ marginBottom: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {['all', 'active', 'cold', 'contacted', 'closed'].map(f => (
+                      <button
+                        key={f}
+                        onClick={() => setStatusFilter(f)}
+                        style={{
+                          padding: '8px 14px',
+                          border: statusFilter === f ? `1px solid var(--rust)` : '1px solid var(--rule)',
+                          borderRadius: '20px',
+                          background: statusFilter === f ? 'var(--rust)' : 'white',
+                          color: statusFilter === f ? 'white' : 'var(--muted)',
+                          cursor: 'pointer',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        {f.charAt(0).toUpperCase() + f.slice(1)}
+                      </button>
+                    ))}
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      value={searchTerm}
+                      onChange={e => setSearchTerm(e.target.value)}
+                      style={{
+                        marginLeft: 'auto',
+                        padding: '8px 12px',
+                        border: '1px solid var(--rule)',
+                        borderRadius: '6px',
+                        fontSize: '12px'
+                      }}
+                    />
+                  </div>
+
+                  {filteredProspects.map(prospect => (
+                    <div
+                      key={prospect.id}
+                      style={{
+                        background: 'var(--card)',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        border: expandedId === prospect.id ? '1px solid var(--rust)' : '1px solid var(--rule)',
+                        marginBottom: '12px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px', gap: '16px' }}>
+                        <div>
+                          <div style={{ fontSize: '16px', fontWeight: '600', color: 'var(--ink)' }}>{prospect.name}</div>
+                          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>
+                            <span style={{ background: 'rgba(201, 79, 42, 0.08)', padding: '4px 12px', borderRadius: '6px', color: 'var(--rust)', fontSize: '11px', fontWeight: '500' }}>
+                              {prospect.category}
+                            </span>
+                            <span>{prospect.calls?.length || 0} call{prospect.calls?.length !== 1 ? 's' : ''}</span>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', gap: '3px' }}>
+                            {[1, 2, 3, 4, 5].map(i => (
+                              <div
+                                key={i}
+                                style={{
+                                  width: '7px',
+                                  height: '7px',
+                                  borderRadius: '50%',
+                                  background: i <= prospect.heatLevel ? 'var(--rust)' : 'var(--rule)'
+                                }}
+                              />
+                            ))}
+                          </div>
+                          <span style={{
+                            padding: '4px 12px',
+                            borderRadius: '6px',
+                            fontSize: '10px',
+                            fontWeight: '600',
+                            textTransform: 'uppercase',
+                            background: prospect.status === 'active' ? 'rgba(45, 122, 74, 0.1)' : 'rgba(122, 112, 104, 0.1)',
+                            color: prospect.status === 'active' ? 'var(--success)' : 'var(--muted)'
+                          }}>
+                            {prospect.status}
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => setExpandedId(expandedId === prospect.id ? null : prospect.id)}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: '8px',
+                          border: '1px solid var(--rule)',
+                          background: 'var(--paper)',
+                          color: 'var(--ink)',
+                          cursor: 'pointer',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          marginBottom: expandedId === prospect.id ? '12px' : 0
+                        }}
+                      >
+                        {expandedId === prospect.id ? '−' : '+'} Details
+                      </button>
+
+                      {expandedId === prospect.id && (
+                        <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--rule)' }}>
+                          {prospect.phone && <p><strong>Phone:</strong> {prospect.phone}</p>}
+                          {prospect.address && <p><strong>Address:</strong> {prospect.address}</p>}
+                          {prospect.why && <p><strong>Why:</strong> {prospect.why}</p>}
+                          <div style={{ display: 'flex', gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
+                            <select
+                              value={prospect.status}
+                              onChange={e => handleUpdateProspectStatus(prospect.id, e.target.value)}
+                              style={{
+                                flex: 1,
+                                minWidth: '140px',
+                                padding: '8px',
+                                borderRadius: '8px',
+                                border: '1px solid var(--rule)',
+                                cursor: 'pointer'
+                              }}
+                            >
+                              <option value="cold">Cold Lead</option>
+                              <option value="active">Active</option>
+                              <option value="contacted">Contacted</option>
+                              <option value="closed">Closed</option>
+                            </select>
+                            <button
+                              onClick={() => {
+                                setCallData({ ...callData, prospectId: prospect.id });
+                                setTab('calls');
+                              }}
+                              style={{
+                                padding: '8px 14px',
+                                borderRadius: '8px',
+                                border: '1px solid var(--rule)',
+                                background: 'var(--paper)',
+                                cursor: 'pointer',
+                                fontSize: '11px'
+                              }}
+                            >
+                              Log Call
+                            </button>
+                            <button
+                              onClick={() => handleDeleteProspect(prospect.id)}
+                              style={{
+                                padding: '8px 14px',
+                                borderRadius: '8px',
+                                border: '1px solid var(--rule)',
+                                background: 'var(--paper)',
+                                color: 'var(--danger)',
+                                cursor: 'pointer',
+                                fontSize: '11px'
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {tab === 'calls' && (
+              <div>
+                <div style={{ background: 'var(--card)', borderRadius: '12px', padding: '28px', marginBottom: '24px', border: '1px solid var(--rule)' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px' }}>Log a Call</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                        Select Prospect
+                      </label>
+                      <select
+                        value={callData.prospectId || ''}
+                        onChange={e => setCallData({ ...callData, prospectId: e.target.value ? parseInt(e.target.value) : null })}
+                        style={{
+                          width: '100%',
+                          padding: '10px 12px',
+                          border: '1px solid var(--rule)',
+                          borderRadius: '8px',
+                          fontFamily: "'Space Grotesk', sans-serif",
+                          fontSize: '14px',
+                          color: 'var(--ink)',
+                          background: 'white'
+                        }}
+                      >
+                        <option value="">-- Choose a prospect --</option>
+                        {prospects.map(p => (
+                          <option key={p.id} value={p.id}>{p.name} ({p.category})</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {callData.prospectId && (
+                      <>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                            Duration (minutes)
+                          </label>
+                          <input
+                            type="number"
+                            value={callData.duration}
+                            onChange={e => setCallData({ ...callData, duration: Math.max(1, parseInt(e.target.value) || 1) })}
+                            min="1"
+                            max="999"
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid var(--rule)',
+                              borderRadius: '8px',
+                              fontFamily: "'Space Grotesk', sans-serif",
+                              fontSize: '14px',
+                              color: 'var(--ink)',
+                              background: 'white'
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                            Connected?
+                          </label>
+                          <select
+                            value={callData.answered ? 'yes' : 'no'}
+                            onChange={e => setCallData({ ...callData, answered: e.target.value === 'yes' })}
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid var(--rule)',
+                              borderRadius: '8px',
+                              fontFamily: "'Space Grotesk', sans-serif",
+                              fontSize: '14px',
+                              color: 'var(--ink)',
+                              background: 'white'
+                            }}
+                          >
+                            <option value="yes">Yes (Live)</option>
+                            <option value="no">No (Voicemail)</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                            Person Answered
+                          </label>
+                          <input
+                            type="text"
+                            value={callData.person}
+                            onChange={e => setCallData({ ...callData, person: e.target.value })}
+                            placeholder="Name or title"
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid var(--rule)',
+                              borderRadius: '8px',
+                              fontFamily: "'Space Grotesk', sans-serif",
+                              fontSize: '14px',
+                              color: 'var(--ink)',
+                              background: 'white'
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                            Objections (comma-separated)
+                          </label>
+                          <input
+                            type="text"
+                            value={callData.objections.join(', ')}
+                            onChange={e => setCallData({
+                              ...callData,
+                              objections: e.target.value.split(',').map(o => o.trim()).filter(o => o)
+                            })}
+                            placeholder="budget, timing, skeptical…"
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid var(--rule)',
+                              borderRadius: '8px',
+                              fontFamily: "'Space Grotesk', sans-serif",
+                              fontSize: '14px',
+                              color: 'var(--ink)',
+                              background: 'white'
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                            Next Steps
+                          </label>
+                          <textarea
+                            value={callData.nextSteps}
+                            onChange={e => setCallData({ ...callData, nextSteps: e.target.value })}
+                            placeholder="e.g., Send proposal by Friday, Follow up next week…"
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid var(--rule)',
+                              borderRadius: '8px',
+                              fontFamily: "'Space Grotesk', sans-serif",
+                              fontSize: '14px',
+                              color: 'var(--ink)',
+                              background: 'white',
+                              minHeight: '80px',
+                              resize: 'vertical'
+                            }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                            Call Notes
+                          </label>
+                          <textarea
+                            value={callData.notes}
+                            onChange={e => setCallData({ ...callData, notes: e.target.value })}
+                            placeholder="How did the call go? What was discussed?"
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              border: '1px solid var(--rule)',
+                              borderRadius: '8px',
+                              fontFamily: "'Space Grotesk', sans-serif",
+                              fontSize: '14px',
+                              color: 'var(--ink)',
+                              background: 'white',
+                              minHeight: '80px',
+                              resize: 'vertical'
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {callData.prospectId && (
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+                      <button
+                        onClick={() => setCallData({ prospectId: null, duration: 15, answered: true, person: '', objections: [], nextSteps: '', notes: '' })}
+                        style={{
+                          padding: '10px 20px',
+                          borderRadius: '8px',
+                          border: '1px solid var(--rule)',
+                          background: 'var(--paper)',
+                          color: 'var(--ink)',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        Clear
+                      </button>
+                      <button
+                        onClick={() => handleLogCall(callData.prospectId)}
+                        style={{
+                          padding: '10px 20px',
+                          borderRadius: '8px',
+                          border: 'none',
+                          background: 'var(--rust)',
+                          color: 'white',
+                          cursor: 'pointer',
+                          fontSize: '12px',
+                          fontWeight: '600'
+                        }}
+                      >
+                        ✓ Save Call
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {tab === 'campaign' && (
+              <div>
+                <h2 style={{ fontSize: '22px', marginBottom: '28px', fontWeight: '600' }}>Pipeline Analytics</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '28px' }}>
+                  {[
+                    { label: 'Total Prospects', value: stats.totalProspects },
+                    { label: 'Active', value: stats.active },
+                    { label: 'Total Calls', value: stats.totalCalls },
+                    { label: 'Closed', value: stats.closed },
+                    { label: 'Conversion', value: stats.conversion + '%' }
+                  ].map((item, i) => (
+                    <div key={i} style={{ background: 'var(--card)', borderRadius: '10px', padding: '22px', border: '1px solid var(--rule)', textAlign: 'center' }}>
+                      <h3 style={{ fontSize: '36px', fontWeight: '700', color: 'var(--rust)', marginBottom: '6px', fontFamily: "'Playfair Display', serif" }}>
+                        {item.value}
+                      </h3>
+                      <p style={{ fontSize: '11px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: '600' }}>
+                        {item.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {tab === 'email' && (
+              <div>
+                <h2 style={{ fontSize: '22px', marginBottom: '28px', fontWeight: '600' }}>Email Templates</h2>
+                <div style={{ background: 'var(--card)', borderRadius: '12px', padding: '28px', border: '1px solid var(--rule)' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px' }}>Template Generator</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '20px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                        Select Template
+                      </label>
+                      <select
+                        value={emailTemplate}
+                        onChange={e => setEmailTemplate(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '10px 12px',
+                          border: '1px solid var(--rule)',
+                          borderRadius: '8px'
+                        }}
+                      >
+                        <option value="first-contact">First Contact</option>
+                        <option value="after-objection">After Objection</option>
+                        <option value="follow-up">Follow-up</option>
+                        <option value="reengagement">Re-engagement</option>
+                      </select>
+                    </div>
+
+                    {Object.entries(emailVariables).map(([key, value]) => (
+                      <div key={key}>
+                        <label style={{ display: 'block', fontSize: '10px', textTransform: 'uppercase', color: 'var(--rust)', marginBottom: '8px', fontWeight: '600' }}>
+                          {key.replace(/-/g, ' ')}
+                        </label>
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={e => setEmailVariables({ ...emailVariables, [key]: e.target.value })}
+                          placeholder={`[${key}]`}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            border: '1px solid var(--rule)',
+                            borderRadius: '8px',
+                            fontFamily: "'Space Grotesk', sans-serif",
+                            fontSize: '14px',
+                            color: 'var(--ink)',
+                            background: 'white'
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      const text = Object.entries(emailVariables).reduce((acc, [key, val]) => {
+                        return acc.replace(`[${key}]`, val);
+                      }, `Subject: ${EMAIL_TEMPLATES[emailTemplate].subject}\n\n${EMAIL_TEMPLATES[emailTemplate].body}`);
+                      navigator.clipboard.writeText(text);
+                      setStatus({ type: 'success', text: '✓ Email copied to clipboard' });
+                      setTimeout(() => setStatus(''), 2000);
+                    }}
+                    style={{
+                      padding: '10px 20px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      background: 'var(--rust)',
+                      color: 'white',
+                      cursor: 'pointer',
+                      fontSize: '12px',
+                      fontWeight: '600'
+                    }}
+                  >
+                    📋 Copy Email
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {tab === 'export' && (
+              <div>
+                <h2 style={{ fontSize: '22px', marginBottom: '28px', fontWeight: '600' }}>Export Data</h2>
+                <div style={{ background: 'var(--card)', borderRadius: '12px', padding: '28px', border: '1px solid var(--rule)' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '20px' }}>Download Your Data</h3>
+                  <p style={{ marginBottom: '20px', color: 'var(--muted)', fontSize: '13px' }}>
+                    Export your prospect list for backup or analysis.
+                  </p>
+
+                  <div style={{ display: 'flex', gap: '12px' }}>
+                    <button
+                      onClick={() => {
+                        const element = document.createElement('div');
+                        element.style.padding = '40px';
+                        element.style.background = 'white';
+                        element.innerHTML = `
+                          <h1 style="font-family: 'Playfair Display', serif; font-size: 36px; margin-bottom: 10px;">BKDziti Prospect List</h1>
+                          <p style="color: #666; margin-bottom: 30px;">Generated ${new Date().toLocaleDateString()}</p>
+                          ${prospects.map(p => `
+                            <div style="page-break-inside: avoid; margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                              <h2 style="font-size: 20px; margin-bottom: 5px;">${p.name}</h2>
+                              <p style="color: #666; margin-bottom: 15px;">${p.category}</p>
+                              <p><strong>Phone:</strong> ${p.phone}</p>
+                              <p><strong>Address:</strong> ${p.address}</p>
+                              <p><strong>Heat Level:</strong> ${'🔥'.repeat(p.heatLevel)}</p>
+                              <p><strong>Status:</strong> ${p.status}</p>
+                              <p><strong>Calls Logged:</strong> ${p.calls?.length || 0}</p>
+                              <p><strong>Why:</strong> ${p.why}</p>
+                            </div>
+                          `).join('')}
+                        `;
+
+                        const opt = {
+                          margin: 10,
+                          filename: `BKDziti-Prospects-${new Date().toISOString().split('T')[0]}.pdf`,
+                          image: { type: 'jpeg', quality: 0.98 },
+                          html2canvas: { scale: 2 },
+                          jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+                        };
+
+                        html2pdf().set(opt).from(element).save();
+                        setStatus({ type: 'success', text: '✓ PDF exported' });
+                        setTimeout(() => setStatus(''), 2000);
+                      }}
+                      style={{
+                        padding: '10px 20px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: 'var(--rust)',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      📄 Export as PDF
+                    </button>
+                    <button
+                      onClick={() => {
+                        const csv = [
+                          ['Name', 'Category', 'Phone', 'Status', 'Heat', 'Calls', 'Last Contact'].join(','),
+                          ...prospects.map(p => [
+                            `"${p.name}"`,
+                            `"${p.category}"`,
+                            p.phone,
+                            p.status,
+                            p.heatLevel,
+                            p.calls?.length || 0,
+                            p.lastContact ? new Date(p.lastContact).toLocaleDateString() : ''
+                          ].join(','))
+                        ].join('\n');
+
+                        const blob = new Blob([csv], { type: 'text/csv' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `BKDziti-Prospects-${new Date().toISOString().split('T')[0]}.csv`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        setStatus({ type: 'success', text: '✓ CSV exported' });
+                        setTimeout(() => setStatus(''), 2000);
+                      }}
+                      style={{
+                        padding: '10px 20px',
+                        borderRadius: '8px',
+                        border: 'none',
+                        background: 'var(--rust)',
+                        color: 'white',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: '600'
+                      }}
+                    >
+                      📊 Export as CSV
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <footer style={{ background: 'var(--ink)', color: '#5a5248', padding: '20px 40px', fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', textAlign: 'center', letterSpacing: '0.06em', marginTop: '60px' }}>
+            BKDziti Prospect Tracker — Password Protected — Admin Only
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<ProspectApp />, document.getElementById('root'));
+  </script>
+</body>
+</html>
