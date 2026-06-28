@@ -1109,10 +1109,10 @@ export default {
       return jsonResponse({ ok: false, error: 'Not found' }, 404);
     }
 
-    // ── Content API (articles / featured / socials) ──────────────────────────
+    // ── Content API (articles / featured / socials / resources / calls) ─────
     if (path.startsWith('/api/content/')) {
       const key = path.slice('/api/content/'.length);
-      if (['articles', 'featured', 'socials'].includes(key)) {
+      if (['articles', 'featured', 'socials', 'resources', 'calls'].includes(key)) {
         if (method === 'GET') return handleGetContent(env, key);
         if (!isAdmin(request, env)) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
         if (method === 'PUT')    return handlePutContent(request, env, key);

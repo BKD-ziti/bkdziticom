@@ -113,6 +113,139 @@
             display: inline-block; width: 14px; height: 14px;
             border-radius: 3px; margin-right: 6px; vertical-align: middle;
         }
+
+        /* ── RESOURCES ── */
+        .resource-row {
+            display: grid;
+            grid-template-columns: 44px 1fr auto;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(100,149,237,0.15);
+            background: rgba(0,0,0,0.25);
+            margin-bottom: 0.6rem;
+            transition: border-color 0.2s;
+        }
+        .resource-row:hover { border-color: rgba(100,149,237,0.35); }
+        .resource-icon {
+            width: 44px; height: 44px;
+            border-radius: 0.5rem;
+            background: rgba(100,149,237,0.1);
+            border: 1px solid rgba(100,149,237,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: #8bb4f5; font-size: 1.1rem; flex-shrink: 0;
+        }
+        .resource-row-info { min-width: 0; }
+        .resource-row-title {
+            font-weight: 600; color: var(--cream);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            font-size: 0.9rem;
+        }
+        .resource-row-meta { font-size: 0.72rem; color: rgba(252,249,245,0.35); margin-top: 0.15rem; }
+        .resource-type-badge {
+            display: inline-flex; align-items: center;
+            padding: 0.12rem 0.5rem; border-radius: 1rem;
+            font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+            background: rgba(100,149,237,0.12); color: #8bb4f5; border: 1px solid rgba(100,149,237,0.2);
+        }
+        .resource-html-field {
+            width: 100%; padding: 0.8rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(100,149,237,0.25);
+            background: rgba(0,0,0,0.4);
+            color: var(--offwhite);
+            font-family: 'Courier New', monospace;
+            font-size: 0.78rem; line-height: 1.5;
+            outline: none; resize: vertical; min-height: 160px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .resource-html-field:focus {
+            border-color: rgba(100,149,237,0.6);
+            box-shadow: 0 0 0 3px rgba(100,149,237,0.1);
+        }
+
+        /* ── CALL LOG ── */
+        .call-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        .call-stat {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(249,83,1,0.15);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            text-align: center;
+        }
+        .call-stat-num {
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: 1.8rem; color: var(--amber);
+            line-height: 1;
+        }
+        .call-stat-label {
+            font-size: 0.68rem; color: rgba(252,249,245,0.35);
+            text-transform: uppercase; letter-spacing: 0.1em;
+            margin-top: 0.3rem;
+        }
+        .call-row {
+            display: grid;
+            grid-template-columns: 90px 1fr 110px 130px auto;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(249,83,1,0.12);
+            background: rgba(0,0,0,0.22);
+            margin-bottom: 0.5rem;
+            transition: border-color 0.2s;
+        }
+        .call-row:hover { border-color: rgba(249,83,1,0.3); }
+        .call-date {
+            font-size: 0.75rem; color: rgba(252,249,245,0.45);
+            font-variant-numeric: tabular-nums;
+        }
+        .call-business {
+            font-weight: 600; font-size: 0.88rem; color: var(--cream);
+            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+        }
+        .call-contact-sub { font-size: 0.72rem; color: rgba(252,249,245,0.35); margin-top: 0.1rem; }
+        .outcome-badge {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.18rem 0.6rem; border-radius: 1rem;
+            font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .outcome-badge.won      { background: rgba(80,200,120,0.15); color:#7de0a0; border:1px solid rgba(80,200,120,0.3); }
+        .outcome-badge.followup { background: rgba(255,154,11,0.15); color:var(--amber); border:1px solid rgba(255,154,11,0.3); }
+        .outcome-badge.meeting  { background: rgba(100,149,237,0.15); color:#8bb4f5; border:1px solid rgba(100,149,237,0.3); }
+        .outcome-badge.callback { background: rgba(150,100,220,0.15); color:#c8a0f0; border:1px solid rgba(150,100,220,0.3); }
+        .outcome-badge.cold     { background: rgba(252,249,245,0.07); color:rgba(252,249,245,0.4); border:1px solid rgba(252,249,245,0.12); }
+        .outcome-badge.no       { background: rgba(180,30,30,0.12); color:#f08080; border:1px solid rgba(180,30,30,0.25); }
+        .method-tag {
+            font-size: 0.7rem; color: rgba(252,249,245,0.4);
+            font-family: monospace; letter-spacing: 0.05em;
+        }
+        .call-notes-preview {
+            font-size: 0.75rem; color: rgba(252,249,245,0.3);
+            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        .call-filter-bar {
+            display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center;
+        }
+        .call-filter-btn {
+            padding: 0.3rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; cursor: pointer;
+            border: 1px solid rgba(249,83,1,0.2); background: rgba(0,0,0,0.2);
+            color: rgba(252,249,245,0.5); transition: all 0.15s;
+        }
+        .call-filter-btn.active { background: rgba(249,83,1,0.15); color:var(--orange); border-color: rgba(249,83,1,0.4); }
+        .call-filter-btn:hover  { color: var(--cream); border-color: rgba(249,83,1,0.4); }
+        @media (max-width: 700px) {
+            .call-row { grid-template-columns: 1fr auto; }
+            .call-date, .method-tag { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -165,6 +298,14 @@
                 <h3>Content</h3>
                 <button class="admin-nav-btn" data-panel="articles">
                     <i class="fas fa-newspaper"></i> Articles
+                </button>
+
+                <h3>Resources</h3>
+                <button class="admin-nav-btn" data-panel="resources">
+                    <i class="fas fa-folder-open"></i> Resource Pages
+                </button>
+                <button class="admin-nav-btn" data-panel="calllog">
+                    <i class="fas fa-phone-alt"></i> Call Log
                 </button>
 
                 <h3>Navigate</h3>
@@ -269,6 +410,55 @@
                         Changes are saved to Cloudflare KV and appear on <a href="/articles/" style="color:var(--orange)">the Articles page</a> within seconds. Drag order with the <i class="fas fa-arrows-alt-v"></i> arrows.
                     </p>
                     <div id="articlesListWrap">
+                        <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size:1.5rem"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── RESOURCES PANEL ── -->
+                <div class="admin-panel" id="panel-resources">
+                    <div class="admin-panel-header">
+                        <h2>Resource Pages</h2>
+                        <div class="panel-actions">
+                            <button class="admin-btn" id="addResourceBtn">
+                                <i class="fas fa-plus"></i> Add Resource
+                            </button>
+                        </div>
+                    </div>
+                    <p style="font-size:0.82rem;color:rgba(252,249,245,0.4);margin:0 0 1.25rem">
+                        Store script cards, SOPs, guides, and reference pages. Paste raw HTML to save a complete page — click View to open it in a new tab.
+                    </p>
+                    <div id="resourcesListWrap">
+                        <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size:1.5rem"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── CALL LOG PANEL ── -->
+                <div class="admin-panel" id="panel-calllog">
+                    <div class="admin-panel-header">
+                        <h2>Call Log</h2>
+                        <div class="panel-actions">
+                            <button class="admin-btn" id="exportCallsBtn">
+                                <i class="fas fa-download"></i> Export CSV
+                            </button>
+                            <button class="admin-btn primary" id="logCallBtn">
+                                <i class="fas fa-plus"></i> Log Interaction
+                            </button>
+                        </div>
+                    </div>
+                    <div class="call-stats" id="callStats"></div>
+                    <div class="call-filter-bar">
+                        <span style="font-size:0.72rem;color:rgba(252,249,245,0.35);text-transform:uppercase;letter-spacing:0.1em">Filter:</span>
+                        <button class="call-filter-btn active" data-filter="all">All</button>
+                        <button class="call-filter-btn" data-filter="followup">Follow-Up</button>
+                        <button class="call-filter-btn" data-filter="meeting">Meeting</button>
+                        <button class="call-filter-btn" data-filter="won">Won</button>
+                        <button class="call-filter-btn" data-filter="no">Not Interested</button>
+                    </div>
+                    <div id="callLogWrap">
                         <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
                             <i class="fas fa-circle-notch fa-spin" style="font-size:1.5rem"></i>
                         </div>
@@ -454,6 +644,144 @@
         </div>
     </div>
 
+    <!-- ── RESOURCE MODAL ── -->
+    <div class="modal-overlay" id="resourceModal" role="dialog" aria-modal="true" aria-labelledby="resourceModalTitle">
+        <div class="modal" style="max-width:720px">
+            <div class="modal-header">
+                <h3 id="resourceModalTitle">Add Resource</h3>
+                <button class="modal-close" id="resourceModalClose" aria-label="Close">&times;</button>
+            </div>
+            <form id="resourceForm" novalidate>
+                <input type="hidden" id="rId">
+                <div class="field-row">
+                    <div class="form-field-store">
+                        <label for="rTitle">Title <span style="color:var(--deep-red)">*</span></label>
+                        <input type="text" id="rTitle" placeholder="e.g. Universal Script Card" maxlength="120" required>
+                    </div>
+                    <div class="form-field-store">
+                        <label for="rType">Type</label>
+                        <select id="rType" class="admin-select">
+                            <option value="Script Card">Script Card</option>
+                            <option value="SOP">SOP</option>
+                            <option value="Guide">Guide</option>
+                            <option value="Template">Template</option>
+                            <option value="Reference">Reference</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-field-store">
+                    <label for="rDesc">Description / Notes</label>
+                    <textarea id="rDesc" class="admin-textarea" rows="2" maxlength="500"
+                        placeholder="What this page is for, when to use it…"></textarea>
+                </div>
+                <div class="form-field-store">
+                    <label for="rUrl">External URL <span style="font-size:0.72rem;color:rgba(252,249,245,0.35)">(optional — link instead of pasting HTML)</span></label>
+                    <input type="text" id="rUrl" placeholder="https://…" maxlength="500">
+                </div>
+                <div class="form-field-store">
+                    <label for="rHtml">HTML Content <span style="font-size:0.72rem;color:rgba(252,249,245,0.35)">(paste full page HTML — opens in new tab when you click View)</span></label>
+                    <textarea id="rHtml" class="resource-html-field" rows="8"
+                        placeholder="<!DOCTYPE html>&#10;<html>…"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="admin-btn" id="resourceModalCancel">Cancel</button>
+                    <button type="submit" class="admin-btn primary" id="resourceSaveBtn">
+                        <i class="fas fa-save"></i> Save Resource
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── CALL LOG MODAL ── -->
+    <div class="modal-overlay" id="callModal" role="dialog" aria-modal="true" aria-labelledby="callModalTitle">
+        <div class="modal" style="max-width:600px">
+            <div class="modal-header">
+                <h3 id="callModalTitle">Log Interaction</h3>
+                <button class="modal-close" id="callModalClose" aria-label="Close">&times;</button>
+            </div>
+            <form id="callForm" novalidate>
+                <input type="hidden" id="cId">
+                <div class="field-row">
+                    <div class="form-field-store">
+                        <label for="cDate">Date <span style="color:var(--deep-red)">*</span></label>
+                        <input type="date" id="cDate" required style="color-scheme:dark">
+                    </div>
+                    <div class="form-field-store">
+                        <label for="cMethod">Method</label>
+                        <select id="cMethod" class="admin-select">
+                            <option value="Walk-In">Walk-In</option>
+                            <option value="Cold Call">Cold Call</option>
+                            <option value="DM / Social">DM / Social</option>
+                            <option value="Email">Email</option>
+                            <option value="Text">Text</option>
+                            <option value="Follow-Up">Follow-Up</option>
+                            <option value="Meeting">Meeting</option>
+                            <option value="Referral">Referral</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="form-field-store">
+                        <label for="cBusiness">Business / Company <span style="color:var(--deep-red)">*</span></label>
+                        <input type="text" id="cBusiness" placeholder="e.g. Sunny Side Café" maxlength="100" required>
+                    </div>
+                    <div class="form-field-store">
+                        <label for="cContact">Contact Name</label>
+                        <input type="text" id="cContact" placeholder="e.g. Maria" maxlength="80">
+                    </div>
+                </div>
+                <div class="form-field-store">
+                    <label for="cOutcome">Outcome <span style="color:var(--deep-red)">*</span></label>
+                    <select id="cOutcome" class="admin-select" required>
+                        <option value="Left Info">Left Info / Left Card</option>
+                        <option value="Audit Sent">Audit / Spec Sent</option>
+                        <option value="Callback">Callback Scheduled</option>
+                        <option value="Meeting">Meeting Booked</option>
+                        <option value="Follow-Up">Follow-Up Needed</option>
+                        <option value="Won">Closed — Won!</option>
+                        <option value="Not Interested">Not Interested</option>
+                        <option value="Ghosted">Ghosted</option>
+                    </select>
+                </div>
+                <div class="form-field-store">
+                    <label for="cNextDate">Next Follow-Up Date <span style="font-size:0.72rem;color:rgba(252,249,245,0.35)">(optional)</span></label>
+                    <input type="date" id="cNextDate" style="color-scheme:dark">
+                </div>
+                <div class="form-field-store">
+                    <label for="cNotes">Notes</label>
+                    <textarea id="cNotes" class="admin-textarea" rows="4" maxlength="2000"
+                        placeholder="What you showed them, how they reacted, what objection came up, next step…"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="admin-btn" id="callModalCancel">Cancel</button>
+                    <button type="submit" class="admin-btn primary" id="callSaveBtn">
+                        <i class="fas fa-save"></i> Save Entry
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── CALL DETAIL MODAL ── -->
+    <div class="modal-overlay" id="callDetailModal" role="dialog" aria-modal="true">
+        <div class="modal" style="max-width:540px">
+            <div class="modal-header">
+                <h3>Interaction Detail</h3>
+                <button class="modal-close" id="callDetailClose" aria-label="Close">&times;</button>
+            </div>
+            <div id="callDetailBody" style="min-height:80px"></div>
+            <div class="modal-footer" style="justify-content:space-between">
+                <button class="admin-btn danger" id="callDetailDeleteBtn"><i class="fas fa-trash"></i> Delete</button>
+                <div style="display:flex;gap:0.5rem">
+                    <button class="admin-btn" id="callDetailEditBtn"><i class="fas fa-pen"></i> Edit</button>
+                    <button class="admin-btn" id="callDetailClose2">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>window.PAGE_CONFIG = { sections: [] };</script>
     <script src="../assets/js/data.js"></script>
     <script src="../assets/js/site.js"></script>
@@ -601,6 +929,8 @@
         loadProducts();
         loadOrders();
         loadArticles();
+        loadResources();
+        loadCalls();
     }
 
     function initLogin() {
@@ -1158,6 +1488,388 @@
         });
     }
 
+    // ── Resources ────────────────────────────────────────────────────────────
+
+    let resources = [];
+
+    const RESOURCE_ICONS = {
+        'Script Card': 'fa-scroll',
+        'SOP':         'fa-list-check',
+        'Guide':       'fa-book-open',
+        'Template':    'fa-file-code',
+        'Reference':   'fa-bookmark',
+        'Other':       'fa-file-alt'
+    };
+
+    async function loadResources() {
+        const wrap = document.getElementById('resourcesListWrap');
+        wrap.innerHTML = `<div style="text-align:center;padding:2rem;color:rgba(252,249,245,0.4)"><i class="fas fa-circle-notch fa-spin"></i> Loading…</div>`;
+        try {
+            const resp = await fetch('/api/content/resources');
+            const data = resp.ok ? await resp.json() : null;
+            resources = Array.isArray(data) ? data : [];
+        } catch { resources = []; }
+        renderResources();
+    }
+
+    async function saveResources() {
+        await fetch('/api/content/resources', {
+            method: 'PUT',
+            headers: apiHeaders(),
+            body: JSON.stringify(resources)
+        });
+    }
+
+    function renderResources() {
+        const wrap = document.getElementById('resourcesListWrap');
+        if (!resources.length) {
+            wrap.innerHTML = `<p style="text-align:center;color:rgba(252,249,245,0.3);padding:3rem">No resources yet. Click "Add Resource" to save your first page.</p>`;
+            return;
+        }
+        wrap.innerHTML = resources.map((r, i) => {
+            const icon = RESOURCE_ICONS[r.type] || 'fa-file-alt';
+            const date = r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+            return `<div class="resource-row">
+                <div class="resource-icon"><i class="fas ${icon}"></i></div>
+                <div class="resource-row-info">
+                    <div class="resource-row-title">${escHtml(r.title)}</div>
+                    <div class="resource-row-meta">
+                        <span class="resource-type-badge">${escHtml(r.type || 'Other')}</span>
+                        ${date ? `<span style="margin-left:0.5rem">${date}</span>` : ''}
+                        ${r.description ? `<span style="margin-left:0.5rem;opacity:0.7">${escHtml(r.description.slice(0,80))}${r.description.length>80?'…':''}</span>` : ''}
+                    </div>
+                </div>
+                <div class="article-row-actions">
+                    <button class="icon-btn" data-view-resource="${i}" title="View"><i class="fas fa-external-link-alt"></i> View</button>
+                    <button class="icon-btn" data-edit-resource="${i}" title="Edit"><i class="fas fa-pen"></i></button>
+                    <button class="icon-btn danger" data-delete-resource="${i}" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`;
+        }).join('');
+
+        wrap.querySelectorAll('[data-view-resource]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const r = resources[parseInt(btn.dataset.viewResource)];
+                if (!r) return;
+                if (r.html && r.html.trim()) {
+                    const blob = new Blob([r.html], { type: 'text/html' });
+                    window.open(URL.createObjectURL(blob), '_blank');
+                } else if (r.url) {
+                    window.open(r.url, '_blank');
+                } else {
+                    showToast('No HTML or URL saved for this resource.', true);
+                }
+            });
+        });
+        wrap.querySelectorAll('[data-edit-resource]').forEach(btn => {
+            btn.addEventListener('click', () => openEditResource(parseInt(btn.dataset.editResource)));
+        });
+        wrap.querySelectorAll('[data-delete-resource]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const i = parseInt(btn.dataset.deleteResource);
+                if (!confirm(`Delete "${resources[i].title}"?`)) return;
+                resources.splice(i, 1);
+                await saveResources();
+                renderResources();
+                showToast('Resource deleted.');
+            });
+        });
+    }
+
+    function openEditResource(idx) {
+        const isNew = idx === -1;
+        const r = isNew ? { id:'', title:'', type:'Script Card', description:'', url:'', html:'' } : { ...resources[idx] };
+        document.getElementById('resourceModalTitle').textContent = isNew ? 'Add Resource' : 'Edit Resource';
+        document.getElementById('rId').value    = r.id || '';
+        document.getElementById('rTitle').value = r.title || '';
+        document.getElementById('rType').value  = r.type || 'Script Card';
+        document.getElementById('rDesc').value  = r.description || '';
+        document.getElementById('rUrl').value   = r.url || '';
+        document.getElementById('rHtml').value  = r.html || '';
+        document.getElementById('rId').dataset.idx = idx;
+        openModal('resourceModal');
+        document.getElementById('rTitle').focus();
+    }
+
+    function initResourceModal() {
+        document.getElementById('addResourceBtn').addEventListener('click', () => openEditResource(-1));
+        document.getElementById('resourceModalClose').addEventListener('click', () => closeModal('resourceModal'));
+        document.getElementById('resourceModalCancel').addEventListener('click', () => closeModal('resourceModal'));
+        document.getElementById('resourceModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('resourceModal'); });
+
+        document.getElementById('resourceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('rTitle').value.trim();
+            if (!title) return showToast('Title is required.', true);
+            const btn = document.getElementById('resourceSaveBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
+            const idx = parseInt(document.getElementById('rId').dataset.idx);
+            const entry = {
+                id:          idx === -1 ? 'res_' + Date.now() : (resources[idx].id || 'res_' + Date.now()),
+                title,
+                type:        document.getElementById('rType').value,
+                description: document.getElementById('rDesc').value.trim(),
+                url:         document.getElementById('rUrl').value.trim(),
+                html:        document.getElementById('rHtml').value,
+                createdAt:   idx === -1 ? new Date().toISOString() : (resources[idx].createdAt || new Date().toISOString()),
+                updatedAt:   new Date().toISOString()
+            };
+            if (idx === -1) resources.push(entry);
+            else resources[idx] = entry;
+            try {
+                await saveResources();
+                closeModal('resourceModal');
+                renderResources();
+                showToast(idx === -1 ? 'Resource saved!' : 'Resource updated!');
+            } catch (err) {
+                showToast('Save failed: ' + err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Save Resource';
+            }
+        });
+    }
+
+    // ── Call Log ─────────────────────────────────────────────────────────────
+
+    let calls = [];
+    let callFilter = 'all';
+    let viewingCallIdx = -1;
+
+    const OUTCOME_CLASS = {
+        'Won':          'won',
+        'Meeting':      'meeting',
+        'Callback':     'callback',
+        'Follow-Up':    'followup',
+        'Audit Sent':   'followup',
+        'Left Info':    'cold',
+        'Not Interested': 'no',
+        'Ghosted':      'no'
+    };
+
+    async function loadCalls() {
+        const wrap = document.getElementById('callLogWrap');
+        wrap.innerHTML = `<div style="text-align:center;padding:2rem;color:rgba(252,249,245,0.4)"><i class="fas fa-circle-notch fa-spin"></i> Loading…</div>`;
+        try {
+            const resp = await fetch('/api/content/calls');
+            const data = resp.ok ? await resp.json() : null;
+            calls = Array.isArray(data) ? data : [];
+        } catch { calls = []; }
+        renderCallStats();
+        renderCalls();
+    }
+
+    async function saveCalls() {
+        await fetch('/api/content/calls', {
+            method: 'PUT',
+            headers: apiHeaders(),
+            body: JSON.stringify(calls)
+        });
+    }
+
+    function renderCallStats() {
+        const now = new Date();
+        const thisMonth = now.getMonth();
+        const thisYear  = now.getFullYear();
+        const total     = calls.length;
+        const followups = calls.filter(c => ['Follow-Up','Callback','Audit Sent','Meeting'].includes(c.outcome)).length;
+        const won       = calls.filter(c => c.outcome === 'Won' && new Date(c.date).getMonth() === thisMonth && new Date(c.date).getFullYear() === thisYear).length;
+        const overdue   = calls.filter(c => c.nextDate && new Date(c.nextDate) < now && !['Won','Not Interested','Ghosted'].includes(c.outcome)).length;
+        document.getElementById('callStats').innerHTML = `
+            <div class="call-stat"><div class="call-stat-num">${total}</div><div class="call-stat-label">Total Logged</div></div>
+            <div class="call-stat"><div class="call-stat-num" style="color:var(--orange)">${followups}</div><div class="call-stat-label">Open Pipeline</div></div>
+            <div class="call-stat"><div class="call-stat-num" style="color:#7de0a0">${won}</div><div class="call-stat-label">Won This Month</div></div>
+            <div class="call-stat"><div class="call-stat-num" style="color:#f08080">${overdue}</div><div class="call-stat-label">Overdue Follow-Up</div></div>`;
+    }
+
+    function renderCalls() {
+        const wrap = document.getElementById('callLogWrap');
+        const filtered = calls
+            .filter(c => {
+                if (callFilter === 'all') return true;
+                if (callFilter === 'won')      return c.outcome === 'Won';
+                if (callFilter === 'meeting')  return c.outcome === 'Meeting';
+                if (callFilter === 'followup') return ['Follow-Up','Callback','Audit Sent'].includes(c.outcome);
+                if (callFilter === 'no')       return ['Not Interested','Ghosted'].includes(c.outcome);
+                return true;
+            })
+            .slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        if (!filtered.length) {
+            wrap.innerHTML = `<p style="text-align:center;color:rgba(252,249,245,0.3);padding:3rem">${calls.length ? 'No entries match this filter.' : 'No interactions logged yet. Click "Log Interaction" to start.'}</p>`;
+            return;
+        }
+        wrap.innerHTML = filtered.map(c => {
+            const origIdx = calls.indexOf(c);
+            const cls     = OUTCOME_CLASS[c.outcome] || 'cold';
+            const dateStr = c.date ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month:'short', day:'numeric' }) : '';
+            const overdue = c.nextDate && new Date(c.nextDate) < new Date() && !['Won','Not Interested','Ghosted'].includes(c.outcome);
+            return `<div class="call-row" style="cursor:pointer" data-view-call="${origIdx}">
+                <div class="call-date">${dateStr}${overdue ? '<br><span style="color:#f08080;font-size:0.65rem">⚠ overdue</span>' : ''}</div>
+                <div>
+                    <div class="call-business">${escHtml(c.business)}</div>
+                    <div class="call-contact-sub">${escHtml(c.contact || '')}${c.contact && c.notes ? ' · ' : ''}${c.notes ? `<span class="call-notes-preview">${escHtml(c.notes.slice(0,60))}${c.notes.length>60?'…':''}</span>` : ''}</div>
+                </div>
+                <div class="method-tag">${escHtml(c.method || '')}</div>
+                <div><span class="outcome-badge ${cls}">${escHtml(c.outcome)}</span></div>
+                <div style="display:flex;gap:0.35rem">
+                    <button class="icon-btn" data-edit-call="${origIdx}" title="Edit"><i class="fas fa-pen"></i></button>
+                    <button class="icon-btn danger" data-delete-call="${origIdx}" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>`;
+        }).join('');
+
+        wrap.querySelectorAll('[data-view-call]').forEach(row => {
+            row.addEventListener('click', e => {
+                if (e.target.closest('button')) return;
+                openCallDetail(parseInt(row.dataset.viewCall));
+            });
+        });
+        wrap.querySelectorAll('[data-edit-call]').forEach(btn => {
+            btn.addEventListener('click', () => openEditCall(parseInt(btn.dataset.editCall)));
+        });
+        wrap.querySelectorAll('[data-delete-call]').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const i = parseInt(btn.dataset.deleteCall);
+                if (!confirm(`Delete this entry for "${calls[i].business}"?`)) return;
+                calls.splice(i, 1);
+                await saveCalls();
+                renderCallStats();
+                renderCalls();
+                showToast('Entry deleted.');
+            });
+        });
+    }
+
+    function openCallDetail(idx) {
+        const c = calls[idx];
+        if (!c) return;
+        viewingCallIdx = idx;
+        const cls     = OUTCOME_CLASS[c.outcome] || 'cold';
+        const dateStr = c.date ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' }) : '';
+        document.getElementById('callDetailBody').innerHTML = `
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+                <div><div style="font-size:0.72rem;color:rgba(252,249,245,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Business</div>
+                    <div style="font-weight:600;font-size:1rem">${escHtml(c.business)}</div>
+                    ${c.contact ? `<div style="font-size:0.85rem;color:rgba(252,249,245,0.45)">${escHtml(c.contact)}</div>` : ''}
+                </div>
+                <div><div style="font-size:0.72rem;color:rgba(252,249,245,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Date</div>
+                    <div>${dateStr}</div>
+                </div>
+                <div><div style="font-size:0.72rem;color:rgba(252,249,245,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Method</div>
+                    <div>${escHtml(c.method || '—')}</div>
+                </div>
+                <div><div style="font-size:0.72rem;color:rgba(252,249,245,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Outcome</div>
+                    <span class="outcome-badge ${cls}">${escHtml(c.outcome)}</span>
+                </div>
+                ${c.nextDate ? `<div style="grid-column:1/-1"><div style="font-size:0.72rem;color:rgba(252,249,245,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Next Follow-Up</div>
+                    <div style="color:var(--amber)">${new Date(c.nextDate + 'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+                </div>` : ''}
+            </div>
+            ${c.notes ? `<div style="font-size:0.72rem;color:rgba(252,249,245,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem">Notes</div>
+                <div style="background:rgba(0,0,0,0.3);border-radius:0.6rem;padding:1rem;font-size:0.88rem;line-height:1.7;color:rgba(252,249,245,0.75);white-space:pre-wrap">${escHtml(c.notes)}</div>` : ''}`;
+        openModal('callDetailModal');
+    }
+
+    function openEditCall(idx) {
+        const isNew = idx === -1;
+        const c = isNew ? { id:'', date: new Date().toISOString().slice(0,10), method:'Walk-In', business:'', contact:'', outcome:'Left Info', nextDate:'', notes:'' } : { ...calls[idx] };
+        document.getElementById('callModalTitle').textContent = isNew ? 'Log Interaction' : 'Edit Interaction';
+        document.getElementById('cId').value       = String(idx);
+        document.getElementById('cDate').value     = c.date || new Date().toISOString().slice(0,10);
+        document.getElementById('cMethod').value   = c.method || 'Walk-In';
+        document.getElementById('cBusiness').value = c.business || '';
+        document.getElementById('cContact').value  = c.contact || '';
+        document.getElementById('cOutcome').value  = c.outcome || 'Left Info';
+        document.getElementById('cNextDate').value = c.nextDate || '';
+        document.getElementById('cNotes').value    = c.notes || '';
+        closeModal('callDetailModal');
+        openModal('callModal');
+        document.getElementById('cBusiness').focus();
+    }
+
+    function initCallModal() {
+        document.getElementById('logCallBtn').addEventListener('click', () => openEditCall(-1));
+        document.getElementById('callModalClose').addEventListener('click', () => closeModal('callModal'));
+        document.getElementById('callModalCancel').addEventListener('click', () => closeModal('callModal'));
+        document.getElementById('callModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('callModal'); });
+
+        document.getElementById('callForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const business = document.getElementById('cBusiness').value.trim();
+            if (!business) return showToast('Business name is required.', true);
+            const btn = document.getElementById('callSaveBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
+            const idx = parseInt(document.getElementById('cId').value);
+            const entry = {
+                id:       idx === -1 ? 'call_' + Date.now() : (calls[idx]?.id || 'call_' + Date.now()),
+                date:     document.getElementById('cDate').value,
+                method:   document.getElementById('cMethod').value,
+                business,
+                contact:  document.getElementById('cContact').value.trim(),
+                outcome:  document.getElementById('cOutcome').value,
+                nextDate: document.getElementById('cNextDate').value || '',
+                notes:    document.getElementById('cNotes').value.trim(),
+                createdAt: idx === -1 ? new Date().toISOString() : (calls[idx]?.createdAt || new Date().toISOString()),
+                updatedAt: new Date().toISOString()
+            };
+            if (idx === -1) calls.push(entry);
+            else calls[idx] = entry;
+            try {
+                await saveCalls();
+                closeModal('callModal');
+                renderCallStats();
+                renderCalls();
+                showToast(idx === -1 ? 'Interaction logged!' : 'Entry updated!');
+            } catch (err) {
+                showToast('Save failed: ' + err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> Save Entry';
+            }
+        });
+
+        // Call detail modal
+        document.getElementById('callDetailClose').addEventListener('click', () => closeModal('callDetailModal'));
+        document.getElementById('callDetailClose2').addEventListener('click', () => closeModal('callDetailModal'));
+        document.getElementById('callDetailModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('callDetailModal'); });
+        document.getElementById('callDetailEditBtn').addEventListener('click', () => openEditCall(viewingCallIdx));
+        document.getElementById('callDetailDeleteBtn').addEventListener('click', async () => {
+            if (viewingCallIdx < 0 || !calls[viewingCallIdx]) return;
+            if (!confirm(`Delete entry for "${calls[viewingCallIdx].business}"?`)) return;
+            calls.splice(viewingCallIdx, 1);
+            await saveCalls();
+            closeModal('callDetailModal');
+            renderCallStats();
+            renderCalls();
+            showToast('Entry deleted.');
+        });
+
+        // Filter buttons
+        document.querySelectorAll('.call-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.call-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                callFilter = btn.dataset.filter;
+                renderCalls();
+            });
+        });
+
+        // Export CSV
+        document.getElementById('exportCallsBtn').addEventListener('click', () => {
+            if (!calls.length) return showToast('No entries to export.', true);
+            const cols = ['date','business','contact','method','outcome','nextDate','notes'];
+            const rows = [cols.join(','), ...calls.map(c => cols.map(k => `"${String(c[k]||'').replace(/"/g,'""')}"`).join(','))];
+            const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `bkdziti-calls-${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+        });
+    }
+
     // ── Init ─────────────────────────────────────────────────────────────────
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1168,6 +1880,8 @@
         initOrderModal();
         initArticleModal();
         initArticlesPanel();
+        initResourceModal();
+        initCallModal();
     });
 
     })();
