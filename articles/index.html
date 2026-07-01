@@ -24,7 +24,7 @@
     <meta property="og:title" content="Articles | Pop-Up, Culinary Consulting & Media Production Tips | BKDziti">
     <meta property="og:type" content="website">
     <meta property="og:description" content="Articles and guides on pop-up restaurants, culinary consulting, restaurant media production, and food business strategy.">
-    <meta property="og:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+    <meta property="og:image" content="https://www.bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
     <meta property="og:url" content="https://www.bkdziti.com/articles/">
     <meta property="og:site_name" content="BKDziti">
 
@@ -32,7 +32,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="BKDziti Articles — Pop-Up, Culinary Consulting & Media Production Tips">
     <meta name="twitter:description" content="Articles and guides on pop-up restaurants, culinary consulting, restaurant media production, and food business strategy.">
-    <meta name="twitter:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+    <meta name="twitter:image" content="https://www.bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
 
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" media="print" onload="this.media='all'">
@@ -48,13 +48,13 @@
       "@context": "https://schema.org",
       "@type": "Blog",
       "name": "BKDziti Articles",
-      "url": "https://bkdziti.com/articles",
+      "url": "https://www.bkdziti.com/articles",
       "description": "Articles and guides on food/restaurant media production, and business strategy."
     }
     </script>
 </head>
 <body>
-    <canvas id="bgPulse"></canvas>
+    <canvas id="bgPulse" aria-hidden="true"></canvas>
     <div id="notificationOverlay" class="notification-overlay"></div>
     <div id="notificationBanner" class="notification-banner"></div>
 
@@ -66,7 +66,7 @@
         <div class="side-panel-inner">
             <img src="../assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
             <h2 class="panel-name">BKDziti</h2>
-            <p class="panel-tagline">ベイクドジーティ</p>
+            <p class="panel-tagline" lang="ja">ベイクドジーティ</p>
             <hr class="panel-divider">
             <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
             <div class="panel-socials" id="panelSocials"></div>
@@ -74,7 +74,8 @@
         </div>
     </aside>
 
-    <main>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <main id="main-content">
 
         <!-- ── HERO ── -->
         <section class="hero" id="hero">
@@ -83,7 +84,7 @@
             <div class="hero-bg-ring"></div>
 
             <div class="hero-inner">
-                <div class="hero-eyebrow reveal">ベイクドジーティ</div>
+                <div class="hero-eyebrow reveal" lang="ja">ベイクドジーティ</div>
                 <h1 class="hero-title reveal">
                     <span class="word-bkd">BKD</span><span class="word-ziti">ziti's</span><span class="word-bkd">Articles</span>
                 </h1>
@@ -105,9 +106,9 @@
     <!-- ── FOOTER ── -->
     <footer class="site-footer">
         <div class="footer-inner">
-            <div class="footer-logo">• ベイクドジーティ •</div>
+            <div class="footer-logo" lang="ja">• ベイクドジーティ •</div>
             <nav class="footer-nav">
-                <a href="https://bkdziti.com">Home</a> ·
+                <a href="../index.html#hero">Home</a> ·
                 <a href="../services.html#hero">Services</a> ·
                 <a href="../portfolio.html#hero">Portfolio</a> ·
                 <a href="../faq.html#hero">FAQ</a> ·

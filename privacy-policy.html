@@ -62,7 +62,7 @@
 </head>
 <body>
 
-    <canvas id="bgPulse"></canvas>
+    <canvas id="bgPulse" aria-hidden="true"></canvas>
     <div id="notificationOverlay" class="notification-overlay"></div>
     <div id="notificationBanner"  class="notification-banner"></div>
 
@@ -74,7 +74,7 @@
         <div class="side-panel-inner">
             <img src="assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
             <h2 class="panel-name">BKDziti</h2>
-            <p class="panel-tagline">ベイクドジーティ</p>
+            <p class="panel-tagline" lang="ja">ベイクドジーティ</p>
             <hr class="panel-divider">
             <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
             <div class="panel-socials" id="panelSocials"></div>
@@ -82,13 +82,14 @@
         </div>
     </aside>
 
-    <main>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <main id="main-content">
         <section class="hero" id="hero">
             <div class="hero-bg-ring"></div>
             <div class="hero-bg-ring"></div>
             <div class="hero-bg-ring"></div>
             <div class="hero-inner">
-                <div class="hero-eyebrow reveal">ベイクドジーティ</div>
+                <div class="hero-eyebrow reveal" lang="ja">ベイクドジーティ</div>
                 <h1 class="hero-title reveal">
                     <span class="word-bkd">Privacy</span><span class="word-ziti">Policy</span>
                 </h1>
@@ -175,7 +176,7 @@
 
     <footer class="site-footer">
         <div class="footer-inner">
-            <div class="footer-logo">&bull; ベイクドジーティ &bull;</div>
+            <div class="footer-logo" lang="ja">&bull; ベイクドジーティ &bull;</div>
             <nav class="footer-nav">
                 <a href="index.html">Home</a> &middot;
                 <a href="services.html#hero">Services</a> &middot;

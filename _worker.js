@@ -20,6 +20,18 @@ function requireEnv(env, key) {
 
 function clean(s) { return String(s || '').trim(); }
 
+// Adds baseline security headers to a response without touching its body —
+// safe to wrap around any HTML/asset response, no visual or functional effect.
+function withSecurityHeaders(response) {
+  const headers = new Headers(response.headers);
+  headers.set('X-Content-Type-Options', 'nosniff');
+  headers.set('X-Frame-Options', 'SAMEORIGIN');
+  headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()');
+  headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 function genId(prefix = 'id') {
   return `${prefix}_${crypto.randomUUID().replace(/-/g, '')}`;
 }
@@ -1057,7 +1069,7 @@ export default {
       const indexPath = path + 'index.html';
       const indexRequest = new Request(new URL(indexPath, url).toString(), request);
       const indexResponse = await env.ASSETS.fetch(indexRequest);
-      if (indexResponse.status !== 404) return indexResponse;
+      if (indexResponse.status !== 404) return withSecurityHeaders(indexResponse);
     }
 
     // ── Contact ──────────────────────────────────────────────────────────────
@@ -1153,7 +1165,21 @@ export default {
     }
 
     // ── Static assets ─────────────────────────────────────────────────────────
-    return env.ASSETS.fetch(request);
+    const assetResponse = await env.ASSETS.fetch(request);
+
+    // Branded 404 page instead of the bare Cloudflare default.
+    if (assetResponse.status === 404 && (method === 'GET' || method === 'HEAD')) {
+      const notFoundRequest = new Request(new URL('/404.html', url).toString(), request);
+      const notFoundResponse = await env.ASSETS.fetch(notFoundRequest);
+      if (notFoundResponse.status !== 404) {
+        return withSecurityHeaders(new Response(notFoundResponse.body, {
+          status: 404,
+          headers: notFoundResponse.headers
+        }));
+      }
+    }
+
+    return withSecurityHeaders(assetResponse);
   }
 };
 

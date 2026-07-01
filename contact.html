@@ -23,7 +23,7 @@
     <meta property="og:title" content="Contact | BKDziti">
     <meta property="og:type"  content="website">
     <meta property="og:description" content="Get in touch fast via form, text, or email.">
-    <meta property="og:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+    <meta property="og:image" content="https://www.bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
     <meta property="og:url"   content="https://www.bkdziti.com/contact.html">
     <meta property="og:site_name" content="BKDziti">
 
@@ -31,7 +31,25 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Contact | BKDziti">
     <meta name="twitter:description" content="Get in touch fast via form, text, or email.">
-    <meta name="twitter:image" content="https://bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+    <meta name="twitter:image" content="https://www.bkdziti.com/assets/images/BKDziti_pfp_2.PNG">
+
+    <!-- ── Schema.org Structured Data ── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      "name": "Contact BKDziti",
+      "url": "https://www.bkdziti.com/contact.html",
+      "description": "Contact BKDziti for culinary consulting, pop-up coordination, and media production.",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "BKDziti",
+        "url": "https://www.bkdziti.com",
+        "email": "AlexZornes@BKDziti.com",
+        "telephone": "+12394205010"
+      }
+    }
+    </script>
 
     <!-- ── External resources ── -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
@@ -50,7 +68,7 @@
 </head>
 <body>
 
-    <canvas id="bgPulse"></canvas>
+    <canvas id="bgPulse" aria-hidden="true"></canvas>
 
     <!-- ── Notification ── -->
     <div id="notificationOverlay" class="notification-overlay"></div>
@@ -65,7 +83,7 @@
         <div class="side-panel-inner">
             <img src="assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
             <h2 class="panel-name">BKDziti</h2>
-            <p class="panel-tagline">ベイクドジーティ</p>
+            <p class="panel-tagline" lang="ja">ベイクドジーティ</p>
             <hr class="panel-divider">
 
             <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
@@ -75,7 +93,8 @@
         </div>
     </aside>
 
-    <main>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <main id="main-content">
 
         <!-- ── HERO ── -->
         <section class="hero" id="hero">
@@ -84,7 +103,7 @@
             <div class="hero-bg-ring"></div>
 
             <div class="hero-inner">
-                <div class="hero-eyebrow reveal">ベイクドジーティ</div>
+                <div class="hero-eyebrow reveal" lang="ja">ベイクドジーティ</div>
                 <h1 class="hero-title reveal">
                     <span class="word-bkd">Contact</span><span class="word-ziti">Me</span>
                 </h1>
@@ -106,7 +125,7 @@
     <!-- ── FOOTER ── -->
     <footer class="site-footer">
         <div class="footer-inner">
-            <div class="footer-logo">• ベイクドジーティ •</div>
+            <div class="footer-logo" lang="ja">• ベイクドジーティ •</div>
             <nav class="footer-nav">
                 <a href="index.html#hero">Home</a> ·
                 <a href="services.html#hero">Services</a> ·

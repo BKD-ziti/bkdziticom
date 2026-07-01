@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | BKDziti</title>
+    <meta name="description" content="The page you're looking for doesn't exist. Find your way back to BKDziti's culinary consulting, media production, and pop-up coordination services.">
+    <meta name="robots" content="noindex, follow">
+
+    <!-- ── Favicons / app icons ── -->
+    <link rel="icon"          type="image/png"     href="assets/images/favicon-32x32.png"  sizes="32x32">
+    <link rel="icon"          type="image/png"     href="assets/images/favicon-16x16.png"  sizes="16x16">
+    <link rel="icon"          type="image/png"     href="assets/images/favicon-96x96.png"  sizes="96x96">
+    <link rel="icon"          type="image/png"     href="assets/images/favicon-196x196.png" sizes="196x196">
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+    <link rel="manifest" href="assets/images/site.webmanifest">
+    <meta name="apple-mobile-web-app-title" content="BKDziti">
+    <meta name="application-name"           content="BKDziti • ベイクドジーティ">
+    <meta name="msapplication-TileColor"    content="#371603">
+
+    <!-- ── External resources ── -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- ── Site stylesheet (critical, same-origin — load first) ── -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+
+    <!-- ── Fonts ── -->
+    <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Golos+Text:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <!-- ── Icons (Font Awesome) — loaded non-render-blocking ── -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"></noscript>
+
+    <style>
+        .notfound-hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 1.5rem;
+        }
+        .notfound-code {
+            font-family: 'Dela Gothic One', sans-serif;
+            font-size: clamp(4rem, 16vw, 9rem);
+            line-height: 1;
+            color: var(--amber);
+            margin-bottom: 1rem;
+        }
+        .notfound-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bgPulse" aria-hidden="true"></canvas>
+
+    <!-- ── Menu trigger + side panel ── -->
+    <button id="menuTrigger" class="menu-trigger" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div id="sidePanelBackdrop" class="side-panel-backdrop"></div>
+    <aside id="sidePanel" class="side-panel" aria-label="Site navigation">
+        <div class="side-panel-inner">
+            <img src="assets/images/mstile-70x70.png" alt="BKDziti logo" class="panel-logo-img" width="80" height="80" loading="eager">
+            <h2 class="panel-name">BKDziti</h2>
+            <p class="panel-tagline" lang="ja">ベイクドジーティ</p>
+            <hr class="panel-divider">
+            <nav class="panel-nav" id="panelNav" aria-label="Main"></nav>
+            <div class="panel-socials" id="panelSocials"></div>
+            <div class="panel-footer">&copy; 2026 BKDziti LLC &middot; All Rights Reserved</div>
+        </div>
+    </aside>
+
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <main id="main-content">
+        <section class="notfound-hero">
+            <div>
+                <div class="notfound-code" aria-hidden="true">404</div>
+                <h1 class="hero-title reveal" style="font-size:clamp(1.5rem,4vw,2.25rem);">Page Not Found</h1>
+                <p class="hero-sub reveal" style="margin-top:0.75rem;">
+                    That page moved, or never existed. Let&rsquo;s get you back on track.
+                </p>
+                <div class="notfound-links">
+                    <a href="/index.html#hero" class="pill-btn">Home <i class="fas fa-arrow-right"></i></a>
+                    <a href="/services.html#hero" class="pill-btn">Services <i class="fas fa-arrow-right"></i></a>
+                    <a href="/store/index.html" class="pill-btn">Store <i class="fas fa-arrow-right"></i></a>
+                    <a href="/contact.html#hero" class="pill-btn">Contact <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-logo" lang="ja">&bull; ベイクドジーティ &bull;</div>
+            <nav class="footer-nav">
+                <a href="/index.html">Home</a> &middot;
+                <a href="/store/index.html">Store</a> &middot;
+                <a href="/services.html#hero">Services</a> &middot;
+                <a href="/portfolio.html#hero">Portfolio</a> &middot;
+                <a href="/faq.html#hero">FAQ</a> &middot;
+                <a href="/articles/index.html#hero">Articles</a> &middot;
+                <a href="/contact.html#hero">Contact</a>
+            </nav>
+            <div class="footer-socials" id="footerSocials"></div>
+            <p class="footer-copy">&copy; Copyright 2026 BKDziti LLC &middot; All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        window.PAGE_CONFIG = { sections: [] };
+    </script>
+
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/site.js"></script>
+
+</body>
+</html>

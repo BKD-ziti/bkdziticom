@@ -2,6 +2,11 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /research/
+Disallow: /store/admin/
+Disallow: /store/cart.html
+Disallow: /store/checkout.html
+Disallow: /store/confirmation.html
+Disallow: /store/orders.html
 Disallow: /.git/
 Disallow: /node_modules/
 
@@ -18,4 +23,4 @@ User-agent: AppleBot
 Allow: /
 Crawl-delay: 1
 
-Sitemap: https://bkdziti.com/sitemap.xml
+Sitemap: https://www.bkdziti.com/sitemap.xml

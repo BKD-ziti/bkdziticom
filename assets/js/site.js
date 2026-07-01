@@ -399,7 +399,7 @@
 
             return `
             <section id="${sec.id}" class="content-section">
-                <canvas class="section-pulse-canvas" id="pulse-${sec.id}"></canvas>
+                <canvas class="section-pulse-canvas" id="pulse-${sec.id}" aria-hidden="true"></canvas>
                 <div class="section-container">
                     <div class="content-split${isReverse ? ' reverse' : ''} reveal">
                         <div>

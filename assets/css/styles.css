@@ -39,6 +39,41 @@ body {
 img, video, iframe { max-width: 100%; display: block; }
 a { color: inherit; }
 
+/* ── ACCESSIBILITY: skip link + keyboard focus ────────────────────────────
+   Off-screen until focused, then jumps above everything so keyboard/screen-
+   reader users can bypass the nav and land on <main>. Purely additive —
+   invisible to mouse users, zero effect on the existing visual design. */
+.skip-link {
+    position: absolute;
+    top: -3rem;
+    left: 1rem;
+    z-index: 9999;
+    padding: 0.65rem 1.25rem;
+    background: var(--darker);
+    color: var(--amber);
+    border: 1px solid rgba(255, 154, 11, 0.5);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: top 0.2s ease;
+}
+.skip-link:focus {
+    top: 1rem;
+}
+
+/* Visible keyboard focus ring on interactive elements — browsers already
+   show a default outline, this just keeps it on-brand. Only triggers for
+   keyboard/AT focus (:focus-visible), never on mouse click, so nothing
+   changes visually for mouse users. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+}
+
 /* ── TEXT WRAP SAFETY (tiny screens / long words) ─────────────────────── */
 h1, h2, h3, p, a, button {
     overflow-wrap: break-word;
@@ -838,5 +873,3 @@ body::before {
 body {
     animation: page-fade-in 0.4s ease forwards;
 }
-
-/* ── PILL BUTTON A
