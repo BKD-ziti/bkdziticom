@@ -246,6 +246,55 @@
             .call-row { grid-template-columns: 1fr auto; }
             .call-date, .method-tag { display: none; }
         }
+
+        /* ── MOBILE LAYOUT FIXES ──────────────────────────────────────────
+           The admin panel is used heavily from phones, so anything laid
+           out in fixed side-by-side columns needs to stack cleanly below
+           tablet width instead of squeezing into unreadable slivers. */
+        @media (max-width: 640px) {
+            /* Two-up form fields (login, product/article/resource modals,
+               order + call detail views) stack into one column. */
+            .field-row,
+            [style*="grid-template-columns:1fr 1fr"],
+            [style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Article / resource rows: keep the thumbnail + title on one
+               line, but drop the action buttons to their own full-width
+               row instead of squeezing a 4-button toolbar into an "auto"
+               column next to the title. */
+            .article-row {
+                grid-template-columns: 44px 1fr;
+                row-gap: 0.6rem;
+            }
+            .article-row .article-thumb { width: 44px; height: 34px; }
+            .resource-row {
+                grid-template-columns: 44px 1fr;
+                row-gap: 0.6rem;
+            }
+            .article-row-actions,
+            .resource-row-actions {
+                grid-column: 1 / -1;
+                justify-content: flex-end;
+                flex-wrap: wrap;
+            }
+
+            /* Modals: less outer padding so content has more room to
+               breathe on a ~360-390px wide screen. */
+            .modal { padding: 1.25rem; }
+            .modal-header { margin-bottom: 1.1rem; padding-bottom: 0.85rem; }
+            .modal-footer { flex-wrap: wrap; }
+            .modal-footer .admin-btn { flex: 1 1 auto; justify-content: center; }
+
+            /* Panel header actions wrap onto their own row below the
+               title instead of crowding beside it. */
+            .admin-panel-header { gap: 0.75rem; }
+            .admin-panel-header h2 { font-size: 1.35rem; }
+            .panel-actions { width: 100%; }
+
+            .call-stats { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
@@ -1275,7 +1324,7 @@
                     <div style="font-size:0.78rem;color:rgba(252,249,245,0.4);margin-bottom:0.25rem">ORDER ID</div>
                     <div style="font-family:monospace;font-size:0.85rem">${escHtml(o.id)}</div>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+                <div class="field-row" style="margin-bottom:1.25rem">
                     <div>
                         <div style="font-size:0.78rem;color:rgba(252,249,245,0.4);margin-bottom:0.25rem">CUSTOMER</div>
                         <div style="font-weight:500">${escHtml(o.customer.name)}</div>
@@ -1993,7 +2042,7 @@
         const cls     = OUTCOME_CLASS[c.outcome] || 'cold';
         const dateStr = c.date ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' }) : '';
         document.getElementById('callDetailBody').innerHTML = `
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+            <div class="field-row" style="margin-bottom:1.25rem">
                 <div><div style="font-size:0.72rem;color:rgba(252,249,245,0.35);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem">Business</div>
                     <div style="font-weight:600;font-size:1rem">${escHtml(c.business)}</div>
                     ${c.contact ? `<div style="font-size:0.85rem;color:rgba(252,249,245,0.45)">${escHtml(c.contact)}</div>` : ''}
