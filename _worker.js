@@ -437,7 +437,7 @@ const SEED_PRODUCTS = [
   {
     id: 'prod_brand_identity',
     name: 'Brand Identity',
-    description: 'A complete brand identity system for your restaurant or food business. Three logo concepts, refined to one final design, with a full visual system: color palette, typography, brand guidelines PDF, and social media templates.',
+    description: 'A complete brand identity system for your business — restaurant or otherwise. Three logo concepts, refined to one final design, with a full visual system: color palette, typography, brand guidelines PDF, and social media templates.',
     features: ['3 logo concepts', 'Color palette & typography', 'Brand guidelines PDF', 'Social media templates', 'All file formats (SVG, PNG, PDF)', '3-week delivery'],
     price: 200000,
     imageUrl: '/assets/images/IMG_2340(1).JPG',

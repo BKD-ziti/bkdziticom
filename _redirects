@@ -1,6 +1,9 @@
 /hosting/*  https://hosting.bkdziti.com/:splat  301
 /hosting    https://hosting.bkdziti.com          301
 
+/food-consulting        /consulting         301
+/food-consulting.html   /consulting.html    301
+
 /blog/                                        /articles/                                    301
 /blog/index.html                              /articles/                                    301
 /blog/food-photography-videography-guide      /articles/videography-photography-editing     301

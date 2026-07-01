@@ -7,6 +7,7 @@ Disallow: /store/cart.html
 Disallow: /store/checkout.html
 Disallow: /store/confirmation.html
 Disallow: /store/orders.html
+Disallow: /api/
 Disallow: /.git/
 Disallow: /node_modules/
 

@@ -212,8 +212,9 @@
                 <input type="tel" name="phone" placeholder="Phone (optional)" maxlength="40">
                 <select name="service">
                   <option value="">Interested in… (optional)</option>
+                  <option value="Consulting">Consulting</option>
                   <option value="Pop-Up Coordination">Pop-Up Coordination</option>
-                  <option value="Culinary Consulting">Culinary Consulting</option>
+                  <option value="Branding">Branding & Web Development</option>
                   <option value="Videography">Videography & Content</option>
                   <option value="Photography">Photography</option>
                   <option value="Full Package">Full Package (multiple services)</option>

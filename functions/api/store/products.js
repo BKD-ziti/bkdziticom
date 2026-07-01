@@ -8,12 +8,12 @@ exports.handler = async (event, context) => {
     const products = [
       {
         id: 'consultation-basic',
-        name: 'Culinary Consulting - Starter',
+        name: 'Consulting - Starter',
         type: 'service',
         category: 'Consulting',
         price: 50000, // $500.00 in cents
         pricingModel: 'one-time',
-        description: 'Initial consultation to understand your vision and business goals.',
+        description: 'Initial consultation to understand your vision and business goals — any industry, any stage.',
         imageUrl: '/assets/images/IMG_1123.PNG',
         features: [
           'One-hour consultation call',
@@ -24,18 +24,18 @@ exports.handler = async (event, context) => {
       },
       {
         id: 'consultation-premium',
-        name: 'Culinary Consulting - Premium',
+        name: 'Consulting - Premium',
         type: 'service',
         category: 'Consulting',
         price: 150000, // $1,500.00 in cents
         pricingModel: 'one-time',
-        description: 'Comprehensive consulting package with strategy development and ongoing support.',
+        description: 'Comprehensive consulting package with strategy development and ongoing support, for businesses in any industry.',
         imageUrl: '/assets/images/IMG_1123.PNG',
         features: [
           'Full business audit',
           'Strategic consulting plan',
-          'Menu development guidance',
-          'Vendor sourcing assistance',
+          'Menu development guidance (food & hospitality clients)',
+          'Vendor & partnership sourcing assistance',
           '3 months email support'
         ]
       },
@@ -62,7 +62,7 @@ exports.handler = async (event, context) => {
         category: 'Media',
         price: 150000, // $1,500.00 in cents
         pricingModel: 'one-time',
-        description: 'Full-day professional media production for your event or restaurant.',
+        description: 'Full-day professional media production for your event, brand, or restaurant.',
         imageUrl: '/assets/images/Datamosh-Dream.mp4',
         features: [
           '8-hour shoot coverage',
@@ -97,7 +97,7 @@ exports.handler = async (event, context) => {
         category: 'Web Development',
         price: 100000, // $1,000.00 in cents
         pricingModel: 'one-time',
-        description: 'Professional single-page website showcasing your restaurant or food business.',
+        description: 'Professional single-page website showcasing your business — restaurant menus included, but built the same way for any industry.',
         imageUrl: '/assets/images/IMG_0326.JPG',
         features: [
           'Mobile-responsive design',
