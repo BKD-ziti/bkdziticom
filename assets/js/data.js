@@ -54,20 +54,20 @@ window.BKD.SOCIALS = [
    PAGE_CONFIG.nav, or pick a named variant via PAGE_CONFIG.navVariant.
    ========================================================================= */
 window.BKD.NAV = {
-    before: [{ label: 'Home', href: '/index.html#hero' }],
+    before: [{ label: 'Home', href: '/index.html' }],
     after: [
         { label: '─────────────', href: '#' },
         { label: 'Store',                 href: '/store/index.html' },
-        { label: 'Services',              href: '/services.html#hero' },
-        { label: 'Consulting',            href: '/consulting.html#hero' },
-        { label: 'Media Production',      href: '/media-production.html#hero' },
-        { label: 'Portfolio',             href: '/portfolio.html#hero' },
-        { label: 'FAQ',                   href: '/faq.html#hero' },
-        { label: 'Articles',               href: '/articles/index.html#hero' },
+        { label: 'Services',              href: '/services.html' },
+        { label: 'Consulting',            href: '/consulting.html' },
+        { label: 'Media Production',      href: '/media-production.html' },
+        { label: 'Portfolio',             href: '/portfolio.html' },
+        { label: 'FAQ',                   href: '/faq.html' },
+        { label: 'Articles',               href: '/articles/index.html' },
         { label: '─────────────', href: '#' },
         { label: 'Hosting',               href: 'https://hosting.bkdziti.com' },
-        { label: 'Resume & Cover Letter', href: '/secret.html#hero' },
-        { label: 'Contact',               href: '/contact.html#hero' },
+        { label: 'Resume & Cover Letter', href: '/secret.html' },
+        { label: 'Contact',               href: '/contact.html' },
         { label: '─────────────', href: '#' },
         { label: 'Email',                 href: 'mailto:AlexZornes@BKDziti.com' }
     ]
@@ -75,22 +75,22 @@ window.BKD.NAV = {
 
 /* Store variant — leads with store-specific links, then the full site nav. */
 window.BKD.NAV_STORE = {
-    before: [{ label: 'Home', href: '/index.html#hero' }],
+    before: [{ label: 'Home', href: '/index.html' }],
     after: [
         { label: '─────────────', href: '#' },
         { label: 'Store Home', href: '/store/index.html' },
         { label: 'My Cart',    href: '/store/cart.html' },
         { label: 'My Orders',  href: '/store/orders.html' },
         { label: '─────────────', href: '#' },
-        { label: 'Services',              href: '/services.html#hero' },
-        { label: 'Consulting',            href: '/consulting.html#hero' },
-        { label: 'Media Production',      href: '/media-production.html#hero' },
-        { label: 'Portfolio',             href: '/portfolio.html#hero' },
-        { label: 'FAQ',                   href: '/faq.html#hero' },
-        { label: 'Articles',               href: '/articles/index.html#hero' },
+        { label: 'Services',              href: '/services.html' },
+        { label: 'Consulting',            href: '/consulting.html' },
+        { label: 'Media Production',      href: '/media-production.html' },
+        { label: 'Portfolio',             href: '/portfolio.html' },
+        { label: 'FAQ',                   href: '/faq.html' },
+        { label: 'Articles',               href: '/articles/index.html' },
         { label: 'Hosting',               href: 'https://hosting.bkdziti.com' },
         { label: '─────────────', href: '#' },
-        { label: 'Contact',               href: '/contact.html#hero' },
+        { label: 'Contact',               href: '/contact.html' },
         { label: 'Email',                 href: 'mailto:AlexZornes@BKDziti.com' }
     ]
 };

@@ -1543,3 +1543,35 @@
     .product-grid { grid-template-columns: 1fr; }
     .cart-icon-wrap { bottom: 1.25rem; right: 1.25rem; }
 }
+
+/* ── ADMIN: SHARED MOBILE FIXES ───────────────────────────────────────────
+   These classes (.admin-btn, .admin-actions, .modal, two-column form
+   grids) are reused by every admin surface — /admin/ and /store/admin/ —
+   so the fixes live here once instead of being copy-pasted per page. */
+@media (max-width: 640px) {
+    /* Two-up modal form fields (e.g. product Type + Pricing Model) stack
+       into one column instead of squeezing on a ~360-390px screen. */
+    [style*="grid-template-columns:1fr 1fr"],
+    [style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Modals: tighter outer padding so content has more room to breathe. */
+    .modal { padding: 1.25rem; }
+    .modal-header { margin-bottom: 1.1rem; padding-bottom: 0.85rem; }
+    .modal-footer { flex-wrap: wrap; }
+    .modal-footer .admin-btn { flex: 1 1 auto; justify-content: center; }
+
+    /* Table row buttons ("Edit", "Delete", "View") are set to a compact
+       size via inline style for desktop table density — restore a
+       comfortable ~40px tap target on phones. */
+    .admin-actions .admin-btn {
+        padding: 0.55rem 0.9rem !important;
+        font-size: 0.85rem !important;
+        min-height: 2.5rem;
+    }
+
+    .admin-panel-header { gap: 0.75rem; }
+    .admin-panel-header h2 { font-size: 1.35rem; }
+    .panel-actions { width: 100%; }
+}

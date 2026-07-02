@@ -64,13 +64,20 @@
             display: flex; gap: 0.4rem; flex-shrink: 0;
         }
         .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            min-width: 2.1rem;
+            min-height: 2.1rem;
             background: rgba(249,83,1,0.1);
             border: 1px solid rgba(249,83,1,0.2);
             color: rgba(252,249,245,0.6);
             border-radius: 0.5rem;
-            padding: 0.35rem 0.55rem;
+            padding: 0.35rem 0.6rem;
             cursor: pointer;
             font-size: 0.78rem;
+            line-height: 1;
             transition: all 0.15s;
         }
         .icon-btn:hover { background: rgba(249,83,1,0.2); color: var(--cream); }
@@ -282,6 +289,27 @@
                 grid-column: 1 / -1;
                 justify-content: flex-end;
                 flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            /* Row-action icon buttons (edit/delete/move/view) are sized for
+               desktop density by default. On a phone they're also the
+               easiest thing to mis-tap, so give them a proper ~40px
+               touch target instead of the compact 34px desktop size. */
+            .icon-btn {
+                min-width: 2.5rem;
+                min-height: 2.5rem;
+                padding: 0.5rem 0.65rem;
+            }
+
+            /* Products/Orders table row buttons ("Edit", "Delete", "View")
+               are deliberately compact via inline style for desktop table
+               density — override that on mobile so they're comfortable to
+               tap instead of shrinking to ~24px. */
+            .admin-actions .admin-btn {
+                padding: 0.55rem 0.9rem !important;
+                font-size: 0.85rem !important;
+                min-height: 2.5rem;
             }
 
             /* Modals: less outer padding so content has more room to
@@ -696,7 +724,7 @@
                     </div>
                     <div class="form-field-store">
                         <label for="aButtonUrl">Button URL</label>
-                        <input type="text" id="aButtonUrl" placeholder="how-to-start-popup-restaurant.html#hero" maxlength="300">
+                        <input type="text" id="aButtonUrl" placeholder="how-to-start-popup-restaurant.html" maxlength="300">
                     </div>
                 </div>
                 <div class="field-row">
@@ -737,17 +765,17 @@
                 <input type="hidden" id="hsIdx">
                 <div class="form-field-store">
                     <label for="hsName">Site Name <span style="color:var(--deep-red)">*</span></label>
-                    <input type="text" id="hsName" placeholder="e.g. Mike Hughes Real Estate" maxlength="120" required>
+                    <input type="text" id="hsName" placeholder="Enter site name" maxlength="120" required>
                 </div>
                 <div class="form-field-store">
                     <label for="hsSubtitle">Subtitle / Description</label>
-                    <input type="text" id="hsSubtitle" placeholder="e.g. Coldwell Banker · Cape Coral, FL" maxlength="200">
+                    <input type="text" id="hsSubtitle" placeholder="Enter subtitle or description" maxlength="200">
                     <span style="font-size:0.72rem;color:rgba(252,249,245,0.3);margin-top:0.2rem;display:block">Shown under the site name on the hosting page.</span>
                 </div>
                 <div class="field-row">
                     <div class="form-field-store">
                         <label for="hsUrl">URL <span style="color:var(--deep-red)">*</span></label>
-                        <input type="text" id="hsUrl" placeholder="mikerealestate/ or https://…" maxlength="500" required>
+                        <input type="text" id="hsUrl" placeholder="Enter URL" maxlength="500" required>
                         <span style="font-size:0.72rem;color:rgba(252,249,245,0.3);margin-top:0.2rem;display:block">Relative path or full URL.</span>
                     </div>
                     <div class="form-field-store">
@@ -935,7 +963,7 @@
             title: 'How to Start a Pop-Up: Complete 13-Step Guide',
             body: 'Pop-up restaurants offer an exciting, low-cost entry into the food business. This comprehensive guide walks you through concept development, permits, kitchen selection, venue scouting, team building, marketing strategy, and execution—from initial idea to successful event.',
             media: '../assets/images/OnigiriBites.mp4', mediaType: 'video', align: 'left',
-            button: { text: 'Read Article', url: 'popup-launch.html#hero' },
+            button: { text: 'Read Article', url: 'popup-launch.html' },
             paletteIndex: 0, palette: PALETTES[0]
         },
         {
@@ -943,7 +971,7 @@
             title: 'Branding & Media Strategy in 2026',
             body: "In today's digital landscape, your brand identity and media presence are crucial for success. Learn how to define your brand, develop a cohesive visual identity, create engaging content, leverage key social platforms, and measure what actually matters for your restaurant's growth.",
             media: '../assets/images/BKDzitiBanner2.png', mediaType: 'image', align: 'right',
-            button: { text: 'Read Article', url: 'brand-strategy.html#hero' },
+            button: { text: 'Read Article', url: 'brand-strategy.html' },
             paletteIndex: 1, palette: PALETTES[1]
         },
         {
@@ -951,7 +979,7 @@
             title: 'Photography / Videography, Editing, and Deployment Pricing',
             body: "Wondering about photography/videography costs? This guide covers DIY vs. professional options, pricing breakdown across service types, what's included in professional packages, ROI calculations, and how to budget for quality visual content that drives results.",
             media: '../assets/images/Datamosh-Dream1.mp4', mediaType: 'video', align: 'left',
-            button: { text: 'Read Article', url: 'videography-photography-editing.html#hero' },
+            button: { text: 'Read Article', url: 'videography-photography-editing.html' },
             paletteIndex: 2, palette: PALETTES[2]
         },
         {
@@ -959,7 +987,7 @@
             title: 'Menu Engineering: Price Your Menu for Maximum Profit',
             body: 'Most restaurants leave 15-25% of potential profit on the table through poor menu pricing. This guide breaks down the four categories of menu items, food cost formulas, psychological pricing, and the engineering approach that high-volume restaurants use to maximize margin.',
             media: '../assets/images/IMG_2340(1).JPG', mediaType: 'image', align: 'left',
-            button: { text: 'Read Article', url: 'menu-engineering.html#hero' },
+            button: { text: 'Read Article', url: 'menu-engineering.html' },
             paletteIndex: 0, palette: PALETTES[0]
         },
         {
@@ -967,7 +995,7 @@
             title: 'Social Media Strategy for Restaurants in 2026',
             body: 'Algorithm changes, short-form video dominance, and rising ad costs have reshuffled what actually works. This guide covers which platforms to prioritize, the three content pillars that drive consistent growth, and how to measure ROI without spending on ads.',
             media: '../assets/images/bkdziti_intro.mp4', mediaType: 'video', align: 'right',
-            button: { text: 'Read Article', url: 'social-strategy.html#hero' },
+            button: { text: 'Read Article', url: 'social-strategy.html' },
             paletteIndex: 1, palette: PALETTES[1]
         },
         {
@@ -975,7 +1003,7 @@
             title: 'How to Find and Book a Commercial Kitchen',
             body: 'Home kitchens are not legal for commercial food production. This guide covers every type of commercial kitchen available to food entrepreneurs — shared commissaries, ghost kitchen rentals, restaurant partnerships, and culinary school facilities — with a cost breakdown and the questions you must ask before signing.',
             media: '../assets/images/food2.mp4', mediaType: 'video', align: 'left',
-            button: { text: 'Read Article', url: 'workspace.html#hero' },
+            button: { text: 'Read Article', url: 'workspace.html' },
             paletteIndex: 2, palette: PALETTES[2]
         },
         {
@@ -983,7 +1011,7 @@
             title: 'FAQ',
             body: 'Quick answers to common questions about our services and how we work.',
             media: '../assets/images/Twisps1.mp4', mediaType: 'video', align: 'right',
-            button: { text: 'FAQ', url: '../faq.html#hero' },
+            button: { text: 'FAQ', url: '../faq.html' },
             paletteIndex: 1, palette: PALETTES[1]
         }
     ];
@@ -1479,16 +1507,16 @@
                     </div>
                 </div>
                 <div class="article-row-actions">
-                    <button class="icon-btn" data-move-up="${i}" title="Move up" ${i===0?'disabled':''}>
+                    <button class="icon-btn" data-move-up="${i}" title="Move up" aria-label="Move article up" ${i===0?'disabled':''}>
                         <i class="fas fa-chevron-up"></i>
                     </button>
-                    <button class="icon-btn" data-move-down="${i}" title="Move down" ${i===articleCards.length-1?'disabled':''}>
+                    <button class="icon-btn" data-move-down="${i}" title="Move down" aria-label="Move article down" ${i===articleCards.length-1?'disabled':''}>
                         <i class="fas fa-chevron-down"></i>
                     </button>
-                    <button class="icon-btn" data-edit-article="${i}" title="Edit">
-                        <i class="fas fa-pen"></i> Edit
+                    <button class="icon-btn" data-edit-article="${i}" title="Edit" aria-label="Edit article">
+                        <i class="fas fa-pen"></i>
                     </button>
-                    <button class="icon-btn danger" data-delete-article="${i}" title="Delete">
+                    <button class="icon-btn danger" data-delete-article="${i}" title="Delete" aria-label="Delete article">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -1683,10 +1711,10 @@
                     </div>
                 </div>
                 <div class="article-row-actions">
-                    <button class="icon-btn" data-move-hs-up="${i}" title="Move up" ${i === 0 ? 'disabled' : ''}><i class="fas fa-chevron-up"></i></button>
-                    <button class="icon-btn" data-move-hs-down="${i}" title="Move down" ${i === hostedSites.length - 1 ? 'disabled' : ''}><i class="fas fa-chevron-down"></i></button>
-                    <button class="icon-btn" data-edit-hs="${i}" title="Edit"><i class="fas fa-pen"></i> Edit</button>
-                    <button class="icon-btn danger" data-delete-hs="${i}" title="Delete"><i class="fas fa-trash"></i></button>
+                    <button class="icon-btn" data-move-hs-up="${i}" title="Move up" aria-label="Move site up" ${i === 0 ? 'disabled' : ''}><i class="fas fa-chevron-up"></i></button>
+                    <button class="icon-btn" data-move-hs-down="${i}" title="Move down" aria-label="Move site down" ${i === hostedSites.length - 1 ? 'disabled' : ''}><i class="fas fa-chevron-down"></i></button>
+                    <button class="icon-btn" data-edit-hs="${i}" title="Edit" aria-label="Edit hosted site"><i class="fas fa-pen"></i></button>
+                    <button class="icon-btn danger" data-delete-hs="${i}" title="Delete" aria-label="Delete hosted site"><i class="fas fa-trash"></i></button>
                 </div>
             </div>`).join('');
 
@@ -1837,9 +1865,9 @@
                     </div>
                 </div>
                 <div class="article-row-actions">
-                    <button class="icon-btn" data-view-resource="${i}" title="View"><i class="fas fa-external-link-alt"></i> View</button>
-                    <button class="icon-btn" data-edit-resource="${i}" title="Edit"><i class="fas fa-pen"></i></button>
-                    <button class="icon-btn danger" data-delete-resource="${i}" title="Delete"><i class="fas fa-trash"></i></button>
+                    <button class="icon-btn" data-view-resource="${i}" title="View" aria-label="View resource"><i class="fas fa-external-link-alt"></i></button>
+                    <button class="icon-btn" data-edit-resource="${i}" title="Edit" aria-label="Edit resource"><i class="fas fa-pen"></i></button>
+                    <button class="icon-btn danger" data-delete-resource="${i}" title="Delete" aria-label="Delete resource"><i class="fas fa-trash"></i></button>
                 </div>
             </div>`;
         }).join('');
@@ -2011,8 +2039,8 @@
                 <div class="method-tag">${escHtml(c.method || '')}</div>
                 <div><span class="outcome-badge ${cls}">${escHtml(c.outcome)}</span></div>
                 <div style="display:flex;gap:0.35rem">
-                    <button class="icon-btn" data-edit-call="${origIdx}" title="Edit"><i class="fas fa-pen"></i></button>
-                    <button class="icon-btn danger" data-delete-call="${origIdx}" title="Delete"><i class="fas fa-trash"></i></button>
+                    <button class="icon-btn" data-edit-call="${origIdx}" title="Edit" aria-label="Edit interaction"><i class="fas fa-pen"></i></button>
+                    <button class="icon-btn danger" data-delete-call="${origIdx}" title="Delete" aria-label="Delete interaction"><i class="fas fa-trash"></i></button>
                 </div>
             </div>`;
         }).join('');
