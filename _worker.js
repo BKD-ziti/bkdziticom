@@ -1135,7 +1135,7 @@ export default {
     // KV-backed content API — so the "Hosted Sites" list edited in /admin/
     // updates hosting.bkdziti.com within seconds.
     const isHostingHost = url.hostname === 'hosting.bkdziti.com';
-    if (isHostingHost && !path.startsWith('/hosting/') && !path.startsWith('/api/') && !path.startsWith('/assets/')) {
+    if (isHostingHost && path !== '/hosting' && !path.startsWith('/hosting/') && !path.startsWith('/api/') && !path.startsWith('/assets/')) {
       url.pathname = '/hosting' + (path === '/' ? '/' : path);
       path = url.pathname;
       request = new Request(url.toString(), request);
@@ -1146,16 +1146,6 @@ export default {
     if (!isHostingHost && (path === '/hosting' || path.startsWith('/hosting/')) && method === 'GET') {
       const rest = path.replace(/^\/hosting\/?/, '/');
       return Response.redirect('https://hosting.bkdziti.com' + rest + url.search, 301);
-    }
-
-    // ── Directory rewrite: /path/ → /path/index.html ────────────────────────
-    if (path !== '/' && path.endsWith('/') && method === 'GET') {
-      const indexPath = path + 'index.html';
-      const indexRequest = new Request(new URL(indexPath, url).toString(), request);
-      const indexResponse = await env.ASSETS.fetch(indexRequest);
-      if (indexResponse.status !== 404) {
-        return withSecurityHeaders(await applySiteEdits(indexResponse, env, url));
-      }
     }
 
     // ── Contact ──────────────────────────────────────────────────────────────
