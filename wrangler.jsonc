@@ -2,7 +2,17 @@
   "name": "bkdziti",
   "compatibility_date": "2026-05-14",
   "main": "_worker.js",
-  "assets": { "directory": ".", "binding": "ASSETS" },
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    // Run the Worker before serving static files. Required for:
+    //  - hosting.bkdziti.com (hostname → /hosting/ rewrite),
+    //  - the admin "Site Content" overlay on HTML pages,
+    //  - security headers on every response.
+    // CSS/JS/data are excluded so they still serve straight from the edge
+    // cache (images are NOT excluded — they stream from R2 via the Worker).
+    "run_worker_first": ["/*", "!/assets/css/*", "!/assets/js/*", "!/assets/data/*"]
+  },
   "kv_namespaces": [
     {
       "binding": "STORE_KV",
