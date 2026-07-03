@@ -1961,7 +1961,9 @@
         try {
             const resp = await fetch('/api/content/hosted-sites');
             const data = resp.ok ? await resp.json() : null;
-            if (Array.isArray(data) && data.length) {
+            // An empty array means "saved with zero sites" — that's live KV
+            // data, not a reason to fall back to the static defaults.
+            if (Array.isArray(data)) {
                 hostedSites = data;
                 hostedSitesFromKv = true;
                 setHostingStatus(true);

@@ -1125,9 +1125,28 @@ async function applySiteEdits(response, env, url) {
 
 export default {
   async fetch(request, env, ctx) {
-    const url      = new URL(request.url);
+    let url        = new URL(request.url);
     let path       = url.pathname;
     const method   = request.method;
+
+    // ── hosting.bkdziti.com ──────────────────────────────────────────────────
+    // The hosting subdomain is served by this same Worker: its pages live in
+    // /hosting/ in this repo, and because it's the same Worker it shares the
+    // KV-backed content API — so the "Hosted Sites" list edited in /admin/
+    // updates hosting.bkdziti.com within seconds.
+    const isHostingHost = url.hostname === 'hosting.bkdziti.com';
+    if (isHostingHost && !path.startsWith('/hosting/') && !path.startsWith('/api/') && !path.startsWith('/assets/')) {
+      url.pathname = '/hosting' + (path === '/' ? '/' : path);
+      path = url.pathname;
+      request = new Request(url.toString(), request);
+    }
+    // On the main domain, /hosting/* lives on the subdomain (301). Done here
+    // instead of _redirects so the rule can be hostname-aware — a static
+    // _redirects rule would loop forever on the subdomain itself.
+    if (!isHostingHost && (path === '/hosting' || path.startsWith('/hosting/')) && method === 'GET') {
+      const rest = path.replace(/^\/hosting\/?/, '/');
+      return Response.redirect('https://hosting.bkdziti.com' + rest + url.search, 301);
+    }
 
     // ── Directory rewrite: /path/ → /path/index.html ────────────────────────
     if (path !== '/' && path.endsWith('/') && method === 'GET') {
@@ -1192,7 +1211,14 @@ export default {
     if (path.startsWith('/api/content/')) {
       const key = path.slice('/api/content/'.length);
       if (['articles', 'featured', 'socials', 'resources', 'calls', 'hosted-sites', 'site-text'].includes(key)) {
-        if (method === 'GET') return handleGetContent(env, key);
+        if (method === 'GET') {
+          // Public reads are CORS-open so any BKDziti property (e.g. the
+          // hosting subdomain) can consume the same content API.
+          const resp = await handleGetContent(env, key);
+          const headers = new Headers(resp.headers);
+          headers.set('access-control-allow-origin', '*');
+          return new Response(resp.body, { status: resp.status, headers });
+        }
         if (!isAdmin(request, env)) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
         if (method === 'PUT')    return handlePutContent(request, env, key);
         if (method === 'DELETE') return handleDeleteContent(env, key);

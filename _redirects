@@ -1,6 +1,3 @@
-/hosting/*  https://hosting.bkdziti.com/:splat  301
-/hosting    https://hosting.bkdziti.com          301
-
 /food-consulting        /consulting         301
 /food-consulting.html   /consulting.html    301
 

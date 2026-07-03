@@ -433,6 +433,11 @@
         function render(sites) {
             var grid = document.getElementById('hostedSitesGrid');
             if (!grid) return;
+            if (!sites.length) {
+                grid.innerHTML = '<p style="text-align:center;opacity:0.55;padding:1.5rem 0">' +
+                    'No hosted sites are listed right now — check back soon.</p>';
+                return;
+            }
             grid.innerHTML = sites.map(function (s) {
                 return '<div class="site-item">' +
                     '<a href="' + s.url + '"><i class="fas ' + (s.icon || 'fa-globe') + '"></i> ' + s.name + '</a>' +
@@ -440,10 +445,12 @@
                     '</div>';
             }).join('');
         }
+        // An empty array is a real, saved state ("no sites") and must render —
+        // only a missing/never-saved key (null) keeps the built-in default list.
         fetch('/api/content/hosted-sites')
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (data) {
-                if (Array.isArray(data) && data.length) render(data.filter(function (s) { return s.active !== false; }));
+                if (Array.isArray(data)) render(data.filter(function (s) { return s.active !== false; }));
             })
             .catch(function () {});
     })();
