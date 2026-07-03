@@ -1055,6 +1055,71 @@ async function handleDeleteContent(env, key) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// SITE TEXT OVERLAY (live content editing from /admin/ → "Site Content")
+//
+// The admin panel saves copy edits to KV under `content:site-text`:
+//   {
+//     blocks:   { "<key>": "<html>" },            // static HTML tagged with data-bkd-edit="<key>"
+//     sections: { "<page>": { "<sectionId>": { label,title,body,buttonText,buttonUrl,media } } }
+//   }
+// At serve time every HTML page gets:
+//   1. [data-bkd-edit] / [data-bkd-edit-src] elements rewritten server-side
+//      (no flash of stale content, works without JS, SEO-safe), and
+//   2. the full edits object injected as window.BKD_EDITS so site.js can merge
+//      section overrides into PAGE_CONFIG before it renders content sections.
+// Appending `?bkd_raw=1` skips the overlay — the admin editor uses that to
+// read each page's built-in defaults.
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function applySiteEdits(response, env, url) {
+  try {
+    if (!env.STORE_KV || response.status !== 200) return response;
+    const ct = response.headers.get('content-type') || '';
+    if (!ct.includes('text/html')) return response;
+    if (url.searchParams.get('bkd_raw') === '1') return response;
+
+    const raw = await env.STORE_KV.get('content:site-text');
+    if (!raw) return response;
+
+    let edits;
+    try { edits = JSON.parse(raw); } catch { return response; }
+    const blocks = (edits && edits.blocks) || {};
+    const sections = (edits && edits.sections) || {};
+    if (!Object.keys(blocks).length && !Object.keys(sections).length) return response;
+
+    // </script>-safe JSON for inline injection.
+    const payload = JSON.stringify({ blocks, sections }).replace(/</g, '\\u003c');
+
+    return new HTMLRewriter()
+      .on('[data-bkd-edit]', {
+        element(el) {
+          const key = el.getAttribute('data-bkd-edit');
+          if (key && blocks[key] != null) el.setInnerContent(String(blocks[key]), { html: true });
+        }
+      })
+      .on('[data-bkd-edit-src]', {
+        element(el) {
+          const key = el.getAttribute('data-bkd-edit-src');
+          if (key && blocks[key] != null) {
+            const v = String(blocks[key]);
+            if (el.hasAttribute('data-src-webm')) el.setAttribute('data-src-webm', v);
+            else el.setAttribute('src', v);
+          }
+        }
+      })
+      .on('head', {
+        element(el) {
+          el.append(`<script>window.BKD_EDITS=${payload}</script>`, { html: true });
+        }
+      })
+      .transform(response);
+  } catch (err) {
+    console.error('applySiteEdits error:', err?.message);
+    return response;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN ROUTER
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1069,7 +1134,9 @@ export default {
       const indexPath = path + 'index.html';
       const indexRequest = new Request(new URL(indexPath, url).toString(), request);
       const indexResponse = await env.ASSETS.fetch(indexRequest);
-      if (indexResponse.status !== 404) return withSecurityHeaders(indexResponse);
+      if (indexResponse.status !== 404) {
+        return withSecurityHeaders(await applySiteEdits(indexResponse, env, url));
+      }
     }
 
     // ── Contact ──────────────────────────────────────────────────────────────
@@ -1124,7 +1191,7 @@ export default {
     // ── Content API (articles / featured / socials / resources / calls) ─────
     if (path.startsWith('/api/content/')) {
       const key = path.slice('/api/content/'.length);
-      if (['articles', 'featured', 'socials', 'resources', 'calls', 'hosted-sites'].includes(key)) {
+      if (['articles', 'featured', 'socials', 'resources', 'calls', 'hosted-sites', 'site-text'].includes(key)) {
         if (method === 'GET') return handleGetContent(env, key);
         if (!isAdmin(request, env)) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
         if (method === 'PUT')    return handlePutContent(request, env, key);
@@ -1165,7 +1232,8 @@ export default {
     }
 
     // ── Static assets ─────────────────────────────────────────────────────────
-    const assetResponse = await env.ASSETS.fetch(request);
+    let assetResponse = await env.ASSETS.fetch(request);
+    if (method === 'GET') assetResponse = await applySiteEdits(assetResponse, env, url);
 
     // Branded 404 page instead of the bare Cloudflare default.
     if (assetResponse.status === 404 && (method === 'GET' || method === 'HEAD')) {

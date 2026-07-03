@@ -35,7 +35,7 @@ Set these in the Cloudflare dashboard (Workers → Settings → Variables) or a 
 | `CONTACT_TO` | *(optional)* Where contact-form submissions land — defaults to `AlexZornes@BKDziti.com` |
 | `STRIPE_SECRET_KEY` | Creating Stripe Checkout sessions for store purchases |
 | `STRIPE_WEBHOOK_SECRET` | Verifying incoming Stripe webhook signatures (order fulfillment) |
-| `ADMIN_KEY` | Bearer-token password gating `/admin/`, `/store/admin/`, and all `/api/store/admin/*` + `/api/content/*` write routes |
+| `ADMIN_KEY` | Bearer-token password gating `/admin/` and all `/api/store/admin/*` + `/api/content/*` write routes |
 
 If `RESEND_API_KEY` isn't set, the contact form fails gracefully and tells visitors to text or email directly instead.
 
@@ -58,19 +58,27 @@ secret.html             Resume/cover letter (noindex — not part of the public 
 
 articles/                Articles hub + 6 individual guides
 store/                   Storefront, cart, checkout, order confirmation, order lookup
-store/admin/              Lightweight store-only admin panel
+store/admin/              Redirects to /admin/ (the old store-only panel was consolidated)
 admin/                   Full admin panel — products, orders, articles, socials, featured posts, resources, hosted-sites registry
 
 hosting/                 Legacy local copy of the free-hosting landing page — superseded by the
                          hosting.bkdziti.com subdomain; /hosting/* now 301s there via _redirects,
                          so these local files are no longer reachable on the live domain.
-
-research/                Unrelated personal side project (a Lee County research timeline). Not
-                         linked from site nav, blocked in robots.txt, browser-localStorage only —
-                         has nothing to do with the BKDziti business.
 ```
 
 `assets/js/data.js` is the single source of truth for the nav menu and social links — edit it once, it propagates everywhere via `PAGE_CONFIG`/`site.js`.
+
+## Editing site content (no code required)
+
+Nearly all copy on the site can be edited from **/admin/ → Site Content**, from any device:
+
+- **Static text** (heroes, homepage sections, pricing) is tagged in the HTML with `data-bkd-edit="key"`. The Worker rewrites those elements at serve time from KV (`content:site-text`) — SEO-safe, no flash of old content. To make a new element editable, add `data-bkd-edit="unique.key"` (and an optional human-friendly `data-bkd-label`) and it appears in the admin automatically.
+- **Content sections** (every page that renders from `PAGE_CONFIG.sections`) are editable per-field (label, title, body, button, media). Overrides are merged client-side by `site.js` from the injected `window.BKD_EDITS`.
+- Only fields that differ from the code defaults are stored — clear a field back to its original text and the page returns to what's in the repo. `?bkd_raw=1` on any URL shows the page without overrides.
+- Article cards on /articles/ are managed in the **Articles** panel; products and prices in the store are managed in **Products**.
+
+The code in this repo stays the source of truth for design and default copy; KV holds only the deltas.
+
 
 ## Redirects
 
@@ -78,7 +86,3 @@ research/                Unrelated personal side project (a Lee County research 
 - `/food-consulting[.html]` → `/consulting[.html]` — from the 2026 rebrand away from food-only positioning.
 - `/blog/*` → `/articles/*` — from an earlier blog → articles rename.
 - `/hosting[/*]` → `https://hosting.bkdziti.com` — hosting now lives on its own subdomain/project.
-
-## Known dead code
-
-`functions/api/contact.js` and `functions/api/store/products.js` are leftover from an earlier Cloudflare Pages Functions setup and are **not** wired up — `wrangler.jsonc` points `main` at `_worker.js`, which owns all `/api/*` routing directly. Safe to ignore or delete; don't edit them expecting it to change live behavior.

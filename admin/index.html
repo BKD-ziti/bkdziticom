@@ -254,8 +254,15 @@
         .call-filter-btn.active { background: rgba(249,83,1,0.15); color:var(--orange); border-color: rgba(249,83,1,0.4); }
         .call-filter-btn:hover  { color: var(--cream); border-color: rgba(249,83,1,0.4); }
         @media (max-width: 700px) {
-            .call-row { grid-template-columns: 1fr auto; }
+            .call-row { grid-template-columns: 1fr auto; row-gap: 0.5rem; }
             .call-date, .method-tag { display: none; }
+            /* Info + outcome badge share the first row; the edit/delete
+               buttons drop to their own right-aligned row so nothing
+               squeezes. */
+            .call-row > div:last-child {
+                grid-column: 1 / -1;
+                justify-content: flex-end;
+            }
         }
 
         /* ── MOBILE LAYOUT FIXES ──────────────────────────────────────────
@@ -363,7 +370,7 @@
 
             <!-- Sidebar -->
             <nav class="admin-sidebar" aria-label="Admin navigation">
-                <div style="padding:0.75rem;margin-bottom:0.5rem">
+                <div class="admin-sidebar-brand" style="padding:0.75rem;margin-bottom:0.5rem">
                     <div style="font-family:'Dela Gothic One',sans-serif;font-size:1.1rem;color:var(--amber)">BKDziti</div>
                     <div style="font-size:0.72rem;color:rgba(252,249,245,0.35);letter-spacing:0.1em">ADMIN PANEL</div>
                 </div>
@@ -377,6 +384,9 @@
                 </button>
 
                 <h3>Content</h3>
+                <button class="admin-nav-btn" data-panel="sitetext">
+                    <i class="fas fa-pen-nib"></i> Site Content
+                </button>
                 <button class="admin-nav-btn" data-panel="articles">
                     <i class="fas fa-newspaper"></i> Articles
                 </button>
@@ -403,7 +413,7 @@
                     <i class="fas fa-home"></i> Main Site
                 </a>
 
-                <div style="margin-top:auto;padding-top:2rem">
+                <div class="admin-sidebar-foot" style="margin-top:auto;padding-top:2rem">
                     <button class="admin-nav-btn" id="logoutBtn" style="color:rgba(240,128,128,0.7)">
                         <i class="fas fa-sign-out-alt"></i> Sign Out
                     </button>
@@ -468,6 +478,37 @@
                                 </td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- ── SITE CONTENT PANEL ── -->
+                <div class="admin-panel" id="panel-sitetext">
+                    <div class="admin-panel-header">
+                        <h2>Site Content</h2>
+                        <div class="panel-actions">
+                            <span id="siteTextKvStatus" class="kv-status static">
+                                <i class="fas fa-circle" style="font-size:0.5rem"></i> No edits saved
+                            </span>
+                            <a class="admin-btn" id="siteTextPreviewBtn" href="/" target="_blank" rel="noopener">
+                                <i class="fas fa-external-link-alt"></i> Open Page
+                            </a>
+                            <button class="admin-btn primary" id="saveSiteTextBtn">
+                                <i class="fas fa-cloud-upload-alt"></i> Save to Site
+                            </button>
+                        </div>
+                    </div>
+                    <p style="font-size:0.82rem;color:rgba(252,249,245,0.4);margin:0 0 1.25rem">
+                        Edit the words on any page &mdash; headlines, paragraphs, buttons, and prices &mdash; from anywhere.
+                        Saved changes go live within seconds. Leave a field unchanged (or restore its original text) and the page keeps using what&rsquo;s built into the code.
+                    </p>
+                    <div class="form-field-store" style="max-width:420px;margin-bottom:1.5rem">
+                        <label for="siteTextPageSelect">Page</label>
+                        <select id="siteTextPageSelect" class="admin-select"></select>
+                    </div>
+                    <div id="siteTextEditorWrap">
+                        <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size:1.5rem"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -1136,6 +1177,14 @@
                 document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
                 btn.classList.add('active');
                 document.getElementById(`panel-${btn.dataset.panel}`).classList.add('active');
+                // Site Content loads lazily — it fetches pages to read their
+                // built-in copy, so only do that when the panel is opened.
+                if (btn.dataset.panel === 'sitetext') initSiteTextPanel();
+                // On phones the nav is a sticky chip bar — jump back to the
+                // top of the newly-opened panel so it's immediately visible.
+                if (window.matchMedia('(max-width: 768px)').matches) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             });
         });
         document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -1168,11 +1217,11 @@
                     <div style="font-weight:600;color:var(--cream)">${escHtml(p.name)}</div>
                     ${p.description ? `<div style="font-size:0.78rem;color:rgba(252,249,245,0.4);margin-top:0.2rem;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${escHtml(p.description)}</div>` : ''}
                 </td>
-                <td><span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.18rem 0.55rem;border-radius:1rem;font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;${type==='service'?'background:rgba(100,149,237,0.15);color:#8bb4f5;border:1px solid rgba(100,149,237,0.25)':'background:rgba(255,154,11,0.12);color:var(--amber);border:1px solid rgba(255,154,11,0.2)'}">${type}</span></td>
-                <td style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">
+                <td data-label="Type"><span style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.18rem 0.55rem;border-radius:1rem;font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;${type==='service'?'background:rgba(100,149,237,0.15);color:#8bb4f5;border:1px solid rgba(100,149,237,0.25)':'background:rgba(255,154,11,0.12);color:var(--amber);border:1px solid rgba(255,154,11,0.2)'}">${type}</span></td>
+                <td data-label="Price" style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">
                     ${pm==='quote'?'<span style="font-size:0.85rem;font-family:\'Golos Text\',sans-serif;color:rgba(100,149,237,0.8)">Custom Quote</span>':formatPrice(p.price)+`<span style="font-size:0.72rem;font-family:'Golos Text',sans-serif;color:rgba(252,249,245,0.4)">${escHtml(billingLabel(pm,bi))}</span>`}
                 </td>
-                <td>${p.active
+                <td data-label="Status">${p.active
                     ?`<span><span class="active-dot"></span>Active</span>`
                     :`<span><span class="inactive-dot"></span>Hidden</span>`}
                 </td>
@@ -1333,11 +1382,11 @@
             return;
         }
         tbody.innerHTML = orders.map(o => `<tr>
-            <td style="font-family:monospace;font-size:0.8rem;color:rgba(252,249,245,0.5)">#${o.id.slice(-10).toUpperCase()}</td>
+            <td data-label="Order" style="font-family:monospace;font-size:0.8rem;color:rgba(252,249,245,0.5)">#${o.id.slice(-10).toUpperCase()}</td>
             <td><div style="font-weight:500">${escHtml(o.customer.name)}</div><div style="font-size:0.78rem;color:rgba(252,249,245,0.4)">${escHtml(o.customer.email)}</div></td>
-            <td style="font-size:0.85rem;color:rgba(252,249,245,0.5)">${new Date(o.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td>
-            <td style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">${formatPrice(o.total)}</td>
-            <td>${statusBadge(o.status)}</td>
+            <td data-label="Date" style="font-size:0.85rem;color:rgba(252,249,245,0.5)">${new Date(o.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td>
+            <td data-label="Total" style="font-family:'Dela Gothic One',sans-serif;color:var(--amber)">${formatPrice(o.total)}</td>
+            <td data-label="Status">${statusBadge(o.status)}</td>
             <td><div class="admin-actions"><button class="admin-btn" data-view-order="${o.id}" style="padding:0.4rem 0.85rem;font-size:0.8rem"><i class="fas fa-eye"></i> View</button></div></td>
         </tr>`).join('');
         tbody.querySelectorAll('[data-view-order]').forEach(btn => btn.addEventListener('click', () => openOrderDetail(btn.dataset.viewOrder)));
@@ -1416,6 +1465,256 @@
         document.getElementById('orderModalClose2').addEventListener('click', closeOrder);
         document.getElementById('orderModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeOrder(); });
         document.getElementById('refreshOrdersBtn').addEventListener('click', loadOrders);
+    }
+
+    // ── Site Content (whole-site copy editing) ──────────────────────────────
+    //
+    // How it works:
+    //  • Static copy in page HTML is tagged with data-bkd-edit="key".
+    //  • Data-driven copy comes from each page's inline PAGE_CONFIG.sections.
+    //  • This panel fetches the page with ?bkd_raw=1 (Worker overlay skipped)
+    //    to read the built-in defaults, overlays any saved edits from KV, and
+    //    lets you edit both kinds of copy in one list.
+    //  • Only fields that actually differ from the defaults are stored, so
+    //    clearing a field back to its original text removes the override.
+
+    const EDIT_PAGES = [
+        { path: '/',                        title: 'Home' },
+        { path: '/services.html',           title: 'Services & Pricing' },
+        { path: '/consulting.html',         title: 'Consulting' },
+        { path: '/media-production.html',   title: 'Media Production' },
+        { path: '/portfolio.html',          title: 'Portfolio' },
+        { path: '/faq.html',                title: 'FAQ' },
+        { path: '/contact.html',            title: 'Contact' },
+        { path: '/secret.html',             title: 'Resume & Cover Letter' },
+        { path: '/articles/index.html',     title: 'Articles — Index', noSections: true },  // cards are edited in the Articles panel
+        { path: '/articles/popup-launch.html',      title: 'Article — Pop-Up Guide' },
+        { path: '/articles/brand-strategy.html',    title: 'Article — Brand Strategy' },
+        { path: '/articles/menu-engineering.html',  title: 'Article — Menu Engineering' },
+        { path: '/articles/social-strategy.html',   title: 'Article — Social Strategy' },
+        { path: '/articles/videography-photography-editing.html', title: 'Article — Media Pricing' },
+        { path: '/articles/workspace.html', title: 'Article — Commercial Kitchen' },
+        { path: '/privacy-policy.html',     title: 'Privacy Policy' },
+        { path: '/terms-of-service.html',   title: 'Terms of Service' }
+    ];
+
+    let siteText = { blocks: {}, sections: {} };   // saved edits (KV)
+    let siteTextLoaded = false;
+    let currentPageDefaults = null;                // { path, blocks:[], sections:[] }
+
+    // Section overrides are keyed the same way site.js resolves the current
+    // page: '/index.html' collapses to '/'.
+    function normPageKey(path) {
+        return path.replace(/\/index\.html$/, '/') || '/';
+    }
+
+    async function loadSiteText() {
+        try {
+            const resp = await fetch('/api/content/site-text', { cache: 'no-store' });
+            const data = resp.ok ? await resp.json() : null;
+            siteText = (data && typeof data === 'object')
+                ? { blocks: data.blocks || {}, sections: data.sections || {} }
+                : { blocks: {}, sections: {} };
+        } catch {
+            siteText = { blocks: {}, sections: {} };
+        }
+        updateSiteTextStatus();
+    }
+
+    function updateSiteTextStatus() {
+        const el = document.getElementById('siteTextKvStatus');
+        const n = Object.keys(siteText.blocks).length
+                + Object.values(siteText.sections).reduce((s, pg) => s + Object.keys(pg).length, 0);
+        if (n) {
+            el.className = 'kv-status live';
+            el.innerHTML = `<i class="fas fa-circle" style="font-size:0.5rem"></i> ${n} edit${n === 1 ? '' : 's'} live`;
+        } else {
+            el.className = 'kv-status static';
+            el.innerHTML = '<i class="fas fa-circle" style="font-size:0.5rem"></i> No edits saved';
+        }
+    }
+
+    async function loadPageDefaults(path) {
+        const sep = path.includes('?') ? '&' : '?';
+        const resp = await fetch(path + sep + 'bkd_raw=1', { cache: 'no-store' });
+        if (!resp.ok) throw new Error(`Could not load ${path} (${resp.status})`);
+        const html = await resp.text();
+        const doc  = new DOMParser().parseFromString(html, 'text/html');
+
+        // 1. Tagged static blocks
+        const blocks = Array.from(doc.querySelectorAll('[data-bkd-edit]')).map(el => ({
+            key:   el.getAttribute('data-bkd-edit'),
+            label: el.getAttribute('data-bkd-label') || el.getAttribute('data-bkd-edit'),
+            html:  el.innerHTML.trim()
+        }));
+
+        // 2. PAGE_CONFIG sections (data-driven copy)
+        let sections = [];
+        for (const script of doc.querySelectorAll('script:not([src])')) {
+            if (!/window\.PAGE_CONFIG\s*=/.test(script.textContent)) continue;
+            try {
+                const win = {};
+                new Function('window', 'document', script.textContent)(win, { getElementById: () => null });
+                sections = ((win.PAGE_CONFIG && win.PAGE_CONFIG.sections) || [])
+                    .filter(sec => sec && sec.id && (sec.title || sec.body));
+            } catch (e) {
+                console.warn('PAGE_CONFIG parse failed for', path, e);
+            }
+            break;
+        }
+        // Pages whose sections are managed elsewhere (e.g. article cards in
+        // the Articles panel) only expose their static text here.
+        const pageCfg = EDIT_PAGES.find(pg => pg.path === path);
+        if (pageCfg && pageCfg.noSections) sections = [];
+        return { path, blocks, sections };
+    }
+
+    function stFieldRow(labelHtml, controlHtml) {
+        return `<div class="form-field-store" style="margin-bottom:1rem">${labelHtml}${controlHtml}</div>`;
+    }
+
+    function stEditedChip(edited) {
+        return edited
+            ? `<span class="kv-status live" style="margin-left:0.5rem;font-size:0.62rem;padding:0.1rem 0.5rem">edited</span>`
+            : '';
+    }
+
+    function renderSiteTextEditor() {
+        const wrap = document.getElementById('siteTextEditorWrap');
+        const d = currentPageDefaults;
+        if (!d) { wrap.innerHTML = ''; return; }
+        const pageKey = normPageKey(d.path);
+        const secOv = siteText.sections[pageKey] || {};
+        let html = '';
+
+        if (d.blocks.length) {
+            html += `<h3 style="font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin:0 0 1rem">Page Text</h3>`;
+            html += d.blocks.map((b, i) => {
+                const val = siteText.blocks[b.key] != null ? siteText.blocks[b.key] : b.html;
+                const edited = siteText.blocks[b.key] != null;
+                const rows = Math.min(8, Math.max(2, Math.ceil(val.length / 70)));
+                return stFieldRow(
+                    `<label for="stb-${i}">${escHtml(b.label)}${stEditedChip(edited)}</label>`,
+                    `<textarea id="stb-${i}" class="admin-textarea" rows="${rows}" style="min-height:0"
+                        data-st-block="${escHtml(b.key)}" data-st-default="${escHtml(b.html)}">${escHtml(val)}</textarea>`
+                );
+            }).join('');
+        }
+
+        if (d.sections.length) {
+            html += `<h3 style="font-size:0.78rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--orange);margin:1.5rem 0 1rem">Content Sections</h3>`;
+            html += d.sections.map(sec => {
+                const o = secOv[sec.id] || {};
+                const val = (field, def) => o[field] != null ? o[field] : (def || '');
+                const edited = Object.keys(o).length > 0;
+                return `<fieldset style="border:1px solid rgba(249,83,1,0.15);border-radius:0.9rem;padding:1.1rem;margin-bottom:1.25rem;background:rgba(0,0,0,0.18)">
+                    <legend style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(252,249,245,0.45);padding:0 0.5rem">
+                        ${escHtml(sec.label || sec.id)}${stEditedChip(edited)}
+                    </legend>
+                    <div class="field-row">
+                        ${stFieldRow(`<label>Label</label>`,
+                            `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="label" data-st-default="${escHtml(sec.label || '')}" value="${escHtml(val('label', sec.label))}">`)}
+                        ${stFieldRow(`<label>Title</label>`,
+                            `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="title" data-st-default="${escHtml(sec.title || '')}" value="${escHtml(val('title', sec.title))}">`)}
+                    </div>
+                    ${stFieldRow(`<label>Body</label>`,
+                        `<textarea class="admin-textarea" rows="4" data-st-sec="${escHtml(sec.id)}" data-st-field="body" data-st-default="${escHtml(sec.body || '')}">${escHtml(val('body', sec.body))}</textarea>`)}
+                    ${sec.button ? `<div class="field-row">
+                        ${stFieldRow(`<label>Button Text</label>`,
+                            `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="buttonText" data-st-default="${escHtml(sec.button.text || '')}" value="${escHtml(val('buttonText', sec.button.text))}">`)}
+                        ${stFieldRow(`<label>Button URL</label>`,
+                            `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="buttonUrl" data-st-default="${escHtml(sec.button.url || '')}" value="${escHtml(val('buttonUrl', sec.button.url))}">`)}
+                    </div>` : ''}
+                    ${sec.media ? stFieldRow(`<label>Media URL <span style="font-size:0.7rem;color:rgba(252,249,245,0.3)">(keep the same type — image stays image, video stays video)</span></label>`,
+                        `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="media" data-st-default="${escHtml(sec.media || '')}" value="${escHtml(val('media', sec.media))}">`) : ''}
+                </fieldset>`;
+            }).join('');
+        }
+
+        if (!html) {
+            html = `<p style="text-align:center;color:rgba(252,249,245,0.35);padding:2.5rem">Nothing editable found on this page yet.</p>`;
+        }
+        wrap.innerHTML = html;
+    }
+
+    function collectSiteTextEdits() {
+        const d = currentPageDefaults;
+        if (!d) return;
+        const pageKey = normPageKey(d.path);
+
+        // Static blocks: store only when different from the built-in default.
+        document.querySelectorAll('[data-st-block]').forEach(el => {
+            const key = el.dataset.stBlock;
+            const val = el.value.trim();
+            const def = (el.dataset.stDefault || '').trim();
+            if (val && val !== def) siteText.blocks[key] = val;
+            else delete siteText.blocks[key];
+        });
+
+        // Sections: same idea, per field.
+        const pageSections = {};
+        document.querySelectorAll('[data-st-sec]').forEach(el => {
+            const id    = el.dataset.stSec;
+            const field = el.dataset.stField;
+            const val   = el.value.trim();
+            const def   = (el.dataset.stDefault || '').trim();
+            if (val && val !== def) {
+                (pageSections[id] = pageSections[id] || {})[field] = val;
+            }
+        });
+        if (Object.keys(pageSections).length) siteText.sections[pageKey] = pageSections;
+        else delete siteText.sections[pageKey];
+    }
+
+    async function openSiteTextPage(path) {
+        const wrap = document.getElementById('siteTextEditorWrap');
+        wrap.innerHTML = `<div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)"><i class="fas fa-circle-notch fa-spin" style="font-size:1.5rem"></i></div>`;
+        document.getElementById('siteTextPreviewBtn').href = path;
+        try {
+            currentPageDefaults = await loadPageDefaults(path);
+            renderSiteTextEditor();
+        } catch (err) {
+            wrap.innerHTML = `<p style="color:#f08080;text-align:center;padding:2rem">${escHtml(err.message)}</p>`;
+        }
+    }
+
+    async function initSiteTextPanel() {
+        if (siteTextLoaded) return;
+        siteTextLoaded = true;
+
+        const sel = document.getElementById('siteTextPageSelect');
+        sel.innerHTML = EDIT_PAGES.map(p => `<option value="${escHtml(p.path)}">${escHtml(p.title)}</option>`).join('');
+        sel.addEventListener('change', () => {
+            collectSiteTextEdits();          // keep unsaved edits when switching pages
+            openSiteTextPage(sel.value);
+        });
+
+        document.getElementById('saveSiteTextBtn').addEventListener('click', async () => {
+            collectSiteTextEdits();
+            const btn = document.getElementById('saveSiteTextBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
+            try {
+                const resp = await fetch('/api/content/site-text', {
+                    method: 'PUT',
+                    headers: apiHeaders(),
+                    body: JSON.stringify(siteText)
+                });
+                const data = await resp.json().catch(() => ({}));
+                if (!resp.ok) throw new Error(data.error || 'Save failed');
+                updateSiteTextStatus();
+                renderSiteTextEditor();
+                showToast('Content saved — changes are live on the site.');
+            } catch (err) {
+                showToast(err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Save to Site';
+            }
+        });
+
+        await loadSiteText();
+        openSiteTextPage(EDIT_PAGES[0].path);
     }
 
     // ── Articles ─────────────────────────────────────────────────────────────

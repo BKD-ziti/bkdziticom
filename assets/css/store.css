@@ -1530,10 +1530,57 @@
     .product-grid  { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.25rem; }
     .cart-table th:nth-child(3),
     .cart-table td:nth-child(3) { display: none; }
-    .admin-sidebar { border-right: none; border-bottom: 1px solid rgba(249,83,1,0.15); flex-direction: row; flex-wrap: wrap; padding: 1rem; }
+
+    /* Admin shell: the sidebar becomes a sticky, horizontally-scrollable
+       chip bar so panels are one thumb-swipe away and the content always
+       starts right below it — no wall of stacked nav buttons. */
+    .admin-layout { margin-top: 0; }
+    .admin-sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 60;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.4rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 0.65rem 0.85rem;
+        padding-top: max(0.65rem, env(safe-area-inset-top));
+        border-right: none;
+        border-bottom: 1px solid rgba(249,83,1,0.2);
+        background: rgba(26,10,0,0.96);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+    .admin-sidebar::-webkit-scrollbar { display: none; }
     .admin-sidebar h3 { display: none; }
-    .admin-nav-btn { width: auto; padding: 0.6rem 1rem; }
-    .admin-content { padding: 1.25rem; }
+    .admin-sidebar-brand { display: none; }
+    .admin-sidebar-foot { margin: 0 !important; padding: 0 !important; }
+    .admin-nav-btn {
+        width: auto;
+        flex: 0 0 auto;
+        white-space: nowrap;
+        min-height: 2.6rem;
+        padding: 0.55rem 0.95rem;
+        border: 1px solid rgba(249,83,1,0.18);
+        border-radius: 2rem;
+        background: rgba(0,0,0,0.25);
+    }
+    .admin-nav-btn.active { border-color: rgba(249,83,1,0.5); }
+    .admin-content { padding: 1.25rem 1rem calc(3rem + env(safe-area-inset-bottom)); }
+
+    /* iOS Safari zooms the page when a focused field's font-size is under
+       16px — the single biggest cause of the admin feeling "broken" on an
+       iPhone. Pin every admin input to 16px on touch-size screens. */
+    .form-field-store input,
+    .form-field-store textarea,
+    .form-field-store select,
+    .admin-select,
+    .admin-textarea,
+    .resource-html-field { font-size: 16px; }
+
     .pd-modal-body { padding: 1.25rem 1.25rem 1.5rem; }
     .pd-modal-price { font-size: 1.5rem; }
     .review-form-row { flex-direction: column; }
@@ -1556,8 +1603,10 @@
         grid-template-columns: 1fr !important;
     }
 
-    /* Modals: tighter outer padding so content has more room to breathe. */
-    .modal { padding: 1.25rem; }
+    /* Modals: tighter outer padding, and cap height with dvh so the modal
+       never hides behind the iOS keyboard/home-indicator. */
+    .modal-overlay { padding: 0.75rem; }
+    .modal { padding: 1.25rem; max-height: calc(100dvh - 1.5rem); }
     .modal-header { margin-bottom: 1.1rem; padding-bottom: 0.85rem; }
     .modal-footer { flex-wrap: wrap; }
     .modal-footer .admin-btn { flex: 1 1 auto; justify-content: center; }
@@ -1570,6 +1619,40 @@
         font-size: 0.85rem !important;
         min-height: 2.5rem;
     }
+
+    /* Data tables (Products / Orders) reflow into stacked cards.
+       Each cell shows its column name via data-label, so nothing is lost
+       and nothing scrolls sideways. */
+    .admin-table { min-width: 0; }
+    .admin-table thead { display: none; }
+    .admin-table, .admin-table tbody, .admin-table tr, .admin-table td { display: block; width: 100%; }
+    .admin-table tr {
+        border: 1px solid rgba(249,83,1,0.15);
+        border-radius: 0.9rem;
+        background: rgba(0,0,0,0.25);
+        margin-bottom: 0.85rem;
+        padding: 0.9rem 1rem;
+    }
+    .admin-table tr:hover td { background: none; }
+    .admin-table td {
+        border-bottom: none;
+        padding: 0.32rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .admin-table td[data-label]::before {
+        content: attr(data-label);
+        font-size: 0.66rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--orange);
+        flex-shrink: 0;
+    }
+    .admin-table td:first-child { justify-content: flex-start; }
+    .admin-table .admin-actions { justify-content: flex-end; width: 100%; }
 
     .admin-panel-header { gap: 0.75rem; }
     .admin-panel-header h2 { font-size: 1.35rem; }

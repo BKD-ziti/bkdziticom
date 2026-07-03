@@ -11,6 +11,35 @@
     const CONFIG   = window.PAGE_CONFIG || {};
     const SECTIONS = CONFIG.sections || [];
 
+    /* ── ADMIN CONTENT OVERRIDES ───────────────────────────────────────────
+       The Worker injects window.BKD_EDITS (saved from /admin/ → Site
+       Content) into every page. Section overrides are merged into
+       PAGE_CONFIG.sections here, before anything renders — so copy edited
+       from the admin panel appears exactly like copy shipped in code. */
+    (function applySectionEdits() {
+        try {
+            const all = (window.BKD_EDITS && window.BKD_EDITS.sections) || null;
+            if (!all) return;
+            // Normalize the current path the same way the admin editor does:
+            // '/index.html' → '/', keep everything else as-is.
+            const page = location.pathname.replace(/\/index\.html$/, '/') || '/';
+            const overrides = all[page];
+            if (!overrides) return;
+            SECTIONS.forEach(sec => {
+                const o = overrides[sec.id];
+                if (!o) return;
+                if (o.label  != null) sec.label = o.label;
+                if (o.title  != null) sec.title = o.title;
+                if (o.body   != null) sec.body  = o.body;
+                if (o.media  != null && o.media !== '') sec.media = o.media;
+                if (sec.button && (o.buttonText != null || o.buttonUrl != null)) {
+                    if (o.buttonText != null && o.buttonText !== '') sec.button.text = o.buttonText;
+                    if (o.buttonUrl  != null && o.buttonUrl  !== '') sec.button.url  = o.buttonUrl;
+                }
+            });
+        } catch (_) { /* never block rendering on an override problem */ }
+    })();
+
     /* ── helpers ───────────────────────────────────────────────────────── */
     const $  = (sel, root = document) => root.querySelector(sel);
     const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));

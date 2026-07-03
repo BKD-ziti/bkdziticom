@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
-Disallow: /research/
 Disallow: /store/admin/
 Disallow: /store/cart.html
 Disallow: /store/checkout.html
