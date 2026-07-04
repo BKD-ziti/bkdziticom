@@ -75,6 +75,18 @@
     badge.setAttribute('data-count', String(n));
   }
 
+  // ── Cart item media (image OR video) ────────────────────────────────────
+
+  function cartItemMediaHtml(url) {
+    if (!url) {
+      return '<div class="cart-item-img-placeholder"><i class="fas fa-image"></i></div>';
+    }
+    if (/\.(webm|mp4)$/i.test(url)) {
+      return `<video class="cart-item-img" src="${escHtml(url)}" muted loop playsinline preload="metadata" autoplay></video>`;
+    }
+    return `<img class="cart-item-img" src="${escHtml(url)}" alt="" loading="lazy">`;
+  }
+
   // ── Billing label helpers ────────────────────────────────────────────────
 
   function billingPeriodLabel(pricingModel, billingInterval) {
@@ -651,9 +663,7 @@
                 <tr class="cart-row" data-id="${item.productId}">
                   <td>
                     <div class="cart-item-info">
-                      ${item.imageUrl
-                        ? `<img class="cart-item-img" src="${escHtml(item.imageUrl)}" alt="">`
-                        : `<div class="cart-item-img-placeholder"><i class="fas fa-image"></i></div>`}
+                      ${cartItemMediaHtml(item.imageUrl)}
                       <div>
                         <div class="cart-item-name">${escHtml(item.name)}</div>
                         <div class="cart-item-category">${item.type === 'service' ? 'Service' : 'Product'}</div>
@@ -702,6 +712,29 @@
     }
 
     render();
+
+    // Refresh item media from the live catalog — carts saved before a
+    // product's image/video was added (or changed) hold stale URLs.
+    (function hydrateCartMedia() {
+      const cart = getCart();
+      if (!cart.length) return;
+      fetch('/api/store/products')
+        .then(r => r.json())
+        .then(data => {
+          if (!data.ok) return;
+          const byId = new Map((data.products || []).map(p => [p.id, p]));
+          let changed = false;
+          cart.forEach(item => {
+            const p = byId.get(item.productId);
+            if (p && (p.imageUrl || '') !== (item.imageUrl || '')) {
+              item.imageUrl = p.imageUrl || '';
+              changed = true;
+            }
+          });
+          if (changed) { saveCart(cart); render(); }
+        })
+        .catch(() => {});
+    })();
   }
 
   // ── Page: Checkout ───────────────────────────────────────────────────────

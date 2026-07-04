@@ -511,14 +511,22 @@ const SEED_PRODUCTS = [
 ];
 
 async function handleAdminSeedProducts(env) {
+  // Refresh seed products IN PLACE so a re-seed never destroys the custom
+  // ordering set in the admin panel. Existing products keep their position;
+  // brand-new seed products are appended at the end.
   const existing = await getProductList(env);
-  const seededIds = SEED_PRODUCTS.map(p => p.id);
-  const kept = existing.filter(p => !seededIds.includes(p.id));
   const now = new Date().toISOString();
-  const seeded = SEED_PRODUCTS.map(p => ({ ...p, createdAt: now, updatedAt: now }));
-  const merged = [...seeded, ...kept];
+  const merged = existing.map(p => {
+    const seed = SEED_PRODUCTS.find(sp => sp.id === p.id);
+    return seed ? { ...p, ...seed, createdAt: p.createdAt || now, updatedAt: now } : p;
+  });
+  for (const seed of SEED_PRODUCTS) {
+    if (!merged.some(p => p.id === seed.id)) {
+      merged.push({ ...seed, createdAt: now, updatedAt: now });
+    }
+  }
   await saveProductList(env, merged);
-  return jsonResponse({ ok: true, seeded: seeded.length, total: merged.length });
+  return jsonResponse({ ok: true, seeded: SEED_PRODUCTS.length, total: merged.length });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1002,6 +1010,27 @@ async function handleAdminDeleteProduct(env, id) {
   return jsonResponse({ ok: true });
 }
 
+async function handleAdminReorderProducts(request, env) {
+  const data = await request.json().catch(() => null);
+  if (!data || !Array.isArray(data.order)) {
+    return jsonResponse({ ok: false, error: 'order must be an array of product IDs' }, 400);
+  }
+  const list = await getProductList(env);
+  const byId = new Map(list.map(p => [p.id, p]));
+  const seen = new Set();
+  const reordered = [];
+  for (const id of data.order) {
+    const p = byId.get(String(id));
+    if (p && !seen.has(p.id)) { reordered.push(p); seen.add(p.id); }
+  }
+  // Any products not mentioned keep their relative order at the end.
+  for (const p of list) {
+    if (!seen.has(p.id)) reordered.push(p);
+  }
+  await saveProductList(env, reordered);
+  return jsonResponse({ ok: true, products: reordered });
+}
+
 async function handleAdminGetOrders(env) {
   const index = await getOrderIndex(env);
   return jsonResponse({ ok: true, orders: index });
@@ -1181,6 +1210,9 @@ export default {
       if (path === '/api/store/admin/products') {
         if (method === 'GET')  return handleAdminGetProducts(env);
         if (method === 'POST') return handleAdminCreateProduct(request, env);
+      }
+      if (path === '/api/store/admin/products/reorder' && method === 'POST') {
+        return handleAdminReorderProducts(request, env);
       }
       if (path.startsWith('/api/store/admin/products/')) {
         const id = path.slice('/api/store/admin/products/'.length);

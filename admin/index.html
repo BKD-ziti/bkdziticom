@@ -334,6 +334,25 @@
 
             .call-stats { grid-template-columns: repeat(2, 1fr); }
         }
+    
+        /* Product reordering */
+        #productsTableBody tr[draggable="true"] { cursor: grab; }
+        #productsTableBody tr.dragging { opacity: 0.35; }
+        #productsTableBody tr.drag-over td { border-top: 2px solid var(--orange); }
+        .reorder-btns { display: inline-flex; flex-direction: column; gap: 0.2rem; margin-right: 0.35rem; vertical-align: middle; }
+        .reorder-btn {
+            background: rgba(249,83,1,0.08);
+            border: 1px solid rgba(249,83,1,0.2);
+            color: rgba(252,249,245,0.6);
+            border-radius: 0.35rem;
+            width: 1.6rem; height: 1.3rem;
+            font-size: 0.65rem; line-height: 1;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s;
+        }
+        .reorder-btn:hover:not(:disabled) { background: rgba(249,83,1,0.25); color: var(--cream); }
+        .reorder-btn:disabled { opacity: 0.25; cursor: default; }
     </style>
 </head>
 <body>
@@ -427,10 +446,19 @@
                 <div class="admin-panel active" id="panel-products">
                     <div class="admin-panel-header">
                         <h2>Products</h2>
-                        <button class="admin-btn primary" id="addProductBtn">
-                            <i class="fas fa-plus"></i> Add Product
-                        </button>
+                        <div style="display:flex;gap:0.6rem;flex-wrap:wrap">
+                            <button class="admin-btn" id="saveOrderBtn" style="display:none">
+                                <i class="fas fa-check"></i> Save Order
+                            </button>
+                            <button class="admin-btn primary" id="addProductBtn">
+                                <i class="fas fa-plus"></i> Add Product
+                            </button>
+                        </div>
                     </div>
+                    <p style="font-size:0.78rem;color:rgba(252,249,245,0.35);margin:-0.5rem 0 1rem">
+                        <i class="fas fa-arrows-up-down"></i>
+                        Drag rows (or use the arrows) to reorder &mdash; this order is exactly how items appear on the storefront.
+                    </p>
                     <div style="overflow-x:auto">
                         <table class="admin-table">
                             <thead>
@@ -1202,11 +1230,11 @@
             tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">No products yet. Click "Add Product" to create one.</td></tr>`;
             return;
         }
-        tbody.innerHTML = products.map(p => {
+        tbody.innerHTML = products.map((p, i) => {
             const pm = p.pricingModel || 'one-time';
             const bi = p.billingInterval || '';
             const type = p.type || 'product';
-            return `<tr>
+            return `<tr draggable="true" data-id="${p.id}">
                 <td>${p.imageUrl
                     ? /\.(webm|mp4)$/i.test(p.imageUrl)
                         ? `<video class="admin-table-img" src="${escHtml(p.imageUrl)}" muted loop playsinline preload="metadata" autoplay style="object-fit:cover"></video>`
@@ -1226,6 +1254,10 @@
                     :`<span><span class="inactive-dot"></span>Hidden</span>`}
                 </td>
                 <td><div class="admin-actions">
+                    <span class="reorder-btns">
+                        <button class="reorder-btn" data-move-up="${p.id}" title="Move up" aria-label="Move ${escHtml(p.name)} up" ${i === 0 ? 'disabled' : ''}><i class="fas fa-chevron-up"></i></button>
+                        <button class="reorder-btn" data-move-down="${p.id}" title="Move down" aria-label="Move ${escHtml(p.name)} down" ${i === products.length - 1 ? 'disabled' : ''}><i class="fas fa-chevron-down"></i></button>
+                    </span>
                     <button class="admin-btn" data-edit="${p.id}" style="padding:0.4rem 0.85rem;font-size:0.8rem"><i class="fas fa-pen"></i> Edit</button>
                     <button class="admin-btn danger" data-delete="${p.id}" style="padding:0.4rem 0.85rem;font-size:0.8rem"><i class="fas fa-trash"></i></button>
                 </div></td>
@@ -1233,6 +1265,86 @@
         }).join('');
         tbody.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openEditProduct(btn.dataset.edit)));
         tbody.querySelectorAll('[data-delete]').forEach(btn => btn.addEventListener('click', () => confirmDeleteProduct(btn.dataset.delete)));
+        tbody.querySelectorAll('[data-move-up]').forEach(btn => btn.addEventListener('click', () => moveProduct(btn.dataset.moveUp, -1)));
+        tbody.querySelectorAll('[data-move-down]').forEach(btn => btn.addEventListener('click', () => moveProduct(btn.dataset.moveDown, 1)));
+
+        // Drag & drop reordering
+        let dragId = null;
+        tbody.querySelectorAll('tr[data-id]').forEach(tr => {
+            tr.addEventListener('dragstart', e => {
+                dragId = tr.dataset.id;
+                e.dataTransfer.effectAllowed = 'move';
+                tr.classList.add('dragging');
+            });
+            tr.addEventListener('dragend', () => {
+                tr.classList.remove('dragging');
+                tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
+            });
+            tr.addEventListener('dragover', e => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (tr.dataset.id !== dragId) tr.classList.add('drag-over');
+            });
+            tr.addEventListener('dragleave', () => tr.classList.remove('drag-over'));
+            tr.addEventListener('drop', e => {
+                e.preventDefault();
+                tr.classList.remove('drag-over');
+                const targetId = tr.dataset.id;
+                if (!dragId || dragId === targetId) return;
+                const from = products.findIndex(p => p.id === dragId);
+                const to   = products.findIndex(p => p.id === targetId);
+                if (from < 0 || to < 0) return;
+                const [moved] = products.splice(from, 1);
+                products.splice(to, 0, moved);
+                dragId = null;
+                markOrderDirty();
+                renderProductsTable();
+            });
+        });
+    }
+
+    // ── Product ordering ─────────────────────────────────────────────────────
+
+    let orderDirty = false;
+
+    function markOrderDirty() {
+        orderDirty = true;
+        const btn = document.getElementById('saveOrderBtn');
+        btn.style.display = '';
+        btn.classList.add('primary');
+    }
+
+    function moveProduct(id, delta) {
+        const idx = products.findIndex(p => p.id === id);
+        const ni  = idx + delta;
+        if (idx < 0 || ni < 0 || ni >= products.length) return;
+        const [p] = products.splice(idx, 1);
+        products.splice(ni, 0, p);
+        markOrderDirty();
+        renderProductsTable();
+    }
+
+    async function saveProductOrder() {
+        if (!orderDirty) return;
+        const btn = document.getElementById('saveOrderBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
+        try {
+            const data = await apiFetch('/api/store/admin/products/reorder', {
+                method: 'POST',
+                body: JSON.stringify({ order: products.map(p => p.id) })
+            });
+            if (!data.ok) throw new Error(data.error || 'Failed to save order');
+            orderDirty = false;
+            btn.style.display = 'none';
+            btn.classList.remove('primary');
+            showToast('Order saved! The storefront now shows items in this order.');
+        } catch (err) {
+            showToast(err.message, true);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Save Order';
+        }
     }
 
     async function loadProducts() {
@@ -1242,6 +1354,9 @@
             const data = await apiFetch('/api/store/admin/products');
             if (!data.ok) throw new Error(data.error);
             products = data.products || [];
+            orderDirty = false;
+            const soBtn = document.getElementById('saveOrderBtn');
+            if (soBtn) { soBtn.style.display = 'none'; soBtn.classList.remove('primary'); }
             renderProductsTable();
         } catch (err) {
             tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#f08080">${escHtml(err.message)}</td></tr>`;
@@ -1285,6 +1400,10 @@
 
     function initProductModal() {
         document.getElementById('addProductBtn').addEventListener('click', openAddProduct);
+        document.getElementById('saveOrderBtn').addEventListener('click', saveProductOrder);
+        window.addEventListener('beforeunload', e => {
+            if (orderDirty) { e.preventDefault(); e.returnValue = ''; }
+        });
         document.getElementById('productModalClose').addEventListener('click', () => closeModal('productModal'));
         document.getElementById('productModalCancel').addEventListener('click', () => closeModal('productModal'));
         document.getElementById('productModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal('productModal'); });
