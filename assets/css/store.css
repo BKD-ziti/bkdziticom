@@ -1654,6 +1654,20 @@
     .admin-table td:first-child { justify-content: flex-start; }
     .admin-table .admin-actions { justify-content: flex-end; width: 100%; }
 
+    /* The product name/description cell is capped to 220px for desktop
+       table density and holds two stacked divs (name, then description).
+       The generic mobile td rule turns every cell into a flex row, which
+       here puts those two divs side-by-side instead of stacked, squeezing
+       the name into a sliver — this is the actual "scrunched" text. Give
+       it its own full-width block layout instead of the label/value flex
+       row the other cells use. */
+    .admin-table td.admin-table-name-cell {
+        display: block;
+        max-width: none;
+        width: 100%;
+        padding: 0.3rem 0 0.6rem;
+    }
+
     .admin-panel-header { gap: 0.75rem; }
     .admin-panel-header h2 { font-size: 1.35rem; }
     .panel-actions { width: 100%; }
