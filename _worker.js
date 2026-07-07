@@ -20,6 +20,12 @@ function requireEnv(env, key) {
 
 function clean(s) { return String(s || '').trim(); }
 
+// Basic RFC-5322-ish format check — not exhaustive, just enough to reject
+// garbage like "sxdfgvhb" before it becomes a Stripe API call or an order.
+function isValidEmail(s) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(s || '').trim());
+}
+
 // Adds baseline security headers to a response without touching its body —
 // safe to wrap around any HTML/asset response, no visual or functional effect.
 function withSecurityHeaders(response) {
@@ -799,6 +805,9 @@ async function handleCreateCheckout(request, env) {
     if (!customerEmail || !customerName) {
       return jsonResponse({ ok: false, error: 'Name and email are required' }, 400);
     }
+    if (!isValidEmail(customerEmail)) {
+      return jsonResponse({ ok: false, error: 'Please enter a valid email address.' }, 400);
+    }
 
     // Server-side price validation — never trust client prices
     const products = await getProductList(env);
@@ -822,9 +831,19 @@ async function handleCreateCheckout(request, env) {
     const orderId = genId('ord');
     const now     = new Date().toISOString();
 
+    // IMPORTANT: create the Stripe session BEFORE writing anything to KV.
+    // Previously the order was saved first and Stripe called second, so any
+    // Stripe-side failure (bad email format, network hiccup, mixed cart,
+    // etc.) left a "pending" order permanently sitting in the admin orders
+    // list that had never actually reached Stripe — exactly the mismatch
+    // where an order shows up on the site but not in the Stripe dashboard.
+    // Now nothing is persisted unless Stripe confirms the session exists.
+    const origin  = new URL(request.url).origin;
+    const session = await createStripeSession(env, { orderId, items: validatedItems, customerEmail, origin });
+
     const order = {
       id: orderId,
-      stripeSessionId: null,
+      stripeSessionId: session.id,
       status: 'pending',
       customer: { name: customerName, email: customerEmail },
       items: validatedItems,
@@ -834,12 +853,6 @@ async function handleCreateCheckout(request, env) {
       paidAt: null
     };
 
-    await saveOrder(env, order);
-
-    const origin  = new URL(request.url).origin;
-    const session = await createStripeSession(env, { orderId, items: validatedItems, customerEmail, origin });
-
-    order.stripeSessionId = session.id;
     await saveOrder(env, order);
 
     return jsonResponse({ ok: true, url: session.url });

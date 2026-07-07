@@ -1524,6 +1524,15 @@
                     <div style="font-size:0.78rem;color:rgba(252,249,245,0.4);margin-bottom:0.25rem">ORDER ID</div>
                     <div style="font-family:monospace;font-size:0.85rem">${escHtml(o.id)}</div>
                 </div>
+                <div style="margin-bottom:1.25rem">
+                    <div style="font-size:0.78rem;color:rgba(252,249,245,0.4);margin-bottom:0.25rem">STRIPE SESSION</div>
+                    ${o.stripeSessionId
+                        ? `<div style="font-family:monospace;font-size:0.85rem;display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap">
+                             ${escHtml(o.stripeSessionId)}
+                             <a href="https://dashboard.stripe.com/${o.stripeSessionId.startsWith('cs_test_') ? 'test/' : ''}checkout/sessions/${encodeURIComponent(o.stripeSessionId)}" target="_blank" rel="noopener" style="color:var(--orange);text-decoration:none;font-family:'Golos Text',sans-serif;font-size:0.8rem"><i class="fas fa-external-link-alt"></i> View in Stripe</a>
+                           </div>`
+                        : `<div style="font-size:0.85rem;color:#f08080"><i class="fas fa-triangle-exclamation"></i> No Stripe session on file — this order was never confirmed by Stripe. Do not mark it paid/fulfilled without checking with the customer.</div>`}
+                </div>
                 <div class="field-row" style="margin-bottom:1.25rem">
                     <div>
                         <div style="font-size:0.78rem;color:rgba(252,249,245,0.4);margin-bottom:0.25rem">CUSTOMER</div>
