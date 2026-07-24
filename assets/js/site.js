@@ -63,7 +63,11 @@
     function initBackgroundPulse() {
         const canvas = $('#bgPulse');
         if (!canvas) return;
-        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+        // Note: never pass desynchronized:true here — multiple desynchronized
+        // 2D canvases put Chromium on the direct-composition overlay path on
+        // Windows, which wedges the GPU process (black screen / full browser
+        // crash) once the section canvases start drawing on scroll.
+        const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) return;
 
         const state = {
@@ -211,7 +215,8 @@
     function createSectionPulseController(section) {
         const canvas = document.getElementById('pulse-' + section.id);
         if (!canvas || !section.palette) return;
-        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+        // Same as bgPulse: desynchronized:true is unsafe with many canvases.
+        const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) return;
 
         const state = {
@@ -878,6 +883,7 @@
         let peekDisabled = false;
         let peekTimer = null;
         let isAnimating = false;
+        let expectedY = 0; // last scroll position set by the peek animation
 
         const isAtBottom = () =>
             (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 50;
@@ -903,6 +909,13 @@
             const startTime = performance.now();
 
             function tick(now) {
+                // The scroll handler clears isAnimating when the user takes
+                // over mid-peek; bail out immediately instead of fighting the
+                // user's scroll position and snapping them back to the top.
+                if (!isAnimating) {
+                    document.documentElement.style.scrollBehavior = '';
+                    return;
+                }
                 const elapsed  = now - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 let scrollY;
@@ -914,11 +927,13 @@
                     const p = (progress - 0.45) / 0.55;
                     scrollY = (1 - easeOutBounce(p)) * peekAmount;
                 }
+                expectedY = scrollY;
                 window.scrollTo(0, scrollY);
 
                 if (progress < 1) {
                     requestAnimationFrame(tick);
                 } else {
+                    expectedY = 0;
                     window.scrollTo(0, 0);
                     document.documentElement.style.scrollBehavior = '';
                     isAnimating = false;
@@ -933,6 +948,15 @@
             if (!peekDisabled) peekTimer = setTimeout(doPeek, 4500);
         }
 
+        // Direct user input always cancels a peek in progress instantly.
+        const cancelPeek = () => {
+            if (!isAnimating) return;
+            isAnimating = false;
+            clearTimeout(peekTimer);
+        };
+        ['wheel', 'touchstart', 'keydown'].forEach(evt =>
+            window.addEventListener(evt, cancelPeek, { passive: true }));
+
         window.addEventListener('scroll', () => {
             if (isAtBottom()) {
                 peekDisabled = true;
@@ -940,9 +964,9 @@
                 return;
             }
             if (isAnimating) {
-                isAnimating = false;
-                window.scrollTo(0, window.scrollY);
-                clearTimeout(peekTimer);
+                // Scroll events fired by the animation's own scrollTo land on
+                // expectedY — anything else means the user moved the page.
+                if (Math.abs(window.scrollY - expectedY) > 2) cancelPeek();
                 return;
             }
             if (window.scrollY > window.innerHeight * 0.15) clearTimeout(peekTimer);
