@@ -68,13 +68,15 @@
         .article-row-info { min-width: 0; }
         .article-row-title {
             font-weight: 600; color: var(--cream);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            overflow-wrap: anywhere;
             font-size: 0.9rem;
         }
         .article-row-meta {
             font-size: 0.72rem; color: rgba(252,249,245,0.35);
             margin-top: 0.1rem;
+            overflow-wrap: anywhere;
         }
+        .article-row-meta a { color: inherit; }
         .article-row-actions {
             display: flex; gap: 0.4rem; flex-shrink: 0;
         }
@@ -166,10 +168,10 @@
         .resource-row-info { min-width: 0; }
         .resource-row-title {
             font-weight: 600; color: var(--cream);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            overflow-wrap: anywhere;
             font-size: 0.9rem;
         }
-        .resource-row-meta { font-size: 0.72rem; color: rgba(252,249,245,0.35); margin-top: 0.15rem; }
+        .resource-row-meta { font-size: 0.72rem; color: rgba(252,249,245,0.35); margin-top: 0.15rem; overflow-wrap: anywhere; }
         .resource-type-badge {
             display: inline-flex; align-items: center;
             padding: 0.12rem 0.5rem; border-radius: 1rem;
@@ -230,15 +232,18 @@
             max-width: 100%;
         }
         .call-row:hover { border-color: rgba(249,83,1,0.3); }
+        /* Let every cell shrink below its content width so long business
+           names, emails, and notes wrap instead of forcing the row wide. */
+        .call-row > div { min-width: 0; }
         .call-date {
             font-size: 0.75rem; color: rgba(252,249,245,0.45);
             font-variant-numeric: tabular-nums;
         }
         .call-business {
             font-weight: 600; font-size: 0.88rem; color: var(--cream);
-            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+            overflow-wrap: anywhere;
         }
-        .call-contact-sub { font-size: 0.72rem; color: rgba(252,249,245,0.35); margin-top: 0.1rem; }
+        .call-contact-sub { font-size: 0.72rem; color: rgba(252,249,245,0.35); margin-top: 0.1rem; overflow-wrap: anywhere; }
         .outcome-badge {
             display: inline-flex; align-items: center; gap: 0.3rem;
             padding: 0.18rem 0.6rem; border-radius: 1rem;
@@ -257,8 +262,7 @@
         }
         .call-notes-preview {
             font-size: 0.75rem; color: rgba(252,249,245,0.3);
-            overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
-            max-width: 100%;
+            overflow-wrap: anywhere;
         }
         .call-filter-bar {
             display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; align-items: center;
@@ -1041,7 +1045,23 @@
     // ── Constants ────────────────────────────────────────────────────────────
 
     const TOKEN_KEY = 'bkdziti_admin_token';
-    let adminToken  = sessionStorage.getItem(TOKEN_KEY) || '';
+    const TOKEN_EXP_KEY = 'bkdziti_admin_token_exp';   // epoch ms the session expires
+    const IDLE_LIMIT_MS = 30 * 60 * 1000;              // sign out after 30 min idle
+
+    // Load the stored session only if it hasn't expired. A stale/expired token
+    // is cleared here so the page never auto-restores a dead session.
+    function loadStoredToken() {
+        const tok = sessionStorage.getItem(TOKEN_KEY) || '';
+        const exp = parseInt(sessionStorage.getItem(TOKEN_EXP_KEY) || '0', 10);
+        if (!tok || !exp || Date.now() >= exp) {
+            sessionStorage.removeItem(TOKEN_KEY);
+            sessionStorage.removeItem(TOKEN_EXP_KEY);
+            return '';
+        }
+        return tok;
+    }
+    let adminToken  = loadStoredToken();
+    let idleTimer   = null;
 
     const PALETTES = [
         [[255,154,11,0.18],[249,234,202,0.12],[255,242,194,0.10],[188,149,117,0.14]],
@@ -1167,19 +1187,57 @@
     function signOut() {
         adminToken = '';
         sessionStorage.removeItem(TOKEN_KEY);
+        sessionStorage.removeItem(TOKEN_EXP_KEY);
+        if (idleTimer) { clearTimeout(idleTimer); idleTimer = null; }
         document.getElementById('loginScreen').style.display = '';
         document.getElementById('adminDashboard').style.display = 'none';
+    }
+
+    // Persist a freshly-issued session token plus its absolute expiry, so the
+    // page can tell an expired session apart from a live one on the next load.
+    function storeSession(token, expiresInSeconds) {
+        adminToken = token;
+        sessionStorage.setItem(TOKEN_KEY, token);
+        const ttl = (Number(expiresInSeconds) || 8 * 60 * 60) * 1000;
+        sessionStorage.setItem(TOKEN_EXP_KEY, String(Date.now() + ttl));
+    }
+
+    // Sign out automatically after a stretch of inactivity. Any interaction
+    // resets the countdown; leaving the tab idle drops the session.
+    function resetIdleTimer() {
+        if (!adminToken) return;
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+            signOut();
+            const err = document.getElementById('loginError');
+            if (err) err.textContent = 'Signed out after inactivity. Please sign in again.';
+        }, IDLE_LIMIT_MS);
     }
 
     function showDashboard() {
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('adminDashboard').style.display = '';
+        resetIdleTimer();
         loadProducts();
         loadOrders();
         loadArticles();
         loadHostedSites();
         loadResources();
         loadCalls();
+    }
+
+    // Re-check the session whenever the admin page is shown again — a tab
+    // refocus, or a back/forward restore that slipped past no-store. If the
+    // stored token has expired locally, drop to the login screen immediately;
+    // otherwise confirm it's still valid server-side (apiFetch signs out on 401).
+    async function revalidateSession() {
+        const dash = document.getElementById('adminDashboard');
+        if (!dash || dash.style.display === 'none') return; // not logged in — nothing to guard
+        if (!loadStoredToken()) { signOut(); return; }
+        try {
+            const d = await apiFetch('/api/store/admin/products');
+            if (!d || !d.ok) signOut(); else resetIdleTimer();
+        } catch { /* apiFetch already handled the 401 sign-out */ }
     }
 
     function initLogin() {
@@ -1207,8 +1265,7 @@
                     body: JSON.stringify({ key: input.value })
                 }).then(r => r.json());
                 if (!data.ok) throw new Error(data.error || 'Invalid credentials');
-                adminToken = data.token;
-                sessionStorage.setItem(TOKEN_KEY, adminToken);
+                storeSession(data.token, data.expiresIn);
                 showDashboard();
             } catch (e2) {
                 err.textContent = e2.message;
@@ -2660,6 +2717,17 @@
         initHostedSitesPanel();
         initResourceModal();
         initCallModal();
+
+        // Security: reset the idle-logout countdown on real activity, and
+        // re-validate the session when the tab is refocused or restored from
+        // the back/forward cache — so a walked-away-from or returned-to admin
+        // page can't keep operating on a dead or expired session.
+        ['mousedown', 'keydown', 'touchstart', 'scroll'].forEach(ev =>
+            document.addEventListener(ev, resetIdleTimer, { passive: true }));
+        window.addEventListener('pageshow', (e) => { if (e.persisted) revalidateSession(); });
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') revalidateSession();
+        });
     });
 
     })();

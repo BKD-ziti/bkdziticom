@@ -17,7 +17,11 @@
       "Bash(awk '{print $9, $5}')",
       "Bash(grep -v \"^$\")",
       "Bash(ls -la assets/images/store*.webm assets/images/store*.mp4)",
-      "Bash(ls -la assets/images/*.mp4)"
+      "Bash(ls -la assets/images/*.mp4)",
+      "Bash(cp /c/Users/BKDziti/Documents/GitHub/bkdziticom/_worker.js \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check.mjs\")",
+      "Bash(node --check \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check.mjs\")",
+      "Bash(cp /c/Users/BKDziti/Documents/GitHub/bkdziticom/_worker.js \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check2.mjs\")",
+      "Bash(node --check \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check2.mjs\")"
     ]
   }
 }

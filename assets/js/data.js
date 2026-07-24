@@ -10,7 +10,7 @@ window.BKD.SOCIALS = [
     {
         platform: 'Facebook',
         icon:     'fab fa-facebook-f',
-        url:      'https://www.facebook.com/TheRealBKDziti/'
+        url:      'https://www.facebook.com/BKDzitiLLC/'
     },
     {
         platform: 'YouTube',

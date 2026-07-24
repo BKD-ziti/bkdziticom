@@ -517,34 +517,137 @@ const SEED_PRODUCTS = [
 ];
 
 async function handleAdminSeedProducts(env) {
-  // Refresh seed products IN PLACE so a re-seed never destroys the custom
-  // ordering set in the admin panel. Existing products keep their position;
-  // brand-new seed products are appended at the end.
+  // Non-destructive seeding: any product that already exists is left EXACTLY
+  // as the admin last saved it — edits, ordering, and active-state all stick.
+  // Only genuinely new seed products (an id not already present) are appended.
+  // A re-seed therefore never overwrites or reverts admin-managed items.
   const existing = await getProductList(env);
   const now = new Date().toISOString();
-  const merged = existing.map(p => {
-    const seed = SEED_PRODUCTS.find(sp => sp.id === p.id);
-    return seed ? { ...p, ...seed, createdAt: p.createdAt || now, updatedAt: now } : p;
-  });
+  const haveIds = new Set(existing.map(p => p.id));
+  const merged = existing.slice();
+  let added = 0;
   for (const seed of SEED_PRODUCTS) {
-    if (!merged.some(p => p.id === seed.id)) {
+    if (!haveIds.has(seed.id)) {
       merged.push({ ...seed, createdAt: now, updatedAt: now });
+      added++;
     }
   }
   await saveProductList(env, merged);
-  return jsonResponse({ ok: true, seeded: SEED_PRODUCTS.length, total: merged.length });
+  return jsonResponse({ ok: true, seeded: added, total: merged.length });
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STORE: ADMIN AUTH
+//
+// The client never receives the raw ADMIN_KEY. On login we issue a short-lived
+// HMAC-signed session token ("<payloadB64>.<sigB64>") whose signing key is
+// derived from ADMIN_KEY — so no extra secret/env var is needed. isAdmin()
+// verifies the signature and the embedded expiry, so a leaked token is useless
+// after it expires and can never be replayed as the permanent password.
 // ─────────────────────────────────────────────────────────────────────────────
 
-function isAdmin(request, env) {
-  const adminKey = env.ADMIN_KEY;
-  if (!adminKey) return false;
+const SESSION_TTL_SECONDS = 8 * 60 * 60; // absolute lifetime of an admin session
+
+// Constant-time compare of two equal-length byte arrays.
+function timingSafeEqual(a, b) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i] ^ b[i];
+  return diff === 0;
+}
+
+function b64urlEncode(bytes) {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function b64urlDecode(str) {
+  const pad = str.length % 4 ? '='.repeat(4 - (str.length % 4)) : '';
+  const bin = atob(str.replace(/-/g, '+').replace(/_/g, '/') + pad);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+async function sessionSigningKey(env) {
+  const secret = requireEnv(env, 'ADMIN_KEY');
+  // Namespace the derived key so the session secret is distinct from the raw key.
+  return crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode('bkd-admin-session-v1:' + secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign', 'verify']
+  );
+}
+
+async function issueSessionToken(env) {
+  const payload = { exp: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS, iat: Math.floor(Date.now() / 1000) };
+  const payloadB64 = b64urlEncode(new TextEncoder().encode(JSON.stringify(payload)));
+  const key = await sessionSigningKey(env);
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payloadB64));
+  return payloadB64 + '.' + b64urlEncode(new Uint8Array(sig));
+}
+
+async function verifySessionToken(env, token) {
+  if (!env.ADMIN_KEY || !token || token.indexOf('.') === -1) return false;
+  const [payloadB64, sigB64] = token.split('.');
+  if (!payloadB64 || !sigB64) return false;
+  try {
+    const key = await sessionSigningKey(env);
+    const expected = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payloadB64)));
+    const provided = b64urlDecode(sigB64);
+    if (!timingSafeEqual(expected, provided)) return false;
+    const payload = JSON.parse(new TextDecoder().decode(b64urlDecode(payloadB64)));
+    if (!payload || typeof payload.exp !== 'number') return false;
+    if (payload.exp < Math.floor(Date.now() / 1000)) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// Constant-time verification that the supplied password matches ADMIN_KEY.
+// Both sides are SHA-256'd first so the compare is fixed-length and leaks
+// neither the key length nor a per-character timing signal.
+async function adminKeyMatches(env, provided) {
+  if (!env.ADMIN_KEY) return false;
+  const enc = new TextEncoder();
+  const a = new Uint8Array(await crypto.subtle.digest('SHA-256', enc.encode(provided)));
+  const b = new Uint8Array(await crypto.subtle.digest('SHA-256', enc.encode(env.ADMIN_KEY)));
+  return timingSafeEqual(a, b);
+}
+
+async function isAdmin(request, env) {
   const auth = request.headers.get('authorization') || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : auth;
-  return token === adminKey;
+  return verifySessionToken(env, token);
+}
+
+// ── Brute-force throttle (KV-backed, per IP) ─────────────────────────────────
+const AUTH_MAX_FAILURES = 8;      // failures allowed within the window
+const AUTH_WINDOW_SECONDS = 900;  // 15-minute rolling window / lockout
+
+async function authAttemptsKey(ip) { return `authfail:${ip}`; }
+
+async function isAuthRateLimited(env, ip) {
+  if (!env.STORE_KV) return false;
+  const raw = await env.STORE_KV.get(await authAttemptsKey(ip));
+  return raw ? parseInt(raw, 10) >= AUTH_MAX_FAILURES : false;
+}
+
+async function recordAuthFailure(env, ip) {
+  if (!env.STORE_KV) return;
+  const k = await authAttemptsKey(ip);
+  const raw = await env.STORE_KV.get(k);
+  const count = (raw ? parseInt(raw, 10) : 0) + 1;
+  await env.STORE_KV.put(k, String(count), { expirationTtl: AUTH_WINDOW_SECONDS });
+}
+
+async function clearAuthFailures(env, ip) {
+  if (!env.STORE_KV) return;
+  await env.STORE_KV.delete(await authAttemptsKey(ip));
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -777,10 +880,12 @@ const SEED_VERSION = '4';
 
 async function handleGetProducts(env) {
   let products = await getProductList(env);
+  // Only (re)seed when the seed VERSION changes — a deliberate deploy-time
+  // action. We must NOT re-seed just because a seed product is "missing":
+  // that's usually the admin having deleted it on purpose, and re-seeding
+  // would resurrect it (and used to overwrite every other product's edits).
   const storedVersion = env.STORE_KV ? await env.STORE_KV.get('seed_version') : null;
-  const seedIds = SEED_PRODUCTS.map(p => p.id);
-  const missingSeeds = seedIds.some(id => !products.find(p => p.id === id));
-  if (env.STORE_KV && (storedVersion !== SEED_VERSION || missingSeeds)) {
+  if (env.STORE_KV && storedVersion !== SEED_VERSION) {
     await handleAdminSeedProducts(env);
     await env.STORE_KV.put('seed_version', SEED_VERSION);
     products = await getProductList(env);
@@ -943,13 +1048,19 @@ async function handleStripeWebhook(request, env) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function handleAdminAuth(request, env) {
+  const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+  if (await isAuthRateLimited(env, ip)) {
+    return jsonResponse({ ok: false, error: 'Too many attempts. Please wait a few minutes and try again.' }, 429);
+  }
   const data = await request.json().catch(() => ({}));
   const key  = clean(data.key);
-  const adminKey = env.ADMIN_KEY;
-  if (!adminKey || key !== adminKey) {
+  if (!(await adminKeyMatches(env, key))) {
+    await recordAuthFailure(env, ip);
     return jsonResponse({ ok: false, error: 'Invalid credentials' }, 401);
   }
-  return jsonResponse({ ok: true, token: adminKey });
+  await clearAuthFailures(env, ip);
+  const token = await issueSessionToken(env);
+  return jsonResponse({ ok: true, token, expiresIn: SESSION_TTL_SECONDS });
 }
 
 async function handleAdminGetProducts(env) {
@@ -1217,7 +1328,7 @@ export default {
     if (path.startsWith('/api/store/admin/')) {
       if (path === '/api/store/admin/auth' && method === 'POST') return handleAdminAuth(request, env);
 
-      if (!isAdmin(request, env)) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
+      if (!(await isAdmin(request, env))) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
 
       if (path === '/api/store/admin/seed' && method === 'POST') return handleAdminSeedProducts(env);
       if (path === '/api/store/admin/products') {
@@ -1254,7 +1365,7 @@ export default {
           headers.set('access-control-allow-origin', '*');
           return new Response(resp.body, { status: resp.status, headers });
         }
-        if (!isAdmin(request, env)) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
+        if (!(await isAdmin(request, env))) return jsonResponse({ ok: false, error: 'Unauthorized' }, 401);
         if (method === 'PUT')    return handlePutContent(request, env, key);
         if (method === 'DELETE') return handleDeleteContent(env, key);
       }
@@ -1295,6 +1406,18 @@ export default {
     // ── Static assets ─────────────────────────────────────────────────────────
     let assetResponse = await env.ASSETS.fetch(request);
     if (method === 'GET') assetResponse = await applySiteEdits(assetResponse, env, url);
+
+    // The admin surface must never be cached or stored in the browser's
+    // back/forward cache — otherwise "Back" restores the logged-in page
+    // (and stale HTML/CSS) without re-running the auth check. no-store forces
+    // a fresh load + token re-validation every time it's viewed.
+    const isAdminSurface = path === '/admin' || path.startsWith('/admin/') ||
+                           path === '/store/admin' || path.startsWith('/store/admin/');
+    if (isAdminSurface) {
+      assetResponse = new Response(assetResponse.body, assetResponse);
+      assetResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+      assetResponse.headers.set('Pragma', 'no-cache');
+    }
 
     // Branded 404 page instead of the bare Cloudflare default.
     if (assetResponse.status === 404 && (method === 'GET' || method === 'HEAD')) {
