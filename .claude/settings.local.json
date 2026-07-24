@@ -21,7 +21,8 @@
       "Bash(cp /c/Users/BKDziti/Documents/GitHub/bkdziticom/_worker.js \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check.mjs\")",
       "Bash(node --check \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check.mjs\")",
       "Bash(cp /c/Users/BKDziti/Documents/GitHub/bkdziticom/_worker.js \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check2.mjs\")",
-      "Bash(node --check \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check2.mjs\")"
+      "Bash(node --check \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check2.mjs\")",
+      "PowerShell(\\(Get-Content admin\\\\index.html | Measure-Object -Line\\).Lines; \\(Get-Content _worker.js | Measure-Object -Line\\).Lines)"
     ]
   }
 }

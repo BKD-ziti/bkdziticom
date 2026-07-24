@@ -380,6 +380,68 @@
         }
         .reorder-btn:hover:not(:disabled) { background: rgba(249,83,1,0.25); color: var(--cream); }
         .reorder-btn:disabled { opacity: 0.25; cursor: default; }
+
+        /* ── UNIFORM AUTO-SAVE INDICATOR ── */
+        .save-chip {
+            font-size: 0.72rem; padding: 0.28rem 0.7rem;
+            border-radius: 1rem; display: inline-flex; align-items: center; gap: 0.35rem;
+            transition: opacity 0.3s;
+        }
+        .save-chip.saving { background: rgba(255,154,11,0.12); color: var(--amber); border: 1px solid rgba(255,154,11,0.25); }
+        .save-chip.saved  { background: rgba(80,200,120,0.12); color: #7de0a0; border: 1px solid rgba(80,200,120,0.25); }
+        .save-chip.error  { background: rgba(180,30,30,0.15); color: #f08080; border: 1px solid rgba(180,30,30,0.3); }
+        .save-chip.idle   { opacity: 0; pointer-events: none; }
+
+        /* ── LIST ROW DRAG & DROP (articles / hosted sites / resources) ── */
+        .article-row[draggable="true"], .resource-row[draggable="true"] { cursor: grab; }
+        .article-row.dragging, .resource-row.dragging { opacity: 0.35; }
+        .article-row.drag-over, .resource-row.drag-over { border-top: 2px solid var(--orange); }
+        .drag-grip {
+            color: rgba(252,249,245,0.18); font-size: 0.85rem;
+            display: inline-flex; align-items: center;
+            margin-right: 0.15rem; flex-shrink: 0;
+        }
+        @media (hover: none) { .drag-grip { display: none; } }
+
+        /* ── SITE CONTENT ACCORDION ── */
+        .st-acc {
+            border: 1px solid rgba(249,83,1,0.15);
+            border-radius: 0.8rem;
+            background: rgba(0,0,0,0.22);
+            margin-bottom: 0.6rem;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .st-acc:hover { border-color: rgba(249,83,1,0.4); background: rgba(0,0,0,0.32); }
+        .st-acc[open] { border-color: rgba(255,154,11,0.45); background: rgba(0,0,0,0.3); }
+        .st-acc > summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 0.65rem;
+            padding: 0.85rem 1rem;
+            min-height: 44px;
+            border-radius: 0.8rem;
+        }
+        .st-acc > summary::-webkit-details-marker { display: none; }
+        .st-acc-label {
+            font-weight: 600; font-size: 0.85rem; color: var(--cream);
+            flex-shrink: 0;
+        }
+        .st-acc-preview {
+            font-size: 0.75rem; color: rgba(252,249,245,0.35);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            min-width: 0; flex: 1;
+        }
+        .st-acc:hover .st-acc-preview { color: rgba(252,249,245,0.55); }
+        .st-acc-chevron {
+            margin-left: auto; flex-shrink: 0;
+            color: rgba(252,249,245,0.3);
+            transition: transform 0.25s;
+        }
+        .st-acc[open] .st-acc-chevron { transform: rotate(180deg); }
+        .st-acc-body { padding: 0.25rem 1rem 1.1rem; }
+        @media (max-width: 640px) {
+            .st-acc-preview { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -473,10 +535,8 @@
                 <div class="admin-panel active" id="panel-products">
                     <div class="admin-panel-header">
                         <h2>Products</h2>
-                        <div style="display:flex;gap:0.6rem;flex-wrap:wrap">
-                            <button class="admin-btn" id="saveOrderBtn" style="display:none">
-                                <i class="fas fa-check"></i> Save Order
-                            </button>
+                        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;align-items:center">
+                            <span id="productsSaveChip" class="save-chip idle"></span>
                             <button class="admin-btn primary" id="addProductBtn">
                                 <i class="fas fa-plus"></i> Add Product
                             </button>
@@ -484,7 +544,7 @@
                     </div>
                     <p style="font-size:0.78rem;color:rgba(252,249,245,0.35);margin:-0.5rem 0 1rem">
                         <i class="fas fa-arrows-up-down"></i>
-                        Drag rows (or use the arrows) to reorder &mdash; this order is exactly how items appear on the storefront.
+                        Drag rows (or use the arrows) to reorder &mdash; the order saves automatically and is exactly how items appear on the storefront.
                     </p>
                     <div style="overflow-x:auto">
                         <table class="admin-table">
@@ -544,17 +604,15 @@
                             <span id="siteTextKvStatus" class="kv-status static">
                                 <i class="fas fa-circle" style="font-size:0.5rem"></i> No edits saved
                             </span>
+                            <span id="siteTextSaveChip" class="save-chip idle"></span>
                             <a class="admin-btn" id="siteTextPreviewBtn" href="/" target="_blank" rel="noopener">
                                 <i class="fas fa-external-link-alt"></i> Open Page
                             </a>
-                            <button class="admin-btn primary" id="saveSiteTextBtn">
-                                <i class="fas fa-cloud-upload-alt"></i> Save to Site
-                            </button>
                         </div>
                     </div>
                     <p style="font-size:0.82rem;color:rgba(252,249,245,0.4);margin:0 0 1.25rem">
                         Edit the words on any page &mdash; headlines, paragraphs, buttons, and prices &mdash; from anywhere.
-                        Saved changes go live within seconds. Leave a field unchanged (or restore its original text) and the page keeps using what&rsquo;s built into the code.
+                        Click a row to expand it. Changes save automatically and go live within seconds. Leave a field unchanged (or restore its original text) and the page keeps using what&rsquo;s built into the code.
                     </p>
                     <div class="form-field-store" style="max-width:420px;margin-bottom:1.5rem">
                         <label for="siteTextPageSelect">Page</label>
@@ -575,19 +633,17 @@
                             <span id="articlesKvStatus" class="kv-status static">
                                 <i class="fas fa-circle" style="font-size:0.5rem"></i> Static defaults
                             </span>
+                            <span id="articlesSaveChip" class="save-chip idle"></span>
                             <button class="admin-btn" id="addArticleBtn">
                                 <i class="fas fa-plus"></i> Add Article
                             </button>
                             <button class="admin-btn" id="resetArticlesBtn">
                                 <i class="fas fa-undo"></i> Reset to Defaults
                             </button>
-                            <button class="admin-btn primary" id="saveArticlesBtn">
-                                <i class="fas fa-cloud-upload-alt"></i> Save to Site
-                            </button>
                         </div>
                     </div>
                     <p style="font-size:0.82rem;color:rgba(252,249,245,0.4);margin:0 0 1.25rem">
-                        Changes are saved to Cloudflare KV and appear on <a href="/articles/" style="color:var(--orange)">the Articles page</a> within seconds. Drag order with the <i class="fas fa-arrows-alt-v"></i> arrows.
+                        Every change saves automatically and appears on <a href="/articles/" style="color:var(--orange)">the Articles page</a> within seconds. Drag cards (or use the arrows) to reorder.
                     </p>
                     <div id="articlesListWrap">
                         <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
@@ -604,16 +660,14 @@
                             <span id="hostingKvStatus" class="kv-status static">
                                 <i class="fas fa-circle" style="font-size:0.5rem"></i> Static defaults
                             </span>
-                            <button class="admin-btn" id="addHostedSiteBtn">
+                            <span id="hostingSaveChip" class="save-chip idle"></span>
+                            <button class="admin-btn primary" id="addHostedSiteBtn">
                                 <i class="fas fa-plus"></i> Add Site
-                            </button>
-                            <button class="admin-btn primary" id="saveHostedSitesBtn">
-                                <i class="fas fa-cloud-upload-alt"></i> Save to Site
                             </button>
                         </div>
                     </div>
                     <p style="font-size:0.82rem;color:rgba(252,249,245,0.4);margin:0 0 1.25rem">
-                        Manage sites listed on <a href="https://hosting.bkdziti.com" target="_blank" style="color:var(--orange)">hosting.bkdziti.com</a>. Each entry needs a name and a URL — the URL can be a relative path (e.g. <code style="font-size:0.78rem;opacity:0.6">mikerealestate/</code>) or a full external URL.
+                        Manage sites listed on <a href="https://hosting.bkdziti.com" target="_blank" style="color:var(--orange)">hosting.bkdziti.com</a>. Every change saves automatically. Each entry needs a name and a URL — the URL can be a relative path (e.g. <code style="font-size:0.78rem;opacity:0.6">mikerealestate/</code>) or a full external URL.
                     </p>
                     <div id="hostedSitesListWrap">
                         <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
@@ -627,13 +681,14 @@
                     <div class="admin-panel-header">
                         <h2>Resource Pages</h2>
                         <div class="panel-actions">
-                            <button class="admin-btn" id="addResourceBtn">
+                            <span id="resourcesSaveChip" class="save-chip idle"></span>
+                            <button class="admin-btn primary" id="addResourceBtn">
                                 <i class="fas fa-plus"></i> Add Resource
                             </button>
                         </div>
                     </div>
                     <p style="font-size:0.82rem;color:rgba(252,249,245,0.4);margin:0 0 1.25rem">
-                        Store script cards, SOPs, guides, and reference pages. Paste raw HTML to save a complete page — click View to open it in a new tab.
+                        Store script cards, SOPs, guides, and reference pages. Everything saves automatically; drag rows (or use the arrows) to reorder. Paste raw HTML to save a complete page — click View to open it in a new tab.
                     </p>
                     <div id="resourcesListWrap">
                         <div style="text-align:center;padding:3rem;color:rgba(252,249,245,0.3)">
@@ -1182,6 +1237,103 @@
         return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     }
 
+    // ── Uniform auto-save plumbing ───────────────────────────────────────────
+    //
+    // Every section persists on change — no separate "Save Order" / "Save to
+    // Site" buttons. Each panel has a small chip that flips Saving… → Saved,
+    // and anything still unsaved (debounce pending or request in flight)
+    // registers in `pendingSaves` so closing the tab mid-save warns first.
+
+    const pendingSaves = new Set();
+
+    function debounce(fn, ms) {
+        let t = null;
+        const d = (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => { t = null; fn(...args); }, ms);
+        };
+        d.flush = (...args) => {
+            if (t) { clearTimeout(t); t = null; fn(...args); }
+        };
+        return d;
+    }
+
+    function setSaveChip(id, state) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        clearTimeout(el._chipTimer);
+        if (state === 'saving') {
+            el.className = 'save-chip saving';
+            el.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
+        } else if (state === 'saved') {
+            el.className = 'save-chip saved';
+            el.innerHTML = '<i class="fas fa-check"></i> Saved';
+            el._chipTimer = setTimeout(() => { el.className = 'save-chip idle'; }, 2200);
+        } else if (state === 'error') {
+            el.className = 'save-chip error';
+            el.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Not saved';
+        } else {
+            el.className = 'save-chip idle';
+        }
+    }
+
+    // Wraps a section's persist function: tracks pending state, drives the
+    // chip, toasts on failure (so a broken save is never silent).
+    function makeAutoSaver(label, chipId, persist, delay) {
+        const run = async () => {
+            try {
+                await persist();
+                pendingSaves.delete(label);
+                setSaveChip(chipId, 'saved');
+            } catch (err) {
+                setSaveChip(chipId, 'error');
+                showToast(`${label}: save failed — ${err && err.message ? err.message : 'unknown error'}`, true);
+            }
+        };
+        const debounced = debounce(run, delay || 700);
+        const saver = () => {
+            pendingSaves.add(label);
+            setSaveChip(chipId, 'saving');
+            debounced();
+        };
+        saver.flush = () => debounced.flush();
+        return saver;
+    }
+
+    // Generic HTML5 drag & drop for a list container whose direct rows carry
+    // data-idx. Reorders `arr` in place and calls onReorder() after a drop.
+    function enableRowDnD(container, rowSelector, arr, onReorder) {
+        let dragIdx = null;
+        container.querySelectorAll(rowSelector).forEach(row => {
+            row.setAttribute('draggable', 'true');
+            row.addEventListener('dragstart', e => {
+                dragIdx = parseInt(row.dataset.idx);
+                e.dataTransfer.effectAllowed = 'move';
+                row.classList.add('dragging');
+            });
+            row.addEventListener('dragend', () => {
+                row.classList.remove('dragging');
+                container.querySelectorAll(rowSelector).forEach(r => r.classList.remove('drag-over'));
+            });
+            row.addEventListener('dragover', e => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                if (parseInt(row.dataset.idx) !== dragIdx) row.classList.add('drag-over');
+            });
+            row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+            row.addEventListener('drop', e => {
+                e.preventDefault();
+                row.classList.remove('drag-over');
+                const to = parseInt(row.dataset.idx);
+                if (dragIdx == null || isNaN(to) || to === dragIdx) return;
+                const [moved] = arr.splice(dragIdx, 1);
+                arr.splice(to, 0, moved);
+                dragIdx = null;
+                onReorder();
+            });
+        });
+    }
+
     // ── Auth ─────────────────────────────────────────────────────────────────
 
     function signOut() {
@@ -1383,15 +1535,18 @@
         });
     }
 
-    // ── Product ordering ─────────────────────────────────────────────────────
+    // ── Product ordering (auto-saves) ────────────────────────────────────────
 
-    let orderDirty = false;
+    const saveProductOrder = makeAutoSaver('Product order', 'productsSaveChip', async () => {
+        const data = await apiFetch('/api/store/admin/products/reorder', {
+            method: 'POST',
+            body: JSON.stringify({ order: products.map(p => p.id) })
+        });
+        if (!data.ok) throw new Error(data.error || 'Failed to save order');
+    });
 
     function markOrderDirty() {
-        orderDirty = true;
-        const btn = document.getElementById('saveOrderBtn');
-        btn.style.display = '';
-        btn.classList.add('primary');
+        saveProductOrder();
     }
 
     function moveProduct(id, delta) {
@@ -1404,29 +1559,6 @@
         renderProductsTable();
     }
 
-    async function saveProductOrder() {
-        if (!orderDirty) return;
-        const btn = document.getElementById('saveOrderBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
-        try {
-            const data = await apiFetch('/api/store/admin/products/reorder', {
-                method: 'POST',
-                body: JSON.stringify({ order: products.map(p => p.id) })
-            });
-            if (!data.ok) throw new Error(data.error || 'Failed to save order');
-            orderDirty = false;
-            btn.style.display = 'none';
-            btn.classList.remove('primary');
-            showToast('Order saved! The storefront now shows items in this order.');
-        } catch (err) {
-            showToast(err.message, true);
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-check"></i> Save Order';
-        }
-    }
-
     async function loadProducts() {
         const tbody = document.getElementById('productsTableBody');
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:rgba(252,249,245,0.4)"><i class="fas fa-circle-notch fa-spin"></i> Loading…</td></tr>`;
@@ -1434,9 +1566,6 @@
             const data = await apiFetch('/api/store/admin/products');
             if (!data.ok) throw new Error(data.error);
             products = data.products || [];
-            orderDirty = false;
-            const soBtn = document.getElementById('saveOrderBtn');
-            if (soBtn) { soBtn.style.display = 'none'; soBtn.classList.remove('primary'); }
             renderProductsTable();
         } catch (err) {
             tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#f08080">${escHtml(err.message)}</td></tr>`;
@@ -1480,9 +1609,10 @@
 
     function initProductModal() {
         document.getElementById('addProductBtn').addEventListener('click', openAddProduct);
-        document.getElementById('saveOrderBtn').addEventListener('click', saveProductOrder);
+        // Warn before closing the tab while any section's auto-save is still
+        // pending or in flight — covers products, articles, hosting, and text.
         window.addEventListener('beforeunload', e => {
-            if (orderDirty) { e.preventDefault(); e.returnValue = ''; }
+            if (pendingSaves.size) { e.preventDefault(); e.returnValue = ''; }
         });
         document.getElementById('productModalClose').addEventListener('click', () => closeModal('productModal'));
         document.getElementById('productModalCancel').addEventListener('click', () => closeModal('productModal'));
@@ -1782,9 +1912,27 @@
     }
 
     function stEditedChip(edited) {
-        return edited
-            ? `<span class="kv-status live" style="margin-left:0.5rem;font-size:0.62rem;padding:0.1rem 0.5rem">edited</span>`
-            : '';
+        return `<span class="kv-status live st-edited-chip" style="font-size:0.62rem;padding:0.1rem 0.5rem;flex-shrink:0;${edited ? '' : 'display:none'}">edited</span>`;
+    }
+
+    // One collapsible accordion row: label + live preview + edited chip in the
+    // summary, the actual fields inside. Click to expand, hover to peek.
+    function stAccRow(label, preview, edited, bodyHtml, open) {
+        return `<details class="st-acc"${open ? ' open' : ''}>
+            <summary>
+                <span class="st-acc-label">${escHtml(label)}</span>
+                ${stEditedChip(edited)}
+                <span class="st-acc-preview">${escHtml(preview)}</span>
+                <i class="fas fa-chevron-down st-acc-chevron"></i>
+            </summary>
+            <div class="st-acc-body">${bodyHtml}</div>
+        </details>`;
+    }
+
+    function stripTags(html) {
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        return (div.textContent || '').replace(/\s+/g, ' ').trim();
     }
 
     function renderSiteTextEditor() {
@@ -1801,11 +1949,9 @@
                 const val = siteText.blocks[b.key] != null ? siteText.blocks[b.key] : b.html;
                 const edited = siteText.blocks[b.key] != null;
                 const rows = Math.min(8, Math.max(2, Math.ceil(val.length / 70)));
-                return stFieldRow(
-                    `<label for="stb-${i}">${escHtml(b.label)}${stEditedChip(edited)}</label>`,
-                    `<textarea id="stb-${i}" class="admin-textarea" rows="${rows}" style="min-height:0"
-                        data-st-block="${escHtml(b.key)}" data-st-default="${escHtml(b.html)}">${escHtml(val)}</textarea>`
-                );
+                const body = `<textarea id="stb-${i}" class="admin-textarea" rows="${rows}" style="min-height:0;width:100%"
+                        data-st-block="${escHtml(b.key)}" data-st-default="${escHtml(b.html)}">${escHtml(val)}</textarea>`;
+                return stAccRow(b.label, stripTags(val), edited, body);
             }).join('');
         }
 
@@ -1815,10 +1961,7 @@
                 const o = secOv[sec.id] || {};
                 const val = (field, def) => o[field] != null ? o[field] : (def || '');
                 const edited = Object.keys(o).length > 0;
-                return `<fieldset style="border:1px solid rgba(249,83,1,0.15);border-radius:0.9rem;padding:1.1rem;margin-bottom:1.25rem;background:rgba(0,0,0,0.18)">
-                    <legend style="font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(252,249,245,0.45);padding:0 0.5rem">
-                        ${escHtml(sec.label || sec.id)}${stEditedChip(edited)}
-                    </legend>
+                const body = `
                     <div class="field-row">
                         ${stFieldRow(`<label>Label</label>`,
                             `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="label" data-st-default="${escHtml(sec.label || '')}" value="${escHtml(val('label', sec.label))}">`)}
@@ -1834,8 +1977,8 @@
                             `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="buttonUrl" data-st-default="${escHtml(sec.button.url || '')}" value="${escHtml(val('buttonUrl', sec.button.url))}">`)}
                     </div>` : ''}
                     ${sec.media ? stFieldRow(`<label>Media URL <span style="font-size:0.7rem;color:rgba(252,249,245,0.3)">(keep the same type — image stays image, video stays video)</span></label>`,
-                        `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="media" data-st-default="${escHtml(sec.media || '')}" value="${escHtml(val('media', sec.media))}">`) : ''}
-                </fieldset>`;
+                        `<input type="text" class="admin-select" data-st-sec="${escHtml(sec.id)}" data-st-field="media" data-st-default="${escHtml(sec.media || '')}" value="${escHtml(val('media', sec.media))}">`) : ''}`;
+                return stAccRow(sec.label || sec.id, val('title', sec.title), edited, body);
             }).join('');
         }
 
@@ -1843,6 +1986,25 @@
             html = `<p style="text-align:center;color:rgba(252,249,245,0.35);padding:2.5rem">Nothing editable found on this page yet.</p>`;
         }
         wrap.innerHTML = html;
+    }
+
+    // Live feedback while typing: keep the row's preview text and "edited"
+    // chip in sync without re-rendering (which would steal focus mid-keystroke).
+    function refreshAccRow(field) {
+        const acc = field.closest('.st-acc');
+        if (!acc) return;
+        const fields = acc.querySelectorAll('[data-st-block], [data-st-sec]');
+        let edited = false;
+        fields.forEach(f => {
+            if (f.value.trim() && f.value.trim() !== (f.dataset.stDefault || '').trim()) edited = true;
+        });
+        const chip = acc.querySelector('.st-edited-chip');
+        if (chip) chip.style.display = edited ? '' : 'none';
+        const preview = acc.querySelector('.st-acc-preview');
+        if (preview) {
+            if (field.dataset.stBlock != null) preview.textContent = stripTags(field.value);
+            else if (field.dataset.stField === 'title') preview.textContent = field.value;
+        }
     }
 
     function collectSiteTextEdits() {
@@ -1886,6 +2048,18 @@
         }
     }
 
+    const saveSiteText = makeAutoSaver('Site content', 'siteTextSaveChip', async () => {
+        collectSiteTextEdits();
+        const resp = await fetch('/api/content/site-text', {
+            method: 'PUT',
+            headers: apiHeaders(),
+            body: JSON.stringify(siteText)
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.error || 'Save failed');
+        updateSiteTextStatus();
+    }, 1000);
+
     async function initSiteTextPanel() {
         if (siteTextLoaded) return;
         siteTextLoaded = true;
@@ -1893,32 +2067,18 @@
         const sel = document.getElementById('siteTextPageSelect');
         sel.innerHTML = EDIT_PAGES.map(p => `<option value="${escHtml(p.path)}">${escHtml(p.title)}</option>`).join('');
         sel.addEventListener('change', () => {
-            collectSiteTextEdits();          // keep unsaved edits when switching pages
+            collectSiteTextEdits();          // capture edits before switching pages
+            saveSiteText.flush();            // push anything still debounced
             openSiteTextPage(sel.value);
         });
 
-        document.getElementById('saveSiteTextBtn').addEventListener('click', async () => {
-            collectSiteTextEdits();
-            const btn = document.getElementById('saveSiteTextBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
-            try {
-                const resp = await fetch('/api/content/site-text', {
-                    method: 'PUT',
-                    headers: apiHeaders(),
-                    body: JSON.stringify(siteText)
-                });
-                const data = await resp.json().catch(() => ({}));
-                if (!resp.ok) throw new Error(data.error || 'Save failed');
-                updateSiteTextStatus();
-                renderSiteTextEditor();
-                showToast('Content saved — changes are live on the site.');
-            } catch (err) {
-                showToast(err.message, true);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Save to Site';
-            }
+        // Auto-save: any keystroke in any field schedules a save; the chip
+        // shows Saving… → Saved and the row's preview/edited state update live.
+        document.getElementById('siteTextEditorWrap').addEventListener('input', e => {
+            const field = e.target;
+            if (field.dataset.stBlock == null && field.dataset.stSec == null) return;
+            refreshAccRow(field);
+            saveSiteText();
         });
 
         await loadSiteText();
@@ -2033,13 +2193,13 @@
         wrap.querySelectorAll('[data-move-up]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const i = parseInt(btn.dataset.moveUp);
-                if (i > 0) { [articleCards[i-1], articleCards[i]] = [articleCards[i], articleCards[i-1]]; renderArticlesList(); }
+                if (i > 0) { [articleCards[i-1], articleCards[i]] = [articleCards[i], articleCards[i-1]]; articlesChanged(); }
             });
         });
         wrap.querySelectorAll('[data-move-down]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const i = parseInt(btn.dataset.moveDown);
-                if (i < articleCards.length - 1) { [articleCards[i], articleCards[i+1]] = [articleCards[i+1], articleCards[i]]; renderArticlesList(); }
+                if (i < articleCards.length - 1) { [articleCards[i], articleCards[i+1]] = [articleCards[i+1], articleCards[i]]; articlesChanged(); }
             });
         });
         wrap.querySelectorAll('[data-edit-article]').forEach(btn => {
@@ -2050,10 +2210,18 @@
                 const i = parseInt(btn.dataset.deleteArticle);
                 if (confirm(`Delete "${articleCards[i].title}"?`)) {
                     articleCards.splice(i, 1);
-                    renderArticlesList();
+                    articlesChanged();
                 }
             });
         });
+
+        enableRowDnD(wrap, '.article-row', articleCards, articlesChanged);
+    }
+
+    // Re-render and persist — the single entry point for any articles change.
+    function articlesChanged() {
+        renderArticlesList();
+        saveArticles();
     }
 
     function openEditArticle(idx) {
@@ -2113,42 +2281,28 @@
                 articleCards[idx] = card;
             }
             closeModal('articleModal');
-            renderArticlesList();
+            articlesChanged();
         });
     }
 
-    async function saveArticlesToKv() {
-        const btn = document.getElementById('saveArticlesBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
-        try {
-            const resp = await fetch('/api/content/articles', {
-                method: 'PUT',
-                headers: apiHeaders(),
-                body: JSON.stringify(articleCards)
-            });
-            const data = await resp.json().catch(() => ({}));
-            if (!resp.ok) throw new Error(data.error || 'Save failed');
-            articlesFromKv = true;
-            setArticlesStatus(true);
-            showToast('Articles saved! Changes are live on the Articles page.');
-        } catch (err) {
-            showToast(err.message, true);
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Save to Site';
-        }
-    }
+    const saveArticles = makeAutoSaver('Articles', 'articlesSaveChip', async () => {
+        const resp = await fetch('/api/content/articles', {
+            method: 'PUT',
+            headers: apiHeaders(),
+            body: JSON.stringify(articleCards)
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.error || 'Save failed');
+        articlesFromKv = true;
+        setArticlesStatus(true);
+    });
 
     function initArticlesPanel() {
-        document.getElementById('saveArticlesBtn').addEventListener('click', saveArticlesToKv);
         document.getElementById('resetArticlesBtn').addEventListener('click', () => {
-            if (!confirm('Reset to static defaults? This will discard your current edits (you still need to Save to make it permanent).')) return;
+            if (!confirm('Reset to static defaults? This discards your current edits and goes live immediately.')) return;
             articleCards = STATIC_ARTICLES.map(c => ({ ...c }));
-            articlesFromKv = false;
-            setArticlesStatus(false);
-            renderArticlesList();
-            showToast('Reset to defaults. Click "Save to Site" to push the reset live.');
+            articlesChanged();
+            showToast('Reset to defaults — the Articles page now shows the built-in cards.');
         });
     }
 
@@ -2206,7 +2360,7 @@
             return;
         }
         wrap.innerHTML = hostedSites.map((s, i) => `
-            <div class="article-row" style="border-color:${s.active === false ? 'rgba(252,249,245,0.08)' : 'rgba(100,149,237,0.2)'}">
+            <div class="article-row" data-idx="${i}" style="border-color:${s.active === false ? 'rgba(252,249,245,0.08)' : 'rgba(100,149,237,0.2)'}">
                 <div class="article-thumb" style="background:rgba(100,149,237,0.1);color:#8bb4f5;font-size:1.2rem">
                     <i class="fas ${escHtml(s.icon || 'fa-globe')}"></i>
                 </div>
@@ -2230,13 +2384,13 @@
         wrap.querySelectorAll('[data-move-hs-up]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const i = parseInt(btn.dataset.moveHsUp);
-                if (i > 0) { [hostedSites[i-1], hostedSites[i]] = [hostedSites[i], hostedSites[i-1]]; renderHostedSites(); }
+                if (i > 0) { [hostedSites[i-1], hostedSites[i]] = [hostedSites[i], hostedSites[i-1]]; hostedSitesChanged(); }
             });
         });
         wrap.querySelectorAll('[data-move-hs-down]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const i = parseInt(btn.dataset.moveHsDown);
-                if (i < hostedSites.length - 1) { [hostedSites[i], hostedSites[i+1]] = [hostedSites[i+1], hostedSites[i]]; renderHostedSites(); }
+                if (i < hostedSites.length - 1) { [hostedSites[i], hostedSites[i+1]] = [hostedSites[i+1], hostedSites[i]]; hostedSitesChanged(); }
             });
         });
         wrap.querySelectorAll('[data-edit-hs]').forEach(btn => {
@@ -2247,12 +2401,31 @@
                 const i = parseInt(btn.dataset.deleteHs);
                 if (confirm(`Remove "${hostedSites[i].name}" from the hosted sites list?`)) {
                     hostedSites.splice(i, 1);
-                    renderHostedSites();
-                    showToast('Site removed. Click "Save to Site" to push the change live.');
+                    hostedSitesChanged();
+                    showToast('Site removed.');
                 }
             });
         });
+
+        enableRowDnD(wrap, '.article-row', hostedSites, hostedSitesChanged);
     }
+
+    function hostedSitesChanged() {
+        renderHostedSites();
+        saveHostedSites();
+    }
+
+    const saveHostedSites = makeAutoSaver('Hosted sites', 'hostingSaveChip', async () => {
+        const resp = await fetch('/api/content/hosted-sites', {
+            method: 'PUT',
+            headers: apiHeaders(),
+            body: JSON.stringify(hostedSites)
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.error || 'Save failed');
+        hostedSitesFromKv = true;
+        setHostingStatus(true);
+    });
 
     function openEditHostedSite(idx) {
         const isNew = idx === -1;
@@ -2294,31 +2467,8 @@
             if (idx === -1) hostedSites.push(entry);
             else hostedSites[idx] = entry;
             closeModal('hostedSiteModal');
-            renderHostedSites();
-            showToast(idx === -1 ? 'Site added. Click "Save to Site" to push live.' : 'Site updated. Click "Save to Site" to push live.');
-        });
-
-        document.getElementById('saveHostedSitesBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('saveHostedSitesBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving…';
-            try {
-                const resp = await fetch('/api/content/hosted-sites', {
-                    method: 'PUT',
-                    headers: apiHeaders(),
-                    body: JSON.stringify(hostedSites)
-                });
-                const data = await resp.json().catch(() => ({}));
-                if (!resp.ok) throw new Error(data.error || 'Save failed');
-                hostedSitesFromKv = true;
-                setHostingStatus(true);
-                showToast('Hosted sites saved! Changes are live on hosting.bkdziti.com');
-            } catch (err) {
-                showToast(err.message, true);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Save to Site';
-            }
+            hostedSitesChanged();
+            showToast(idx === -1 ? 'Site added.' : 'Site updated.');
         });
     }
 
@@ -2346,12 +2496,19 @@
         renderResources();
     }
 
-    async function saveResources() {
-        await fetch('/api/content/resources', {
+    const saveResources = makeAutoSaver('Resources', 'resourcesSaveChip', async () => {
+        const resp = await fetch('/api/content/resources', {
             method: 'PUT',
             headers: apiHeaders(),
             body: JSON.stringify(resources)
         });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.error || 'Save failed');
+    }, 400);
+
+    function resourcesChanged() {
+        renderResources();
+        saveResources();
     }
 
     function renderResources() {
@@ -2363,7 +2520,7 @@
         wrap.innerHTML = resources.map((r, i) => {
             const icon = RESOURCE_ICONS[r.type] || 'fa-file-alt';
             const date = r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
-            return `<div class="resource-row">
+            return `<div class="resource-row" data-idx="${i}">
                 <div class="resource-icon"><i class="fas ${icon}"></i></div>
                 <div class="resource-row-info">
                     <div class="resource-row-title">${escHtml(r.title)}</div>
@@ -2373,13 +2530,29 @@
                         ${r.description ? `<span style="margin-left:0.5rem;opacity:0.7">${escHtml(r.description.slice(0,80))}${r.description.length>80?'…':''}</span>` : ''}
                     </div>
                 </div>
-                <div class="article-row-actions">
+                <div class="article-row-actions resource-row-actions">
+                    <button class="icon-btn" data-move-res-up="${i}" title="Move up" aria-label="Move resource up" ${i === 0 ? 'disabled' : ''}><i class="fas fa-chevron-up"></i></button>
+                    <button class="icon-btn" data-move-res-down="${i}" title="Move down" aria-label="Move resource down" ${i === resources.length - 1 ? 'disabled' : ''}><i class="fas fa-chevron-down"></i></button>
                     <button class="icon-btn" data-view-resource="${i}" title="View" aria-label="View resource"><i class="fas fa-external-link-alt"></i></button>
                     <button class="icon-btn" data-edit-resource="${i}" title="Edit" aria-label="Edit resource"><i class="fas fa-pen"></i></button>
                     <button class="icon-btn danger" data-delete-resource="${i}" title="Delete" aria-label="Delete resource"><i class="fas fa-trash"></i></button>
                 </div>
             </div>`;
         }).join('');
+
+        wrap.querySelectorAll('[data-move-res-up]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.dataset.moveResUp);
+                if (i > 0) { [resources[i-1], resources[i]] = [resources[i], resources[i-1]]; resourcesChanged(); }
+            });
+        });
+        wrap.querySelectorAll('[data-move-res-down]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const i = parseInt(btn.dataset.moveResDown);
+                if (i < resources.length - 1) { [resources[i], resources[i+1]] = [resources[i+1], resources[i]]; resourcesChanged(); }
+            });
+        });
+        enableRowDnD(wrap, '.resource-row', resources, resourcesChanged);
 
         wrap.querySelectorAll('[data-view-resource]').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -2399,12 +2572,11 @@
             btn.addEventListener('click', () => openEditResource(parseInt(btn.dataset.editResource)));
         });
         wrap.querySelectorAll('[data-delete-resource]').forEach(btn => {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
                 const i = parseInt(btn.dataset.deleteResource);
                 if (!confirm(`Delete "${resources[i].title}"?`)) return;
                 resources.splice(i, 1);
-                await saveResources();
-                renderResources();
+                resourcesChanged();
                 showToast('Resource deleted.');
             });
         });
@@ -2451,17 +2623,11 @@
             };
             if (idx === -1) resources.push(entry);
             else resources[idx] = entry;
-            try {
-                await saveResources();
-                closeModal('resourceModal');
-                renderResources();
-                showToast(idx === -1 ? 'Resource saved!' : 'Resource updated!');
-            } catch (err) {
-                showToast('Save failed: ' + err.message, true);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-save"></i> Save Resource';
-            }
+            resourcesChanged();
+            closeModal('resourceModal');
+            showToast(idx === -1 ? 'Resource saved!' : 'Resource updated!');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save"></i> Save Resource';
         });
     }
 
@@ -2495,11 +2661,15 @@
     }
 
     async function saveCalls() {
-        await fetch('/api/content/calls', {
+        const resp = await fetch('/api/content/calls', {
             method: 'PUT',
             headers: apiHeaders(),
             body: JSON.stringify(calls)
         });
+        if (!resp.ok) {
+            const data = await resp.json().catch(() => ({}));
+            throw new Error(data.error || 'Save failed');
+        }
     }
 
     function renderCallStats() {
