@@ -22,7 +22,11 @@
       "Bash(node --check \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check.mjs\")",
       "Bash(cp /c/Users/BKDziti/Documents/GitHub/bkdziticom/_worker.js \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check2.mjs\")",
       "Bash(node --check \"/c/Users/BKDziti/AppData/Local/Temp/claude/C--Users-BKDziti-Documents-GitHub-bkdziticom/a0287318-c3a8-4fd5-bcc6-d4dc96ab2b77/scratchpad/worker_check2.mjs\")",
-      "PowerShell(\\(Get-Content admin\\\\index.html | Measure-Object -Line\\).Lines; \\(Get-Content _worker.js | Measure-Object -Line\\).Lines)"
+      "PowerShell(\\(Get-Content admin\\\\index.html | Measure-Object -Line\\).Lines; \\(Get-Content _worker.js | Measure-Object -Line\\).Lines)",
+      "Bash(grep -v ':0$')",
+      "Bash(grep -n \"#[0-9a-fA-F]\\\\{3,8\\\\}\" assets/css/styles.css)",
+      "Bash(grep -v \":0$\")",
+      "Bash(awk '/<style>/{s=NR} /<\\\\/style>/{print s\"-\"NR; exit}' admin/index.html)"
     ]
   }
 }
