@@ -826,6 +826,12 @@
     /* ── VIEWPORT-ACTIVATED SECTION EFFECTS ───────────────────────────── */
     function initViewportActivatedEffects() {
         const controllers = new Map();
+        // Only one section-pulse canvas may animate at a time. Chromium on
+        // Windows wedges its GPU process when several of these 2D canvases
+        // composite simultaneously (see the note in
+        // createSectionPulseController) — a fast scroll used to bring 2-3
+        // sections into the rootMargin band at once and crash the tab.
+        let activeId = null;
 
         const getController = (section) => {
             if (controllers.has(section.id)) return controllers.get(section.id);
@@ -843,12 +849,22 @@
                 if (!c) return;
                 if (prefersReducedMotion()) {
                     c.stop();
+                    if (activeId === id) activeId = null;
                     return;
                 }
-                if (entry.isIntersecting) c.start();
-                else c.stop();
+                if (entry.isIntersecting) {
+                    if (activeId && activeId !== id) {
+                        const prev = controllers.get(activeId);
+                        if (prev) prev.stop();
+                    }
+                    activeId = id;
+                    c.start();
+                } else {
+                    c.stop();
+                    if (activeId === id) activeId = null;
+                }
             });
-        }, { threshold: 0.12, rootMargin: '120px 0px 120px 0px' });
+        }, { threshold: 0.3, rootMargin: '0px 0px -20% 0px' });
 
         SECTIONS.forEach(sec => {
             const el = document.getElementById(sec.id);
